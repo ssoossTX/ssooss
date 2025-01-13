@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продвинутый Кликер</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Кликер</h1>
+        <div class="counter">
+            <p id="click-count">0</p>
+        </div>
+        <button id="click-button">Клик!</button>
+
+        <div class="upgrades">
+            <h2>Улучшения</h2>
+            <div class="upgrade-item" id="upgrade-click">
+                <p>Улучшение клика (+1)</p>
+                <p>Цена: <span id="click-upgrade-cost">10</span></p>
+                <button>Купить</button>
+            </div>
+            <div class="upgrade-item" id="upgrade-auto">
+                <p>Автокликер</p>
+                <p>Цена: <span id="auto-upgrade-cost">50</span></p>
+                <button>Купить</button>
+            </div>
+            <div class="upgrade-item" id="upgrade-click-level">
+                <p>Уровень улучшения клика: <span id="click-upgrade-level-display">1</span></p>
+                <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
+                <button>Купить уровень</button>
+            </div>
+           <div class="message" id="message"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

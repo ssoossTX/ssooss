@@ -1,0 +1,75 @@
+body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    text-align: center;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.counter {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+#click-button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#click-button:hover {
+    background-color: #367c39;
+}
+
+.upgrades {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.upgrade-item {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+    
+.upgrade-item button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+    
+.upgrade-item button:hover {
+    background-color: #1976D2;
+}
+    
+#message {
+        margin-top: 10px;
+        font-weight: bold;
+    }
