@@ -24,7 +24,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0; /* Запасной цвет фона */
+    background-color: #f0f0f0; /* Added placeholder background color */
 }
 
 body::before {
@@ -41,7 +41,6 @@ body::before {
     z-index: -1; /* Помещаем фон за контент */
     filter: blur(2px);
 }
-
 
 .container {
     text-align: center;
