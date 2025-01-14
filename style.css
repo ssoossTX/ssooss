@@ -5,7 +5,10 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-image: url('IMG_20250114_111552_356.jpg'); /* Замените на путь к вашему изображению */
+    background-size: cover; /* Растягивает изображение на весь фон */
+    background-repeat: no-repeat; /* Запрещает повторение изображения */
+     background-position: center;
 }
 
 .container {
