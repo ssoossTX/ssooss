@@ -5,7 +5,9 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-image: url('https://github.com/ssoossTX/ssooss/blob/baccdb8510b18a90474a4a969014ec0abbff7e2d/IMG_20250114_111552_356.jpg');
+    background-color: red;
+    background-size: cover;
+    background-repeat: no-repeat;
     background-position: center;
 }
 
