@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', function() {
             loadPlayerName();
         });
     } else {
-        loadGame();
-        startRandomEvent();
-        checkAchievements();
-        loadRating();
-        loadPlayerName();
+         loadGame();
+         startRandomEvent();
+         checkAchievements();
+         loadRating();
+         loadPlayerName();
     }
 
     function updateDisplay() {
@@ -141,48 +141,48 @@ document.addEventListener('DOMContentLoaded', function() {
         saveData();
     }
 
-    function saveRating() {
-          const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-         saveFunction( 'playersRating', JSON.stringify(playersRating), (err)=>{
-            if(err) console.log("Ошибка сохранения рейтинга", err);
-         });
-      }
+     function saveRating() {
+         const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
+         saveFunction( 'playersRating',JSON.stringify(playersRating), (err) => {
+              if(err)  console.log("Ошибка сохранения рейтинга", err)
+         })
+     }
     function loadRating() {
         const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-           loadFunction('playersRating', (err, value)=> {
-            if(err){
-                 console.error("Ошибка загрузки рейтинга:", err);
+        loadFunction('playersRating',(err, value) => {
+           if(err){
+               console.error("Ошибка загрузки рейтинга:", err);
                return;
-            }
-                playersRating = value ? JSON.parse(value) : [];
-                updateRatingDisplay();
+           }
+             playersRating = value ? JSON.parse(value) : [];
+             updateRatingDisplay();
+         })
+    }
+    function savePlayerName() {
+        const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
+        saveFunction('playerName',JSON.stringify(playerName), (err) =>{
+           if(err) console.log("Ошибка сохранения имени игрока", err)
          });
     }
-  function savePlayerName() {
-        const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-         saveFunction( 'playerName',JSON.stringify(playerName), (err)=>{
-           if (err) console.log("Ошибка сохранения имени", err)
-          });
-        }
-
     function loadPlayerName() {
-       const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-         loadFunction('playerName', (err,value) =>{
+         const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
+            loadFunction('playerName', (err,value) =>{
                 if(err){
-                    console.error("Ошибка загрузки имени игрока:", err);
-                    return;
+                  console.error("Ошибка загрузки имени игрока:", err);
+                   return;
                 }
-              playerName = value ? JSON.parse(value) : null;
+                 playerName = value ? JSON.parse(value) : null;
            });
-
     }
     function updateRatingDisplay() {
         ratingList.innerHTML = '';
         playersRating.sort((a, b) => b.score - a.score);
         playersRating.forEach((player, index) => {
             const listItem = document.createElement('li');
-            listItem.textContent = `${index + 1}. Игрок: ${player.name}, Очки: ${player.score}`;
-            ratingList.appendChild(listItem);
+             if(player.name){
+               listItem.textContent = `${index + 1}. Игрок: ${player.name}, Очки: ${player.score}`;
+                ratingList.appendChild(listItem);
+              }
         });
     }
 
@@ -201,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
         achievementCount = 0;
         playerName = null;
 
-
         clearInterval(autoClickerInterval);
         autoClickerInterval = null;
         clearTimeout(bonusTimeout);
@@ -210,9 +209,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         updateDisplay();
         achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-         if (isTWA) {
-             tWebApp.CloudStorage.removeItem('clickerData');
-            tWebApp.CloudStorage.removeItem('playerName');
+        if (isTWA) {
+            tWebApp.CloudStorage.removeItem('clickerData');
+             tWebApp.CloudStorage.removeItem('playerName');
         }
         displayMessage('Прогресс сброшен!', 'orange');
         saveData();
@@ -220,8 +219,8 @@ document.addEventListener('DOMContentLoaded', function() {
         savePlayerName();
     }
 
-      function saveData() {
-        let data = {
+    function saveData() {
+         let data = {
             clickCount: clickCount,
             clickValue: clickValue,
             autoClickerValue: autoClickerValue,
@@ -235,24 +234,22 @@ document.addEventListener('DOMContentLoaded', function() {
             achievementCount: achievementCount,
             bonusActive: bonusActive
         };
-        const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-         saveFunction( 'clickerData',JSON.stringify(data),(err)=>{
-            if(err) console.log("Ошибка сохранения игры", err);
-         });
+         const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
+         saveFunction('clickerData', JSON.stringify(data), (err) => {
+             if(err)  console.log("Ошибка сохранения данных игры", err)
+         })
     }
 
-
-    function loadGame() {
-        const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-
-        loadFunction('clickerData',(err,value)=> {
+     function loadGame() {
+         const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
+          loadFunction('clickerData', (err,value) => {
              if (err) {
-                 console.error("Ошибка загрузки данных:", err);
+                console.error("Ошибка загрузки данных:", err);
                  return;
              }
-           if(value){
-                 let savedData = JSON.parse(value);
-                clickCount = savedData.clickCount || 0;
+              if (value) {
+                let savedData = JSON.parse(value);
+                  clickCount = savedData.clickCount || 0;
                 clickValue = savedData.clickValue || 1;
                 autoClickerValue = savedData.autoClickerValue || 0;
                 clickUpgradeCost = savedData.clickUpgradeCost || 10;
@@ -262,25 +259,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 prestigeLevel = savedData.prestigeLevel || 0;
                 prestigeMultiplier = savedData.prestigeMultiplier || 1;
                 achievements = savedData.achievements || [];
-                achievementCount = savedData.achievementCount || 0;
-                achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-                 if (autoClickerValue > 0) {
-                     autoClickerInterval = setInterval(autoClick, 1000);
+                  achievementCount = savedData.achievementCount || 0;
+                  achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+                  if (autoClickerValue > 0) {
+                      autoClickerInterval = setInterval(autoClick, 1000);
                  }
                   if (savedData.bonusActive) {
-                      bonusActive = true;
-                      clickValue *= 2;
-                     autoClickerValue *= 2;
+                    bonusActive = true;
+                     clickValue *= 2;
+                      autoClickerValue *= 2;
                     bonusTimeout = setTimeout(() => {
                         bonusActive = false;
                         clickValue /= 2;
                         autoClickerValue /= 2;
-                    }, 10000);
-                  }
-                updateDisplay();
-           }
-        });
-    }
+                   }, 10000);
+               }
+              updateDisplay();
+              }
+         });
+     }
+
     // Сохранение данных при изменении прогресса
     function handleSave() {
         saveData();
@@ -288,11 +286,11 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('click', handleSave);
     window.addEventListener('keydown', handleSave);
     clickButton.addEventListener('click', function() {
-        clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
-        updateDisplay();
-        checkAchievements();
-        saveData();
-        updatePlayerScore(); // Сохраняем данные игрока
+         clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
+         updateDisplay();
+         checkAchievements();
+         saveData();
+         updatePlayerScore(); // Сохраняем данные игрока
     });
 
     upgradeClickLevelButton.addEventListener('click', function() {
@@ -353,14 +351,14 @@ document.addEventListener('DOMContentLoaded', function() {
             updateDisplay();
             displayMessage('Перерождение!');
             saveData();
-            updatePlayerScore(); // Сохраняем данные игрока
+             updatePlayerScore(); // Сохраняем данные игрока
         } else {
             displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
         }
     });
 
     resetButton.addEventListener('click', function() {
-        resetGame();
+       resetGame();
     });
 
     function updatePlayerScore() {
@@ -378,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 playersRating.push({ name: playerName, score: playerScore });
             }
             saveRating();
-            updateRatingDisplay();
+             updateRatingDisplay();
         }
     }
 
@@ -394,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (tab === 'rating') {
                 gameContent.style.display = 'none';
                 ratingContent.style.display = 'block';
-                updateRatingDisplay();
+                 updateRatingDisplay();
             } else {
                 gameContent.style.display = 'block';
                 ratingContent.style.display = 'none';
