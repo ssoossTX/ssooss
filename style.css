@@ -39,8 +39,9 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 1; /* что бы контейнер был на переднем плане */
+    max-width: 400px; /* Максимальная ширина контейнера */
+      /* margin-left: 20%;  Убрано смещение контейнера влево*/
 }
-
 
 h1 {
     margin-bottom: 20px;
@@ -139,4 +140,4 @@ h1 {
 
 #reset-button:hover {
     background-color: rgba(211, 47, 47, 0.8);  /* Полупрозрачный темно красный*/
-        }
+    }
