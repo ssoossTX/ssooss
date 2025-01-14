@@ -54,7 +54,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
 }
-    
+
 .upgrade-item button {
     background-color: #2196F3;
     color: white;
@@ -64,12 +64,53 @@ h1 {
     cursor: pointer;
     transition: background-color 0.3s;
 }
-    
+
 .upgrade-item button:hover {
     background-color: #1976D2;
 }
-    
+
 #message {
-        margin-top: 10px;
-        font-weight: bold;
-    }
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#prestige-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+#prestige-button:hover {
+    background-color: #e68a00;
+}
+
+.prestige-level {
+    margin-top: 10px;
+}
+
+#achievements {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#reset-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+#reset-button:hover {
+    background-color: #d32f2f;
+}
