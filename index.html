@@ -8,15 +8,17 @@
 </head>
 <body>
     <div class="container">
-    <nav class="menu">
-        <button class="menu-toggle" aria-label="Открыть меню">☰</button>
-        <ul class="menu-items">
-            <li><button data-tab="shop">Магазин</button></li>
-            <li><button data-tab="profile">Профиль</button></li>
-             <li><button data-tab="settings">Настройки</button></li>
-        </ul>
-     </nav>
+        <nav class="menu">
+            <button class="menu-toggle" aria-label="Открыть меню">☰</button>
+            <ul class="menu-items">
+                <li><button data-tab="shop">Магазин</button></li>
+                <li><button data-tab="profile">Профиль</button></li>
+                <li><button data-tab="rating">Рейтинг</button></li>  <!-- Добавлено меню рейтинга -->
+                <li><button data-tab="settings">Настройки</button></li>
+            </ul>
+        </nav>
         <div class="content">
+           <div id="game-content">
             <h1>Кликер</h1>
             <div class="counter">
                 <p id="click-count">0</p>
@@ -32,20 +34,25 @@
                 <div class="upgrade-item" id="upgrade-auto">
                     <p>Автокликер</p>
                     <p>Цена: <span id="auto-upgrade-cost">50</span></p>
-                     <button class="buy-upgrade" data-upgrade="auto">Купить</button>
+                    <button class="buy-upgrade" data-upgrade="auto">Купить</button>
                 </div>
                  <div class="upgrade-item" id="upgrade-click-level">
                     <p>Уровень улучшения клика: <span id="click-upgrade-level-display">1</span></p>
                     <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
                     <button class="buy-upgrade" data-upgrade="level">Купить уровень</button>
                  </div>
-             <div class="message" id="message"></div>
+                <div class="message" id="message"></div>
             </div>
             <button id="prestige-button" aria-label="Переродиться для получения бонуса">Переродиться</button>
             <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
-             <div id="achievements">Достижения: 0</div>
-             <button id="reset-button" aria-label="Сбросить прогресс игры">Сбросить прогресс</button>
-         </div>
+            <div id="achievements">Достижения: 0</div>
+            <button id="reset-button" aria-label="Сбросить прогресс игры">Сбросить прогресс</button>
+           </div>
+            <div id="rating-content" style="display: none;"> <!-- Скрытое содержимое для рейтинга -->
+                <h2>Рейтинг игроков</h2>
+                <ul id="rating-list"></ul> <!-- Список для отображения рейтинга -->
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
