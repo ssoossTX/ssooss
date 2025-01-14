@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetButton = document.getElementById('reset-button');
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
+        if(tWebApp) {
+            tWebApp.ready();
+        }
 
     function updateDisplay() {
         clickCountDisplay.textContent = Math.round(clickCount);
@@ -41,10 +44,111 @@ document.addEventListener('DOMContentLoaded', function() {
         prestigeLevelDisplay.textContent = prestigeLevel;
     }
 
-    // ... (остальные функции — autoClick, displayMessage, startRandomEvent, checkAchievements, addAchievement, resetGame — без изменений) ...
+    function displayMessage(msg, color = 'green') {
+        messageDisplay.textContent = msg;
+        messageDisplay.style.color = color;
+        setTimeout(() => {
+            messageDisplay.textContent = '';
+        }, 3000);
+    }
 
+    function autoClick() {
+        clickCount += (autoClickerValue * clickUpgradeLevel) * prestigeMultiplier;
+        updateDisplay();
+    }
+
+    function startRandomEvent() {
+        const eventType = Math.random() < 0.5 ? 'bonus' : 'penalty';
+
+         if (eventType === 'bonus') {
+            bonusActive = true;
+            clickValue *= 2;
+            autoClickerValue *= 2;
+            displayMessage('Случайный бонус: удвоенный урон!', 'blue');
+            updateDisplay();
+
+
+            clearTimeout(bonusTimeout);
+            bonusTimeout = setTimeout(() => {
+                bonusActive = false;
+                clickValue /= 2;
+                autoClickerValue /= 2;
+                displayMessage('Действие бонуса закончилось!');
+                 updateDisplay();
+            }, 10000);
+
+        } else {
+            displayMessage('Случайный штраф: клики уменьшены в 2 раза!', 'red');
+           clickValue /= 2;
+            updateDisplay();
+            setTimeout(() => {
+                clickValue *=2;
+                displayMessage('Штраф закончился!');
+                updateDisplay();
+            }, 10000)
+        }
+
+        randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (120000 - 60000) + 60000);
+    }
+
+    function checkAchievements() {
+      if(clickCount >= 100000 && !achievements.includes('100000 clicks')) {
+        addAchievement('100000 clicks');
+        achievementCount++;
+      }
+
+      if(clickCount >= 1000000 && !achievements.includes('1000000 clicks')) {
+        addAchievement('1000000 clicks');
+        achievementCount++;
+      }
+
+        if(prestigeLevel >= 1 && !achievements.includes('first prestige')) {
+            addAchievement('first prestige');
+             achievementCount++;
+        }
+      
+        if(autoClickerValue >= 5 && !achievements.includes('5 autoClicker')) {
+          addAchievement('5 autoClicker');
+          achievementCount++;
+        }
+    }
+
+    function addAchievement(achievement) {
+        achievements.push(achievement);
+        achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+         saveData();
+    }
+
+      function resetGame() {
+        clickCount = 0;
+        clickValue = 1;
+        autoClickerValue = 0;
+        clickUpgradeCost = 10;
+        autoUpgradeCost = 50;
+        clickUpgradeLevel = 1;
+        clickUpgradeLevelCost = 100;
+        prestigeLevel = 0;
+        prestigeMultiplier = 1;
+          bonusActive = false;
+          achievements = [];
+        achievementCount = 0;
+
+        clearInterval(autoClickerInterval);
+        autoClickerInterval = null;
+        clearTimeout(bonusTimeout);
+           clearTimeout(randomEventTimeout);
+           randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (120000 - 60000) + 60000);
+
+        updateDisplay();
+         achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+        if(tWebApp) {
+            tWebApp.CloudStorage.removeItem('clickerData');
+        }
+        displayMessage('Прогресс сброшен!', 'orange');
+     }
+    
     function saveData() {
-        let data = {
+      let data = {
             clickCount: clickCount,
             clickValue: clickValue,
             autoClickerValue: autoClickerValue,
@@ -56,15 +160,18 @@ document.addEventListener('DOMContentLoaded', function() {
             prestigeMultiplier: prestigeMultiplier,
             achievements: achievements,
             achievementCount: achievementCount,
-            bonusActive: bonusActive
+             bonusActive: bonusActive
         };
-        if (tWebApp) {
-            tWebApp.CloudStorage.setItem('clickerData', JSON.stringify(data));
-        }
+      if (tWebApp) {
+          tWebApp.CloudStorage.setItem('clickerData', JSON.stringify(data));
+      } else {
+           localStorage.setItem('clickerData', JSON.stringify(data));
+      }
     }
 
-    function loadGame() {
-        if (tWebApp) {
+
+     function loadGame() {
+       if (tWebApp) {
             tWebApp.CloudStorage.getItem('clickerData', function(err, value) {
                 if (err) {
                     console.error("Ошибка загрузки данных:", err);
@@ -83,27 +190,53 @@ document.addEventListener('DOMContentLoaded', function() {
                     prestigeMultiplier = savedData.prestigeMultiplier || 1;
                     achievements = savedData.achievements || [];
                     achievementCount = savedData.achievementCount || 0;
-                    achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+                     achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
                     if (autoClickerValue > 0) {
                         autoClickerInterval = setInterval(autoClick, 1000);
                     }
-                    if (savedData.bonusActive) {
-                        bonusActive = true;
-                        clickValue *= 2;
-                        autoClickerValue *= 2;
-                        bonusTimeout = setTimeout(() => {
-                            bonusActive = false;
-                            clickValue /= 2;
-                            autoClickerValue /= 2;
-                        }, 10000);
-                    }
+                     if (savedData.bonusActive) {
+                            bonusActive = true;
+                            clickValue *= 2;
+                            autoClickerValue *= 2;
+                            bonusTimeout = setTimeout(() => {
+                                bonusActive = false;
+                                clickValue /= 2;
+                                autoClickerValue /= 2;
+                            }, 10000);
+                        }
                     updateDisplay();
                 }
             });
-        }
-    }
-
-
+        } else if (localStorage.getItem('clickerData')) {
+                let savedData = JSON.parse(localStorage.getItem('clickerData'));
+                 clickCount = savedData.clickCount || 0;
+                clickValue = savedData.clickValue || 1;
+                autoClickerValue = savedData.autoClickerValue || 0;
+                clickUpgradeCost = savedData.clickUpgradeCost || 10;
+                autoUpgradeCost = savedData.autoUpgradeCost || 50;
+                clickUpgradeLevel = savedData.clickUpgradeLevel || 1;
+                clickUpgradeLevelCost = savedData.clickUpgradeLevelCost || 100;
+                prestigeLevel = savedData.prestigeLevel || 0;
+                prestigeMultiplier = savedData.prestigeMultiplier || 1;
+                achievements = savedData.achievements || [];
+                 achievementCount = savedData.achievementCount || 0;
+                  achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+                  if (autoClickerValue > 0) {
+                  autoClickerInterval = setInterval(autoClick, 1000);
+               }
+                if (savedData.bonusActive) {
+                            bonusActive = true;
+                            clickValue *= 2;
+                            autoClickerValue *= 2;
+                            bonusTimeout = setTimeout(() => {
+                                bonusActive = false;
+                                clickValue /= 2;
+                                autoClickerValue /= 2;
+                            }, 10000);
+                        }
+                updateDisplay();
+         }
+      }
     window.addEventListener('beforeunload', saveData);
 
     clickButton.addEventListener('click', function() {
@@ -173,13 +306,14 @@ document.addEventListener('DOMContentLoaded', function() {
          displayMessage('Недостаточно кликов! (нужно 10000)','red');
       }
     });
-    
-      resetButton.addEventListener('click', function() {
+
+    resetButton.addEventListener('click', function() {
          resetGame();
     })
-    
-    loadGame();
 
+
+    loadGame();
     startRandomEvent();
     checkAchievements();
 });
+                   
