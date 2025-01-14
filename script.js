@@ -106,8 +106,78 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addEventListener('beforeunload', saveData);
 
-    // ... (остальные обработчики событий — clickButton, upgradeClickLevelButton, upgradeClickButton, upgradeAutoButton, prestigeButton, resetButton — без изменений) ...
+    clickButton.addEventListener('click', function() {
+        clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
+        updateDisplay();
+        checkAchievements();
+    });
 
+    upgradeClickLevelButton.addEventListener('click', function() {
+        if (clickCount >= clickUpgradeLevelCost) {
+            clickCount -= clickUpgradeLevelCost;
+            clickUpgradeLevel++;
+            clickUpgradeCost = 10;
+            clickCount = 0;
+            clickValue = 1;
+            clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
+            updateDisplay();
+            displayMessage('Уровень улучшения клика повышен!');
+        } else {
+            displayMessage('Недостаточно кликов!', 'red');
+        }
+    });
+
+    upgradeClickButton.addEventListener('click', function() {
+        if (clickCount >= clickUpgradeCost) {
+            clickCount -= clickUpgradeCost;
+            clickValue++;
+            clickUpgradeCost = Math.round(clickUpgradeCost * 1.8);
+            updateDisplay();
+            displayMessage('Улучшение клика приобретено!');
+        } else {
+            displayMessage('Недостаточно кликов!', 'red');
+        }
+    });
+
+    upgradeAutoButton.addEventListener('click', function() {
+        if (clickCount >= autoUpgradeCost) {
+            clickCount -= autoUpgradeCost;
+            autoClickerValue++;
+            if (!autoClickerInterval) {
+                autoClickerInterval = setInterval(autoClick, 1000);
+            }
+            autoUpgradeCost = Math.round(autoUpgradeCost * 2.2);
+            updateDisplay();
+            displayMessage('Автокликер приобретен!');
+        } else {
+            displayMessage('Недостаточно кликов!', 'red');
+        }
+    });
+
+    prestigeButton.addEventListener('click', function(){
+      if(clickCount >= 10000) {
+         prestigeLevel++;
+        prestigeMultiplier *= 2;
+         clickCount = 0;
+          clickValue = 1;
+        autoClickerValue = 0;
+        clickUpgradeCost = 10;
+        autoUpgradeCost = 50;
+         clickUpgradeLevel = 1;
+         clickUpgradeLevelCost = 100;
+         clearInterval(autoClickerInterval);
+          autoClickerInterval = null;
+          updateDisplay();
+          displayMessage('Перерождение!');
+        } else {
+         displayMessage('Недостаточно кликов! (нужно 10000)','red');
+      }
+    });
+    
+      resetButton.addEventListener('click', function() {
+         resetGame();
+    })
+    
     loadGame();
 
     startRandomEvent();
