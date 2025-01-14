@@ -27,8 +27,7 @@ body {
     background-image: url('IMG_20250114_111552_356.jpg'); /* Замените на путь к вашему изображению */
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;
-    filter: blur(2px); /* Размытие фона */
+    background-position: center
 }
 
 .container {
