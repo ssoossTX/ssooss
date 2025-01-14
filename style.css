@@ -20,26 +20,27 @@ button, input {
 body {
     font-family: sans-serif;
     display: flex;
-     justify-content: center; /* Выравниваем элементы по центру */
+    justify-content: center; /* Выравниваем элементы по центру */
     align-items: center;
     height: 100vh;
     margin: 0;
     background-image: url('IMG_20250114_111552_356.jpg'); /* Замените на путь к вашему изображению */
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center
+    background-position: center;
+    filter: blur(2px); /* Размытие фона */
 }
 
 .container {
     text-align: center;
-   background-color: rgba(255, 255, 255, 0.6); /* полупрозрачный белый */
+    background-color: transparent; /* Фон теперь прозрачный */
     padding: 20px; /* Меньше отступы */
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 1; /* что бы контейнер был на переднем плане */
     max-width: 400px; /* Максимальная ширина контейнера */
-     margin-left: 20%; /* Смещение контейнера влево*/
+    margin-left: 20%; /* Смещение контейнера влево*/
 }
 
 
@@ -140,4 +141,4 @@ h1 {
 
 #reset-button:hover {
     background-color: rgba(211, 47, 47, 0.8);  /* Полупрозрачный темно красный*/
-    }
+        }
