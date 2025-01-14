@@ -1,56 +1,25 @@
-/* Reset CSS */
-body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, form, button, input, a {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    outline: 0;
-    box-shadow: none;
-    list-style: none;
-    text-decoration: none;
-}
-
-button:focus, input:focus {
-    outline: none;
-}
-
-button, input {
-    border: none;
-}
-
 body {
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0; /* Added placeholder background color */
-}
-
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('IMG_20250114_111552_356.jpg'); /* Замените на путь к вашему изображению */
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: -1; /* Помещаем фон за контент */
-    filter: blur(2px);
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-image: url('IMG_20250114_111552_356.jpg'); /* Замените это на путь к вашему фоновому изображению */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: white;
 }
 
 .container {
     text-align: center;
-    background-color: transparent; /* Контейнер прозрачный */
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон для лучшей читаемости текста */
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 1;
-    max-width: 400px;
+    max-width: 400px; /* Ограничение ширины для удобства */
+    width: 90%; /* Занимает 90% ширины контейнера */
 }
 
 h1 {
@@ -58,99 +27,84 @@ h1 {
 }
 
 .counter {
-    font-size: 4em;
+    font-size: 3em;
     margin-bottom: 20px;
 }
 
-#click-button {
-    padding: 15px 30px;
-    font-size: 1.2em;
-    background-color: #4caf50; /* Зеленый непрозрачный */
-    color: white;
+button {
+    padding: 10px 20px;
+    font-size: 1em;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    margin-bottom: 10px;
+    border-radius: 5px;
 }
 
-#click-button:hover {
-    background-color: #367c39; /* Темно-зеленый непрозрачный */
+#click-button {
+  background-color: green;
+  color: white;
 }
 
 .upgrades {
-    margin-top: 30px;
+    margin-top: 20px;
     text-align: left;
 }
 
 .upgrade-item {
-    background-color: #f9f9f9; /* Непрозрачный светло-серый */
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
+    color: black;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.upgrade-item button {
-    background-color: #2196F3; /* Синий непрозрачный */
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.upgrade-item p {
+  margin: 0;
 }
 
-.upgrade-item button:hover {
-    background-color: #1976D2; /* Темно-синий непрозрачный */
-}
 
-#message {
-    margin-top: 10px;
-    font-weight: bold;
-   color: black; /* Непрозрачный черный */
+.buy-upgrade {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.buy-upgrade:hover{
+  background-color: #0056b3;
 }
 
 #prestige-button {
-    padding: 10px 20px;
-    font-size: 1em;
-    background-color: #ff9800; /* Оранжевый непрозрачный */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s;
-}
-
-#prestige-button:hover {
-    background-color: #e68a00; /* Темно-оранжевый непрозрачный */
-}
-
-.prestige-level {
-    margin-top: 10px;
-   color: black; /* Непрозрачный черный */
-}
-
-#achievements {
-    margin-top: 10px;
-    font-weight: bold;
-   color: black; /* Непрозрачный черный */
+  background-color: orange;
+  color: white;
 }
 
 #reset-button {
-    padding: 10px 20px;
-    font-size: 1em;
-    background-color: #f44336; /* Красный непрозрачный */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s;
+  background-color: red;
+  color: white;
 }
 
-#reset-button:hover {
-    background-color: #d32f2f; /* Темно-красный непрозрачный */
+.message{
+    text-align: center;
+    color: white;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Добавим медиа запрос для адаптивности на мобильных устройствах */
+@media (max-width: 600px) {
+  .container {
+      width: 95%; /* Немного шире на мобильных устройствах */
+  }
+  .upgrade-item{
+      flex-direction: column;
+      align-items: flex-start;
+  }
+  .upgrade-item > p:last-of-type{
+     margin-bottom: 10px;
+  }
     }
