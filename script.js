@@ -32,8 +32,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
         if(tWebApp) {
-            tWebApp.ready();
-        }
+             tWebApp.onEvent('web_app_ready', function() {
+                  loadGame();
+                 startRandomEvent();
+                checkAchievements();
+        });
+       }
 
     function updateDisplay() {
         clickCountDisplay.textContent = Math.round(clickCount);
@@ -55,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function autoClick() {
         clickCount += (autoClickerValue * clickUpgradeLevel) * prestigeMultiplier;
         updateDisplay();
+        saveData(); // Сохраняем при каждом автоклике
     }
 
     function startRandomEvent() {
@@ -66,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             autoClickerValue *= 2;
             displayMessage('Случайный бонус: удвоенный урон!', 'blue');
             updateDisplay();
+            saveData(); // Сохраняем при активации бонуса
 
 
             clearTimeout(bonusTimeout);
@@ -75,16 +81,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 autoClickerValue /= 2;
                 displayMessage('Действие бонуса закончилось!');
                  updateDisplay();
+                  saveData(); // Сохраняем при окончании бонуса
             }, 10000);
 
         } else {
             displayMessage('Случайный штраф: клики уменьшены в 2 раза!', 'red');
            clickValue /= 2;
             updateDisplay();
+              saveData(); // Сохраняем при активации штрафа
             setTimeout(() => {
                 clickValue *=2;
                 displayMessage('Штраф закончился!');
                 updateDisplay();
+                   saveData(); // Сохраняем при окончании штрафа
             }, 10000)
         }
 
@@ -145,6 +154,8 @@ document.addEventListener('DOMContentLoaded', function() {
             tWebApp.CloudStorage.removeItem('clickerData');
         }
         displayMessage('Прогресс сброшен!', 'orange');
+      saveData(); // Сохраняем после сброса
+
      }
     
     function saveData() {
@@ -237,12 +248,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateDisplay();
          }
       }
-    window.addEventListener('beforeunload', saveData);
 
+
+    // Сохранение данных при изменении прогресса
+      function handleSave() {
+        saveData();
+     }
+
+       window.addEventListener('click', handleSave);
+         window.addEventListener('keydown', handleSave);
     clickButton.addEventListener('click', function() {
         clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
         updateDisplay();
-        checkAchievements();
+         checkAchievements();
+         saveData(); // Сохраняем после клика
     });
 
     upgradeClickLevelButton.addEventListener('click', function() {
@@ -255,6 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
             updateDisplay();
             displayMessage('Уровень улучшения клика повышен!');
+            saveData(); // Сохраняем после повышения уровня
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
@@ -267,6 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clickUpgradeCost = Math.round(clickUpgradeCost * 1.8);
             updateDisplay();
             displayMessage('Улучшение клика приобретено!');
+             saveData(); // Сохраняем после покупки улучшения клика
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
@@ -282,6 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
             autoUpgradeCost = Math.round(autoUpgradeCost * 2.2);
             updateDisplay();
             displayMessage('Автокликер приобретен!');
+              saveData();  // Сохраняем после покупки автокликера
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
@@ -302,9 +324,10 @@ document.addEventListener('DOMContentLoaded', function() {
           autoClickerInterval = null;
           updateDisplay();
           displayMessage('Перерождение!');
+           saveData(); // Сохраняем после перерождения
         } else {
          displayMessage('Недостаточно кликов! (нужно 10000)','red');
-      }
+        }
     });
 
     resetButton.addEventListener('click', function() {
@@ -312,8 +335,11 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
 
-    loadGame();
-    startRandomEvent();
-    checkAchievements();
+
+    if(!tWebApp){
+     loadGame();
+     startRandomEvent();
+     checkAchievements();
+    }
+
 });
-                   
