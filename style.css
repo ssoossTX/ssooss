@@ -24,12 +24,24 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    background-color: #f0f0f0; /* Запасной цвет фона */
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-image: url('IMG_20250114_111552_356.jpg'); /* Замените на путь к вашему изображению */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    z-index: -1; /* Помещаем фон за контент */
     filter: blur(2px);
 }
+
 
 .container {
     text-align: center;
