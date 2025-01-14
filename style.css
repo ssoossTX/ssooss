@@ -1,25 +1,26 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-image: url('IMG_20250114_111552_356.jpg'); /* Замените это на путь к вашему фоновому изображению */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  color: white;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('https://i.imgur.com/zYtYw71.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
 }
 
 .container {
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон для лучшей читаемости текста */
+    background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
-    max-width: 400px; /* Ограничение ширины для удобства */
-    width: 90%; /* Занимает 90% ширины контейнера */
+    max-width: 400px;
+    width: 90%;
+    position: relative; /* Добавлено для позиционирования меню */
 }
 
 h1 {
@@ -41,8 +42,8 @@ button {
 }
 
 #click-button {
-  background-color: green;
-  color: white;
+    background-color: green;
+    color: white;
 }
 
 .upgrades {
@@ -60,51 +61,105 @@ button {
     justify-content: space-between;
     align-items: center;
 }
-
 .upgrade-item p {
-  margin: 0;
+   margin: 0;
 }
 
 
 .buy-upgrade {
-  background-color: #007bff;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
 }
-.buy-upgrade:hover{
-  background-color: #0056b3;
+
+.buy-upgrade:hover {
+    background-color: #0056b3;
 }
 
 #prestige-button {
-  background-color: orange;
-  color: white;
+    background-color: orange;
+    color: white;
 }
 
 #reset-button {
-  background-color: red;
-  color: white;
+    background-color: red;
+    color: white;
 }
 
-.message{
+.message {
     text-align: center;
     color: white;
     margin-top: 10px;
     font-weight: bold;
 }
 
+/* Menu Styles */
+.menu {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+}
+
+.menu-toggle {
+    font-size: 1.5em;
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    display: inline-block;
+}
+
+.menu-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    display: none;
+}
+
+.menu-items li button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background-color 0.3s ease;
+}
+.menu-items li:last-child button{
+  border-bottom: none;
+}
+.menu-items li button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-items.active {
+  display: block;
+}
+
+.content{
+    padding-top: 30px; /* Добавил отступ, чтобы контент не перекрывал меню */
+}
 /* Добавим медиа запрос для адаптивности на мобильных устройствах */
 @media (max-width: 600px) {
-  .container {
-      width: 95%; /* Немного шире на мобильных устройствах */
-  }
-  .upgrade-item{
-      flex-direction: column;
-      align-items: flex-start;
-  }
-  .upgrade-item > p:last-of-type{
-     margin-bottom: 10px;
-  }
+    .container {
+        width: 95%;
     }
+    .upgrade-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+   .upgrade-item > p:last-of-type{
+      margin-bottom: 10px;
+    }
+}
