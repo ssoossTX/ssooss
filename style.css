@@ -1,14 +1,15 @@
 body {
+body {
     font-family: sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-image: url('IMG_20250114_111552_356.jpg'); /* Замените на путь к вашему изображению */
-    background-size: cover; /* Растягивает изображение на весь фон */
-    background-repeat: no-repeat; /* Запрещает повторение изображения */
-     background-position: center;
+    background-image: url('IMG_20250114_111552_356.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .container {
