@@ -20,7 +20,7 @@ button, input {
 body {
     font-family: sans-serif;
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Выравниваем элементы по центру */
     align-items: center;
     height: 100vh;
     margin: 0;
@@ -28,15 +28,21 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    /* Размытие фона (необязательно) */
+  /*  filter: blur(2px);*/
 }
+
 
 .container {
     text-align: center;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.8); /* полупрозрачный белый */
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     position: relative;
+     z-index: 1; /* что бы контейнер был на переднем плане */
 }
+
 
 h1 {
     margin-bottom: 20px;
@@ -50,7 +56,7 @@ h1 {
 #click-button {
     padding: 15px 30px;
     font-size: 1.2em;
-    background-color: #4caf50;
+    background-color: rgba(76, 175, 80, 0.7); /* Полупрозрачный зеленый */
     color: white;
     border: none;
     border-radius: 5px;
@@ -59,7 +65,7 @@ h1 {
 }
 
 #click-button:hover {
-    background-color: #367c39;
+    background-color: rgba(54, 124, 57, 0.9);  /* Полупрозрачный темно зеленый */
 }
 
 .upgrades {
@@ -68,7 +74,7 @@ h1 {
 }
 
 .upgrade-item {
-    background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.8); /* Полупрозрачный светло серый */
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -78,7 +84,7 @@ h1 {
 }
 
 .upgrade-item button {
-    background-color: #2196F3;
+    background-color: rgba(33, 150, 243, 0.7);/* Полупрозрачный синий */
     color: white;
     border: none;
     padding: 8px 15px;
@@ -88,7 +94,7 @@ h1 {
 }
 
 .upgrade-item button:hover {
-    background-color: #1976D2;
+    background-color: rgba(25, 118, 210, 0.9); /* Полупрозрачный темно синий */
 }
 
 #message {
@@ -99,7 +105,7 @@ h1 {
 #prestige-button {
     padding: 10px 20px;
     font-size: 1em;
-    background-color: #ff9800;
+    background-color: rgba(255, 152, 0, 0.7); /* Полупрозрачный оранжевый */
     color: white;
     border: none;
     border-radius: 5px;
@@ -109,7 +115,7 @@ h1 {
 }
 
 #prestige-button:hover {
-    background-color: #e68a00;
+    background-color: rgba(230, 138, 0, 0.9); /* Полупрозрачный темно оранжевый */
 }
 
 .prestige-level {
@@ -124,7 +130,7 @@ h1 {
 #reset-button {
     padding: 10px 20px;
     font-size: 1em;
-    background-color: #f44336;
+    background-color: rgba(244, 67, 54, 0.7);/* Полупрозрачный красный */
     color: white;
     border: none;
     border-radius: 5px;
@@ -134,5 +140,5 @@ h1 {
 }
 
 #reset-button:hover {
-    background-color: #d32f2f;
-    }
+    background-color: rgba(211, 47, 47, 0.9);  /* Полупрозрачный темно красный*/
+                           }
