@@ -30,12 +30,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const achievementsDisplay = document.getElementById('achievements');
     const resetButton = document.getElementById('reset-button');
 
+     // Рейтинг
+    const ratingContent = document.getElementById('rating-content');
+     const gameContent = document.getElementById('game-content');
+    const ratingList = document.getElementById('rating-list');
+    let playersRating = [];
+
+    //menu
+    const menuToggle = document.querySelector('.menu-toggle');
+    const menuItems = document.querySelector('.menu-items');
+
     const tWebApp = window.Telegram && window.Telegram.WebApp;
     if (tWebApp) {
         tWebApp.onEvent('web_app_ready', function() {
             loadGame();
             startRandomEvent();
             checkAchievements();
+            loadRating();
         });
     }
 
@@ -120,6 +131,43 @@ document.addEventListener('DOMContentLoaded', function() {
         saveData();
     }
 
+     function saveRating() {
+        if(tWebApp){
+              tWebApp.CloudStorage.setItem('playersRating',JSON.stringify(playersRating))
+         }
+         else {
+              localStorage.setItem('playersRating', JSON.stringify(playersRating));
+          }
+       }
+      function loadRating(){
+        if (tWebApp) {
+            tWebApp.CloudStorage.getItem('playersRating', function(err, value) {
+                 if (err) {
+                    console.error("Ошибка загрузки рейтинга:", err);
+                   return;
+                }
+                  if(value){
+                    playersRating = JSON.parse(value);
+                    updateRatingDisplay();
+                  }
+             });
+        }
+        else if (localStorage.getItem('playersRating')) {
+              playersRating = JSON.parse(localStorage.getItem('playersRating')) || [];
+               updateRatingDisplay();
+        }
+
+     }
+
+     function updateRatingDisplay() {
+         ratingList.innerHTML = '';
+          playersRating.sort((a, b) => b.score - a.score);
+         playersRating.forEach((player, index) => {
+             const listItem = document.createElement('li');
+             listItem.textContent = `${index + 1}. Игрок: ${player.name}, Очки: ${player.score}`;
+             ratingList.appendChild(listItem);
+         });
+     }
     function resetGame() {
         clickCount = 0;
         clickValue = 1;
@@ -147,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         displayMessage('Прогресс сброшен!', 'orange');
         saveData();
-
+         saveRating();
     }
 
     function saveData() {
@@ -173,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    function loadGame() {
+   function loadGame() {
         if (tWebApp) {
             tWebApp.CloudStorage.getItem('clickerData', function(err, value) {
                 if (err) {
@@ -192,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     prestigeLevel = savedData.prestigeLevel || 0;
                     prestigeMultiplier = savedData.prestigeMultiplier || 1;
                     achievements = savedData.achievements || [];
-                     achievementCount = savedData.achievementCount || 0;
+                    achievementCount = savedData.achievementCount || 0;
                     achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
                     if (autoClickerValue > 0) {
                         autoClickerInterval = setInterval(autoClick, 1000);
@@ -221,9 +269,9 @@ document.addEventListener('DOMContentLoaded', function() {
             clickUpgradeLevelCost = savedData.clickUpgradeLevelCost || 100;
             prestigeLevel = savedData.prestigeLevel || 0;
             prestigeMultiplier = savedData.prestigeMultiplier || 1;
-             achievements = savedData.achievements || [];
-               achievementCount = savedData.achievementCount || 0;
-              achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+            achievements = savedData.achievements || [];
+             achievementCount = savedData.achievementCount || 0;
+             achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
             if (autoClickerValue > 0) {
                 autoClickerInterval = setInterval(autoClick, 1000);
             }
@@ -242,15 +290,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // Сохранение данных при изменении прогресса
     function handleSave() {
-       saveData();
+        saveData();
     }
     window.addEventListener('click', handleSave);
     window.addEventListener('keydown', handleSave);
     clickButton.addEventListener('click', function() {
-         clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
+        clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
         updateDisplay();
         checkAchievements();
         saveData();
+        updatePlayerScore(); // Сохраняем данные игрока
     });
 
     upgradeClickLevelButton.addEventListener('click', function() {
@@ -311,18 +360,58 @@ document.addEventListener('DOMContentLoaded', function() {
             updateDisplay();
             displayMessage('Перерождение!');
             saveData();
+             updatePlayerScore(); // Сохраняем данные игрока
         } else {
             displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
         }
     });
 
     resetButton.addEventListener('click', function() {
-        resetGame();
+         resetGame();
     });
+
+      function updatePlayerScore() {
+        const playerName = prompt('Введите ваше имя:','Игрок');
+        if (playerName) {
+            const playerScore = clickCount + (prestigeLevel * 10000);
+          // Проверяем есть ли игрок
+          const existingPlayerIndex = playersRating.findIndex(player => player.name === playerName);
+         if (existingPlayerIndex > -1) {
+            playersRating[existingPlayerIndex].score = playerScore;
+          } else {
+           playersRating.push({ name: playerName, score: playerScore });
+           }
+            saveRating();
+            updateRatingDisplay();
+         }
+      }
+
+      // Menu logic
+    menuToggle.addEventListener('click', () => {
+        menuItems.classList.toggle('active');
+    });
+
+    // Логика для перехода между вкладками
+    menuItems.addEventListener('click', (e) => {
+        if(e.target.tagName === 'BUTTON'){
+             const tab = e.target.dataset.tab;
+              if (tab === 'rating') {
+                   gameContent.style.display = 'none';
+                ratingContent.style.display = 'block';
+                updateRatingDisplay();
+              } else{
+                   gameContent.style.display = 'block';
+                ratingContent.style.display = 'none';
+              }
+              menuItems.classList.remove('active');
+        }
+    });
+
 
     if (!tWebApp) {
         loadGame();
         startRandomEvent();
         checkAchievements();
+        loadRating();
     }
 });
