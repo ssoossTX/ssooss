@@ -1,5 +1,14 @@
 body {
-    background-color: red
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url('IMG_20250114_111552_356.jpg'); /* Убедитесь, что это имя файла правильное*/
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .container {
