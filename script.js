@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
      }
     
     function autoClick(){
-        clickCount += Math.round(autoClickerValue * clickUpgradeLevel);
+        clickCount = clickCount + (autoClickerValue * clickUpgradeLevel);
         updateDisplay();
     }
 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
 
     clickButton.addEventListener('click', function() {
-        clickCount += Math.round(clickValue * clickUpgradeLevel);
+        clickCount = clickCount + (clickValue * clickUpgradeLevel);
         updateDisplay();
     });
     
