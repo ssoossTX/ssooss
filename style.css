@@ -32,7 +32,7 @@ body {
 
 .container {
     text-align: center;
-   background-color: rgba(255, 255, 255, 0); /* полупрозрачный белый */
+   background-color: rgba(255, 255, 255, 0.6); /* полупрозрачный белый */
     padding: 20px; /* Меньше отступы */
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
