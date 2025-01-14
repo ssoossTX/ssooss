@@ -1,3 +1,22 @@
+/* Reset CSS */
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, form, button, input, a {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    list-style: none;
+    text-decoration: none;
+}
+
+button:focus, input:focus {
+    outline: none;
+}
+
+button, input {
+    border: none;
+}
+
 body {
     font-family: sans-serif;
     display: flex;
@@ -5,7 +24,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-image: url('IMG_20250114_111552_356.jpg'); /* Убедитесь, что это имя файла правильное*/
+    background-image: url('background.jpg'); /* Замените на путь к вашему изображению */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -116,4 +135,4 @@ h1 {
 
 #reset-button:hover {
     background-color: #d32f2f;
-}
+    }
