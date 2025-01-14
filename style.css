@@ -20,7 +20,7 @@ button, input {
 body {
     font-family: sans-serif;
     display: flex;
-    justify-content: center; /* Выравниваем элементы по центру */
+    justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
@@ -28,19 +28,18 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    filter: blur(2px); /* Размытие фона */
+    filter: blur(2px);
 }
 
 .container {
     text-align: center;
-    background-color: transparent; /* Фон теперь прозрачный */
-    padding: 20px; /* Меньше отступы */
+    background-color: transparent; /* Контейнер прозрачный */
+    padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
-    z-index: 1; /* что бы контейнер был на переднем плане */
-    max-width: 400px; /* Максимальная ширина контейнера */
-      /* margin-left: 20%;  Убрано смещение контейнера влево*/
+    z-index: 1;
+    max-width: 400px;
 }
 
 h1 {
@@ -55,7 +54,7 @@ h1 {
 #click-button {
     padding: 15px 30px;
     font-size: 1.2em;
-    background-color: rgba(76, 175, 80, 0.6); /* Полупрозрачный зеленый */
+    background-color: #4caf50; /* Зеленый непрозрачный */
     color: white;
     border: none;
     border-radius: 5px;
@@ -64,7 +63,7 @@ h1 {
 }
 
 #click-button:hover {
-    background-color: rgba(54, 124, 57, 0.8);  /* Полупрозрачный темно зеленый */
+    background-color: #367c39; /* Темно-зеленый непрозрачный */
 }
 
 .upgrades {
@@ -73,7 +72,7 @@ h1 {
 }
 
 .upgrade-item {
-    background-color: rgba(249, 249, 249, 0.6); /* Полупрозрачный светло серый */
+    background-color: rgba(249, 249, 249, 0.6); /* Полупрозрачный светло-серый */
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -83,7 +82,7 @@ h1 {
 }
 
 .upgrade-item button {
-    background-color: rgba(33, 150, 243, 0.6);/* Полупрозрачный синий */
+    background-color: #2196F3; /* Синий непрозрачный */
     color: white;
     border: none;
     padding: 8px 15px;
@@ -93,7 +92,7 @@ h1 {
 }
 
 .upgrade-item button:hover {
-    background-color: rgba(25, 118, 210, 0.8); /* Полупрозрачный темно синий */
+    background-color: #1976D2; /* Темно-синий непрозрачный */
 }
 
 #message {
@@ -104,7 +103,7 @@ h1 {
 #prestige-button {
     padding: 10px 20px;
     font-size: 1em;
-    background-color: rgba(255, 152, 0, 0.6); /* Полупрозрачный оранжевый */
+    background-color: #ff9800; /* Оранжевый непрозрачный */
     color: white;
     border: none;
     border-radius: 5px;
@@ -114,7 +113,7 @@ h1 {
 }
 
 #prestige-button:hover {
-    background-color: rgba(230, 138, 0, 0.8); /* Полупрозрачный темно оранжевый */
+    background-color: #e68a00; /* Темно-оранжевый непрозрачный */
 }
 
 .prestige-level {
@@ -129,7 +128,7 @@ h1 {
 #reset-button {
     padding: 10px 20px;
     font-size: 1em;
-    background-color: rgba(244, 67, 54, 0.6);/* Полупрозрачный красный */
+    background-color: #f44336; /* Красный непрозрачный */
     color: white;
     border: none;
     border-radius: 5px;
@@ -139,5 +138,5 @@ h1 {
 }
 
 #reset-button:hover {
-    background-color: rgba(211, 47, 47, 0.8);  /* Полупрозрачный темно красный*/
+    background-color: #d32f2f; /* Темно-красный непрозрачный */
     }
