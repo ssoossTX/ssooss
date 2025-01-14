@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     let clickCount = 0;
     let clickValue = 1;
+    let clickValueLevel = 1;
     let autoClickerInterval;
     let autoClickerValue = 0;
     let clickUpgradeCost = 10;
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
 
     clickButton.addEventListener('click', function() {
-        clickCount += clickValue;
+        clickCount += Match.round(clickValue * clickValueLevel);
         updateDisplay();
     });
     
@@ -79,9 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
        if(clickCount >= clickUpgradeLevelCost){
             clickCount -= clickUpgradeLevelCost;
             clickUpgradeLevel++;
-            clickValue = clickUpgradeLevel;
-            clickUpgradeCost = Math.round(clickUpgradeCost = 10);
-            updateDisplay();
+            clickValueLevel = clickUpgradeLevel;
             clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
             updateDisplay();
            displayMessage('Уровень улучшения клика повышен!')
