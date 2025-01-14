@@ -268,9 +268,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (clickCount >= clickUpgradeLevelCost) {
             clickCount -= clickUpgradeLevelCost;
             clickUpgradeLevel++;
-            clickUpgradeCost = 10;
-            clickCount = 0;
-            clickValue = 1;
             clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
             updateDisplay();
             displayMessage('Уровень улучшения клика повышен!');
