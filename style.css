@@ -28,7 +28,6 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    filter: blur(2px);
 }
 
 .container {
