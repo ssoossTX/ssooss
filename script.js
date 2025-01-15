@@ -77,8 +77,8 @@ class SaveManager {
     async load(key) {
         return new Promise((resolve, reject) => {
             try {
-                const loadFunction = this.isTWA ? window.Telegram.WebApp.CloudStorage.getItem : localStorage.getItem;
-                loadFunction(key, async (err, value) => {
+                 const loadFunction = this.isTWA ? window.Telegram.WebApp.CloudStorage.getItem : localStorage.getItem;
+                  loadFunction(key, async (err, value) => {
                      if (err) {
                         reject(err);
                         return;
@@ -839,4 +839,3 @@ document.addEventListener('DOMContentLoaded', async function () {
     await game.init();
     game.setupEventListeners();
 });
-                 
