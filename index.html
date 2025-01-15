@@ -13,9 +13,15 @@
             <ul class="menu-items" id="menu-items">
                 <li><button data-tab="shop">Магазин</button></li>
                 <li><button data-tab="rating">Рейтинг</button></li>
+                 <li><button data-action="change-name">Сменить имя</button></li>
             </ul>
         </nav>
         <div class="content">
+            <div id="name-input-container" style="display: none;">
+                <label for="player-name">Введите ваше имя:</label>
+                <input type="text" id="player-name">
+                <button id="set-name-button" class="game-button">Подтвердить</button>
+            </div>
            <div id="game-content" role="region" aria-label="Игровая область">
             <h1>Кликер</h1>
             <div class="counter">
@@ -54,4 +60,4 @@
     </div>
     <script src="script.js"></script>
 </body>
-                                                                       </html>
+                    </html>
