@@ -44,14 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
         achievementsDisplay: document.getElementById('achievements'),
         resetButton: document.getElementById('reset-button'),
 
-        menuButton: document.querySelector('.menu-toggle'), // Используем класс для переключателя меню
-        menu: document.getElementById('menu-items'), // Идентификатор меню
-         exportSaveButton: document.querySelector('#menu-items [data-action="export"]'), // Кнопка экспорта (по data-action)
-         importSaveButton: document.querySelector('#menu-items [data-action="import"]'),// Кнопка импорта (по data-action)
-         importInput: document.getElementById('import-input'), // Инпут для импорта
+        menuButton: document.querySelector('.menu-toggle'),
+        menu: document.getElementById('menu-items'),
         gameContent: document.getElementById('game-content'),
         ratingContent: document.getElementById('rating-content'),
-        menuItems: document.querySelectorAll('.menu-items li button'), // Кнопки меню
+        menuItems: document.querySelectorAll('.menu-items li button'),
     };
 
 
@@ -156,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Управление игрой ---
-   function resetGame() {
+    function resetGame() {
         gameState = {
             clickCount: 0,
             clickValue: 1,
@@ -180,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
     }
-
 
     function clearAllTimeouts() {
         clearInterval(gameState.autoClickerInterval);
@@ -210,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-   function loadGame() {
+    function loadGame() {
         const loadFromStorage = (storage) => {
             const savedDataString = storage.getItem(SAVE_KEY);
             if (savedDataString) {
@@ -243,53 +239,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-   function exportSave() {
-        const data = JSON.stringify(gameState);
-        const blob = new Blob([data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'clicker_save.json';
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-   function importSave() {
-        const file = elements.importInput.files[0];
-        if (!file) {
-            displayMessage('Файл не выбран', 'red');
-            return;
-        }
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            try {
-                const savedData = JSON.parse(event.target.result);
-                 gameState = { ...gameState, ...savedData };
-                 clearAllTimeouts();
-                startAutoClicker();
-                startRandomEvent();
-               updateDisplay();
-               saveData();
-                displayMessage('Сохранение импортировано!');
-            } catch (e) {
-                console.error('Error parsing save data', e);
-                  displayMessage('Ошибка при импорте сохранения', 'red');
-            }
-        };
-        reader.readAsText(file);
-        elements.importInput.value = '';
-    }
-
-      function switchTab(tabId) {
+    function switchTab(tabId) {
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
         elements.ratingContent.style.display = tabId === 'rating' ? 'block' : 'none';
 
-          elements.menuItems.forEach(item => {
+        elements.menuItems.forEach(item => {
             item.classList.remove('active');
-              if(item.dataset.tab === tabId) {
-                  item.classList.add('active');
-              }
-          })
+            if (item.dataset.tab === tabId) {
+                item.classList.add('active');
+            }
+        })
     }
 
 
@@ -361,14 +321,12 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.menuButton.classList.toggle('active');
     });
 
-    elements.exportSaveButton.addEventListener('click', exportSave);
-    elements.importSaveButton.addEventListener('click', importSave);
     elements.menuItems.forEach(item => {
           item.addEventListener('click', () => {
              const tabId = item.dataset.tab;
               switchTab(tabId)
               elements.menu.classList.remove('active');
-            elements.menuButton.classList.remove('active');
+              elements.menuButton.classList.remove('active');
           })
       })
 
