@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
            if (clickUpgradeLevelCostDisplay) clickUpgradeLevelCostDisplay.textContent = clickUpgradeLevelCost;
             if(prestigeLevelDisplay) prestigeLevelDisplay.textContent = prestigeLevel;
         } catch(error) {
+             console.error("Ошибка при обновлении дисплея", error);
         }
     }
 
@@ -98,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      }, 3000);
              }
         } catch(error){
+             console.error("Ошибка при отображении сообщения", error);
         }
     }
 
@@ -107,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
              updateDisplay();
              saveData();
         } catch(error){
+             console.error("Ошибка в автоклике", error);
        }
     }
 
@@ -144,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
          randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (120000 - 60000) + 60000);
        } catch(error){
+            console.error("Ошибка при запуске случайного события", error);
        }
     }
   function checkAchievements() {
@@ -161,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
                addAchievement('5 autoClicker');
            }
        }catch(error){
+           console.error("Ошибка при проверки достижений", error);
        }
     }
 
@@ -171,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if(achievementsDisplay) achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
              saveData();
        }catch(error){
+           console.error("Ошибка при добавлении достижения", error)
        }
    }
     function saveRating() {
@@ -179,12 +185,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
                 saveFunction('playersRating', JSON.stringify(playersRating), (err) => {
                     if (err) {
+                        console.error("Ошибка при сохранении рейтинга:", err);
                         reject(err);
                     } else {
                         resolve();
                     }
                 });
             } catch (error) {
+                console.error("Ошибка при сохранении рейтинга:", error);
                 reject(error);
             }
         });
@@ -195,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
                 loadFunction('playersRating', (err, value) => {
                     if (err) {
+                        console.error("Ошибка при загрузке рейтинга:", err);
                         reject(err);
                         return;
                     }
@@ -203,6 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     resolve();
                 });
             } catch (error) {
+                 console.error("Ошибка при загрузке рейтинга:", error);
                 reject(error);
             }
         });
@@ -213,12 +223,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
                 saveFunction('playerName', JSON.stringify(playerName), (err) => {
                     if (err) {
+                         console.error("Ошибка при сохранении имени игрока:", err);
                         reject(err);
                     } else {
                         resolve();
                     }
                 });
             } catch (error) {
+                 console.error("Ошибка при сохранении имени игрока:", error);
                 reject(error);
             }
         });
@@ -229,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
                 loadFunction('playerName', (err, value) => {
                     if (err) {
+                       console.error("Ошибка при загрузке имени игрока:", err);
                         reject(err);
                         return;
                     }
@@ -236,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     resolve();
                 });
             } catch (error) {
+                 console.error("Ошибка при загрузке имени игрока:", error);
                 reject(error);
             }
         });
@@ -254,9 +268,10 @@ document.addEventListener('DOMContentLoaded', function() {
                });
             }
          } catch(error){
+              console.error("Ошибка при обновлении рейтинга", error);
         }
     }
-    function resetGame() {
+   function resetGame() {
         try{
             clickCount = 0;
             clickValue = 1;
@@ -291,11 +306,11 @@ document.addEventListener('DOMContentLoaded', function() {
            saveRating();
            savePlayerName();
          } catch(error){
+               console.error("Ошибка при сбросе прогресса", error);
         }
     }
-
     async function saveData() {
-       if (!gameLoaded) {
+        if (!gameLoaded) {
             return;
         }
         try {
@@ -314,26 +329,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 bonusActive: bonusActive
             };
 
-            const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-            await new Promise((resolve, reject) => {
-                saveFunction('clickerData', JSON.stringify(data), (err) => {
-                  if (err) {
-                     reject(err);
-                     return;
-                  }
-                     resolve();
-                  });
-            });
-        } catch (error) {
-        }
-    }
-
+           const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
+           await new Promise((resolve, reject) => {
+               saveFunction('clickerData', JSON.stringify(data), (err) => {
+                 if (err) {
+                   console.error("Ошибка при сохранении данных игры:", err);
+                    reject(err);
+                   return;
+                 }
+                  resolve();
+                });
+             });
+           } catch (error) {
+                console.error("Ошибка при сохранении данных игры:", error);
+           }
+       }
     function loadGame() {
         return new Promise(async (resolve, reject) => {
             try {
                  const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
                 loadFunction('clickerData', async (err, value) => {
                   if (err) {
+                       console.error("Ошибка при загрузке данных:", err);
                         reject(err);
                       return;
                    }
@@ -370,6 +387,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 updateDisplay();
                                 resolve();
                          } catch(error) {
+                                console.error("Ошибка при парсинге данных:", error);
                                 resetGame();
                                 reject(error);
                             }
@@ -378,14 +396,16 @@ document.addEventListener('DOMContentLoaded', function() {
               });
             }
             catch(error) {
+                 console.error("Ошибка при загрузке игры", error);
                 reject(error);
             }
         });
     }
 
-  // Сохранение данных перед закрытием или перезагрузкой страницы
+    // Сохранение данных перед закрытием или перезагрузкой страницы
     window.addEventListener('beforeunload', async function() {
-         await saveData();
+        await saveData();
+        await saveRating();
     });
 
   function handleSave() {
@@ -408,6 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
                saveData();
               updatePlayerScore();
           } catch(error){
+               console.error("Ошибка при клике на кнопку", error);
           }
       });
   }
@@ -425,6 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     displayMessage('Недостаточно кликов!', 'red');
                 }
             } catch(error){
+                  console.error("Ошибка при улучшении уровня клика", error);
            }
         });
   }
@@ -442,6 +464,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       displayMessage('Недостаточно кликов!', 'red');
                     }
               } catch(error){
+                    console.error("Ошибка при улучшении клика", error);
                }
           });
    }
@@ -462,6 +485,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       displayMessage('Недостаточно кликов!', 'red');
                   }
                 } catch(error){
+                     console.error("Ошибка при покупке автокликера", error);
                 }
          });
    }
@@ -489,6 +513,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
                 }
            } catch(error){
+                 console.error("Ошибка при перерождении", error);
             }
          });
     }
@@ -497,6 +522,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                  resetGame();
              } catch(error){
+                   console.error("Ошибка при сбросе прогресса", error);
                }
          });
     }
@@ -518,6 +544,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      updateRatingDisplay();
                }
             } catch(error){
+                console.error("Ошибка при обновлении очков игрока", error);
             }
        }
 
@@ -527,6 +554,7 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 if(menuItems)menuItems.classList.toggle('active');
            } catch(error){
+                console.error("Ошибка при открытии меню", error);
               }
          });
   }
@@ -548,6 +576,7 @@ document.addEventListener('DOMContentLoaded', function() {
                          if(menuItems)menuItems.classList.remove('active');
                        }
                   } catch(error){
+                       console.error("Ошибка при переключении вкладок", error);
                  }
            });
      }
