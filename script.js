@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let randomEventTimeout;
     let achievements = [];
     let playerName = null;
-    let gameLoaded = false;
 
     const clickCountDisplay = document.getElementById('click-count');
     const clickButton = document.getElementById('click-button');
@@ -58,8 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      .then(loadPlayerName)
                     .then(() => {
                             if(!playerName) updatePlayerScore();
-                            gameLoaded = true;
-                       })
+                      })
                   .catch(error => console.error('Ошибка инициализации TWA:', error));
          });
     } else {
@@ -71,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(loadPlayerName)
               .then(()=>{
                   if(!playerName) updatePlayerScore();
-                   gameLoaded = true;
               })
               .catch(error => console.error('Ошибка загрузки игры в браузере:', error));
     }
@@ -104,11 +101,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
      function autoClick() {
         try{
-            const clicksToAdd = (autoClickerValue * clickUpgradeLevel) * prestigeMultiplier;
-              clickCount += clicksToAdd;
+           clickCount += (autoClickerValue * clickUpgradeLevel) * prestigeMultiplier;
              updateDisplay();
-           // saveData(); // Убрано сохранение на каждый автоклик
-           } catch(error){
+              saveData();
+        } catch(error){
              console.error("Ошибка в автоклике", error);
        }
     }
@@ -180,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
        }
    }
     function saveRating() {
-           return new Promise((resolve, reject) => {
+          return new Promise((resolve, reject) => {
            try{
                  const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
                 saveFunction('playersRating', JSON.stringify(playersRating), (err) =>{
@@ -218,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 }
     function savePlayerName() {
-        return new Promise((resolve, reject) =>{
+       return new Promise((resolve, reject) =>{
              try{
                 const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
                  saveFunction('playerName',JSON.stringify(playerName), (err) =>{
@@ -237,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     }
   function loadPlayerName() {
-      return new Promise((resolve, reject) => {
+       return new Promise((resolve, reject) => {
         try{
            const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
           loadFunction('playerName', (err, value) =>{
@@ -311,10 +307,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     function saveData() {
-         if (!gameLoaded) {
-            console.log('Игра еще не загружена, сохранение отменено');
-             return Promise.reject('Игра еще не загружена');
-            }
         return new Promise((resolve, reject) =>{
             try{
                  let data = {
@@ -333,11 +325,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                     const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
                    saveFunction('clickerData', JSON.stringify(data), (err) =>{
-                      if(err){
+                       if(err){
                           console.error("Ошибка при сохранении игры", err);
                             reject(err);
                        } else {
-                           console.log('Данные сохранены:', data);
                            resolve();
                         }
                     });
@@ -360,8 +351,8 @@ document.addEventListener('DOMContentLoaded', function() {
                  }
                    if (value) {
                         try{
-                            let savedData = JSON.parse(value);
-                            console.log('Загруженные данные:', savedData);
+                              let savedData = JSON.parse(value);
+                              console.log('Загруженные данные:', savedData);
                               clickCount = savedData.clickCount || 0;
                              clickValue = savedData.clickValue || 1;
                               autoClickerValue = savedData.autoClickerValue || 0;
@@ -411,24 +402,26 @@ document.addEventListener('DOMContentLoaded', function() {
         saveData();
     }
 
+    window.addEventListener('click', handleSave);
+    window.addEventListener('keydown', handleSave);
+
+
   if(clickButton){
-      let clickCountHandle = 0;
          clickButton.addEventListener('click', function() {
           try{
-              clickCountHandle++
-               console.log("Клик номер:" + clickCountHandle);
-               let clicksToAdd = (clickValue * clickUpgradeLevel) * prestigeMultiplier;
+             let clicksToAdd = (clickValue * clickUpgradeLevel) * prestigeMultiplier;
                 if (bonusActive) {
                     clicksToAdd *= 2
-                  }
-                clickCount += clicksToAdd;
+                }
+                console.log("Прибавляем кликов:", clicksToAdd);
+              clickCount += clicksToAdd;
               updateDisplay();
               checkAchievements();
-              saveData();
-            updatePlayerScore();
-         } catch(error){
-            console.error("Ошибка при клике на кнопку", error);
-         }
+               saveData();
+              updatePlayerScore(); // Сохраняем данные игрока
+          } catch(error){
+             console.error("Ошибка при клике на кнопку", error);
+          }
       });
   }
   if(upgradeClickLevelButton){
@@ -485,7 +478,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   }
                 } catch(error){
                   console.error("Ошибка при покупке автокликера", error);
-        }
+                }
          });
    }
 
