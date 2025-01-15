@@ -326,6 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 prestigeMultiplier: prestigeMultiplier,
                 achievements: achievements,
                 achievementCount: achievementCount,
+                 playerName: playerName,
                 bonusActive: bonusActive
             };
 
@@ -368,6 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 prestigeMultiplier = savedData.prestigeMultiplier || 1;
                                 achievements = savedData.achievements || [];
                                 achievementCount = savedData.achievementCount || 0;
+                                playerName = savedData.playerName;
                                bonusActive = savedData.bonusActive || false;
 
                                 if (achievementsDisplay) achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
@@ -536,12 +538,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     const playerScore = clickCount + (prestigeLevel * 10000);
                     const existingPlayerIndex = playersRating.findIndex(player => player.name === playerName);
                     if (existingPlayerIndex > -1) {
-                       playersRating[existingPlayerIndex].score = playerScore;
-                      } else {
-                         playersRating.push({ name: playerName, score: playerScore });
+                        if(playersRating[existingPlayerIndex].score !== playerScore){
+                           playersRating[existingPlayerIndex].score = playerScore;
+                           saveRating();
+                           updateRatingDisplay();
+                        }
+                     } else {
+                           playersRating.push({ name: playerName, score: playerScore });
+                         saveRating();
+                        updateRatingDisplay();
                      }
-                     saveRating();
-                     updateRatingDisplay();
                }
             } catch(error){
                 console.error("Ошибка при обновлении очков игрока", error);
