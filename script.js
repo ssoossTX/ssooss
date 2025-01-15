@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const BONUS_DURATION = 10000;
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
+    const RATING_KEY = 'clickerRating'; // Ключ для сохранения рейтинга
+
 
     // --- Состояния игры ---
     let gameState = {
@@ -48,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameContent: document.getElementById('game-content'),
         ratingContent: document.getElementById('rating-content'),
         menuItems: document.querySelectorAll('.menu-items li button'),
+         ratingList: document.getElementById('rating-list'), // Добавлен элемент для списка рейтинга
     };
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
@@ -78,11 +81,13 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel) * gameState.prestigeMultiplier;
         updateDisplay();
         checkAchievements();
+        updateRating(); // Обновляем рейтинг после каждого клика
     }
 
     function autoClick() {
         gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel) * gameState.prestigeMultiplier;
         updateDisplay();
+        updateRating(); // Обновляем рейтинг после автоклика
     }
 
     function startAutoClicker() {
@@ -174,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
+        clearRating(); // Очищаем рейтинг при сбросе игры
     }
 
     function clearAllTimeouts() {
@@ -189,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem(SAVE_KEY);
         }
     }
-   function saveData() {
+    function saveData() {
         const data = { ...gameState };
          delete data.autoClickerInterval;
         delete data.bonusTimeout;
@@ -200,6 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             localStorage.setItem(SAVE_KEY, dataString);
        }
+        updateRating();
     }
 
 
@@ -215,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
                          handleBonusEvent();
                      }
                     updateDisplay();
+                     loadRating(); // Загружаем рейтинг при загрузке игры
                 } catch (e) {
                     console.error('Error parsing saved data', e);
                     clearSaveData();
@@ -236,6 +244,90 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Рейтинг ---
+
+    function updateRating() {
+           const playerName = tWebApp ? tWebApp.initDataUnsafe?.user?.username || 'Anonymus' : 'Anonymus';
+
+          const newScore =  gameState.clickCount + (gameState.prestigeLevel * 100000) ;
+        let rating = loadRatingData();
+          const playerIndex = rating.findIndex(item => item.name === playerName);
+        if (playerIndex !== -1) {
+            if(rating[playerIndex].score < newScore) {
+                 rating[playerIndex].score = newScore;
+            }
+        } else {
+              rating.push({ name: playerName, score: newScore });
+        }
+
+         rating.sort((a, b) => b.score - a.score); // Сортируем по убыванию
+           if (rating.length > 10) {
+               rating = rating.slice(0,10)
+           }
+
+           saveRating(rating);
+          displayRating(rating);
+    }
+
+    function loadRatingData() {
+        let rating = [];
+         const loadFromStorage = (storage) => {
+            const ratingDataString = storage.getItem(RATING_KEY);
+            if (ratingDataString) {
+                try {
+                  rating = JSON.parse(ratingDataString);
+                } catch (e) {
+                    console.error('Error parsing rating data', e);
+                    clearRating();
+                }
+            }
+        }
+         if (tWebApp) {
+           tWebApp.CloudStorage.getItem(RATING_KEY, (err, value) => {
+               if (err) {
+                   console.error('Error loading rating data from Telegram', err);
+                   return;
+               }
+               if (value) {
+                   loadFromStorage({ getItem: () => value });
+               }
+           });
+         } else {
+          loadFromStorage(localStorage);
+         }
+          return rating;
+    }
+
+    function saveRating(rating) {
+        const ratingString = JSON.stringify(rating);
+         if (tWebApp) {
+             tWebApp.CloudStorage.setItem(RATING_KEY, ratingString);
+        } else {
+           localStorage.setItem(RATING_KEY, ratingString);
+        }
+    }
+
+     function clearRating() {
+       if (tWebApp) {
+          tWebApp.CloudStorage.removeItem(RATING_KEY);
+      } else {
+            localStorage.removeItem(RATING_KEY);
+      }
+    }
+
+     function loadRating() {
+           const rating = loadRatingData()
+           displayRating(rating)
+    }
+
+      function displayRating(rating) {
+           elements.ratingList.innerHTML = '';
+          rating.forEach((player, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${index + 1}. ${player.name}: ${Math.round(player.score)}`;
+                elements.ratingList.appendChild(li);
+            });
+    }
 
     function switchTab(tabId) {
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
@@ -248,7 +340,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
     }
-
 
     // --- Обработчики событий ---
     elements.clickButton.addEventListener('click', applyClick);
@@ -322,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
           item.addEventListener('click', () => {
              const tabId = item.dataset.tab;
               switchTab(tabId)
-              elements.menu.classList.remove('active');
+             elements.menu.classList.remove('active');
              elements.menuButton.classList.remove('active');
           })
       })
