@@ -43,14 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
         prestigeLevelDisplay: document.getElementById('prestige-level'),
         achievementsDisplay: document.getElementById('achievements'),
         resetButton: document.getElementById('reset-button'),
-
         menuButton: document.querySelector('.menu-toggle'),
         menu: document.getElementById('menu-items'),
         gameContent: document.getElementById('game-content'),
         ratingContent: document.getElementById('rating-content'),
         menuItems: document.querySelectorAll('.menu-items li button'),
     };
-
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
     if (tWebApp) {
@@ -191,32 +189,31 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem(SAVE_KEY);
         }
     }
-    function saveData() {
+   function saveData() {
         const data = { ...gameState };
-        delete data.autoClickerInterval;
+         delete data.autoClickerInterval;
         delete data.bonusTimeout;
         delete data.randomEventTimeout;
-
-        const dataString = JSON.stringify(data);
+         const dataString = JSON.stringify(data);
         if (tWebApp) {
-            tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
+             tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
         } else {
             localStorage.setItem(SAVE_KEY, dataString);
-        }
+       }
     }
 
 
     function loadGame() {
-        const loadFromStorage = (storage) => {
+       const loadFromStorage = (storage) => {
             const savedDataString = storage.getItem(SAVE_KEY);
             if (savedDataString) {
                 try {
                     const savedData = JSON.parse(savedDataString);
                     gameState = { ...gameState, ...savedData };
                     startAutoClicker();
-                    if (gameState.bonusActive) {
-                        handleBonusEvent();
-                    }
+                     if (gameState.bonusActive) {
+                         handleBonusEvent();
+                     }
                     updateDisplay();
                 } catch (e) {
                     console.error('Error parsing saved data', e);
@@ -224,18 +221,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-        if (tWebApp) {
-            tWebApp.CloudStorage.getItem(SAVE_KEY, (err, value) => {
+         if (tWebApp) {
+             tWebApp.CloudStorage.getItem(SAVE_KEY, (err, value) => {
                 if (err) {
                     console.error('Error loading data from Telegram', err);
                     return;
                 }
                 if (value) {
-                    loadFromStorage({ getItem: () => value });
+                     loadFromStorage({ getItem: () => value });
                 }
             });
         } else {
-            loadFromStorage(localStorage);
+           loadFromStorage(localStorage);
         }
     }
 
@@ -326,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
              const tabId = item.dataset.tab;
               switchTab(tabId)
               elements.menu.classList.remove('active');
-              elements.menuButton.classList.remove('active');
+             elements.menuButton.classList.remove('active');
           })
       })
 
