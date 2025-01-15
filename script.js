@@ -45,41 +45,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
    const tWebApp = window.Telegram && window.Telegram.WebApp;
     let isTWA = false;
-     let appVersion = '1.0.0'; // Версия игры
+    let appVersion = '1.0.0'; // Версия игры
 
      if(tWebApp){
         isTWA = true;
           tWebApp.onEvent('web_app_ready', function() {
                 console.log('Telegram Web App готов.');
-               loadGame()
-                   .then(() => loadVersion())
-                   .then(checkVersion)
-                   .then(startRandomEvent)
-                    .then(checkAchievements)
+                loadGame()
+                     .then(() => loadVersion())
+                     .then(checkVersion)
+                     .then(startRandomEvent)
+                     .then(checkAchievements)
                     .then(loadRating)
-                    .then(loadPlayerName)
-                    .then(() => {
+                     .then(loadPlayerName)
+                     .then(() => {
                             if(!playerName) updatePlayerScore();
                       })
-                  .catch(error => {
-                    console.error('Ошибка инициализации TWA:', error)
-                  });
+                  .catch(error => console.error('Ошибка инициализации TWA:', error));
          });
     } else {
         console.log('Запуск в браузере');
-         loadGame()
+          loadGame()
                  .then(() => loadVersion())
-               .then(checkVersion)
-                .then(startRandomEvent)
+                 .then(checkVersion)
+                 .then(startRandomEvent)
                 .then(checkAchievements)
-                .then(loadRating)
+                 .then(loadRating)
                .then(loadPlayerName)
               .then(()=>{
                    if(!playerName) updatePlayerScore();
                })
-              .catch(error => {
-                    console.error('Ошибка загрузки игры в браузере:', error);
-               });
+              .catch(error => console.error('Ошибка загрузки игры в браузере:', error));
     }
       function updateDisplay() {
         try {
@@ -187,17 +183,29 @@ document.addEventListener('DOMContentLoaded', function() {
     function saveRating() {
         return new Promise((resolve, reject) => {
            try{
-                 const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-                saveFunction('playersRating', JSON.stringify(playersRating), (err) =>{
-                   if(err){
-                     console.log("Ошибка сохранения рейтинга", err);
-                    reject(err)
-                    } else {
-                         resolve();
+                const saveFunction = isTWA ?  (key, value, callback) => {
+                    tWebApp.CloudStorage.setItem(key, value, (err) => {
+                      if(err){
+                         console.error("Ошибка сохранения рейтинга:", err);
+                         reject(err);
+                        } else {
+                            resolve();
+                          }
+                    })
+                  } :
+                   (key, value, callback) => {
+                    try{
+                        localStorage.setItem(key, value);
+                        resolve();
                     }
-              });
+                    catch (err){
+                        console.error("Ошибка сохранения рейтинга:", err);
+                        reject(err)
+                     }
+                   } ;
+                saveFunction('playersRating', JSON.stringify(playersRating));
            } catch(error){
-               console.error("Ошибка при сохранения рейтинга", error);
+               console.error("Ошибка при сохранении рейтинга", error);
               reject(error);
            }
          })
@@ -205,18 +213,32 @@ document.addEventListener('DOMContentLoaded', function() {
      function loadRating() {
        return new Promise((resolve, reject) =>{
           try{
-              const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-               loadFunction('playersRating',(err, value) =>{
-                  if(err){
-                     console.error("Ошибка при загрузке рейтинга:", err);
-                    reject(err)
-                   return;
-                   }
-                  playersRating = value ? JSON.parse(value) : [];
-                     updateRatingDisplay();
-                     resolve();
-            });
-         } catch(error){
+            const loadFunction = isTWA ? (key, callback) => {
+                tWebApp.CloudStorage.getItem(key, (err, value) =>{
+                   if(err){
+                      console.error("Ошибка загрузки рейтинга:", err);
+                      reject(err)
+                       return;
+                    }
+                   playersRating = value ? JSON.parse(value) : [];
+                    updateRatingDisplay();
+                   resolve()
+                })
+             } :
+               (key, callback) => {
+                  try{
+                    const value = localStorage.getItem(key);
+                     playersRating = value ? JSON.parse(value) : [];
+                    updateRatingDisplay();
+                       resolve()
+                    }
+                    catch (err){
+                      console.error("Ошибка загрузки рейтинга:", err);
+                       reject(err)
+                    }
+                }
+              loadFunction('playersRating');
+           } catch(error){
              console.error("Ошибка при загрузке рейтинга", error);
             reject(error);
         }
@@ -225,18 +247,29 @@ document.addEventListener('DOMContentLoaded', function() {
     function savePlayerName() {
          return new Promise((resolve, reject) =>{
              try{
-                const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-                 saveFunction('playerName',JSON.stringify(playerName), (err) =>{
-                    if(err){
-                      console.log("Ошибка при сохранения имени игрока", err)
-                       reject(err)
-                   }
-                    else{
-                       resolve();
-                    }
-                });
+                const saveFunction = isTWA ?  (key, value, callback) => {
+                    tWebApp.CloudStorage.setItem(key, value, (err) => {
+                       if(err){
+                            console.error("Ошибка при сохранении имени игрока", err);
+                         reject(err);
+                       } else{
+                            resolve();
+                       }
+                    });
+                  } :
+                    (key, value, callback) => {
+                      try{
+                          localStorage.setItem(key, value);
+                           resolve();
+                        }
+                        catch (err){
+                           console.error("Ошибка при сохранении имени игрока", err);
+                          reject(err);
+                        }
+                    };
+                 saveFunction('playerName',JSON.stringify(playerName));
             } catch(error){
-                console.error("Ошибка при сохранения имени игрока", error);
+                console.error("Ошибка при сохранении имени игрока", error);
              reject(error);
             }
         })
@@ -244,17 +277,29 @@ document.addEventListener('DOMContentLoaded', function() {
   function loadPlayerName() {
       return new Promise((resolve, reject) => {
         try{
-           const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-          loadFunction('playerName', (err, value) =>{
-              if(err){
-                  console.error("Ошибка при загрузки имени игрока:", err)
-                  reject(err);
-                    return;
+            const loadFunction = isTWA ? (key, callback) => {
+                  tWebApp.CloudStorage.getItem(key, (err, value) =>{
+                       if(err){
+                           console.error("Ошибка при загрузке имени игрока:", err);
+                           reject(err);
+                          return;
+                        }
+                      playerName = value ? JSON.parse(value) : null;
+                       resolve();
+                 });
+             } :
+            (key, callback) => {
+              try{
+                 const value = localStorage.getItem(key);
+                  playerName = value ? JSON.parse(value) : null;
+                  resolve();
+              } catch(err){
+                console.error("Ошибка при загрузке имени игрока:", err);
+                reject(err);
                }
-              playerName = value ? JSON.parse(value) : null;
-                resolve();
-           });
-      } catch(error){
+          };
+            loadFunction('playerName');
+        } catch(error){
          console.error("Ошибка при загрузке имени игрока", error);
         reject(error)
         }
@@ -278,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     function resetGame() {
-    try{
+     try{
             clickCount = 0;
             clickValue = 1;
            autoClickerValue = 0;
@@ -303,8 +348,12 @@ document.addEventListener('DOMContentLoaded', function() {
               if(achievementsDisplay)achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
                if (isTWA) {
                   tWebApp.CloudStorage.removeItem('clickerData');
-                 tWebApp.CloudStorage.removeItem('playerName');
+                  tWebApp.CloudStorage.removeItem('playerName');
                   tWebApp.CloudStorage.removeItem('appVersion');
+            } else {
+                 localStorage.removeItem('clickerData');
+                 localStorage.removeItem('playerName');
+                  localStorage.removeItem('appVersion');
             }
            displayMessage('Прогресс сброшен!', 'orange');
            saveData();
@@ -315,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
                console.error("Ошибка при сбросе прогресса", error);
         }
     }
-    function saveData() {
+  function saveData() {
       return new Promise((resolve, reject) => {
           try{
             let data = {
@@ -333,75 +382,140 @@ document.addEventListener('DOMContentLoaded', function() {
                bonusActive: bonusActive,
                 appVersion: appVersion
            };
-                const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-                saveFunction('clickerData',JSON.stringify(data), (err) => {
-                 if(err){
-                      console.error("Ошибка при сохранении игры", err);
-                   reject(err)
-                   } else{
-                       resolve();
-                   }
-             });
+                const saveFunction = isTWA ? (key, value, callback) => {
+                    tWebApp.CloudStorage.setItem(key, value, (err) =>{
+                        if(err){
+                           console.error("Ошибка при сохранения данных игры", err);
+                         reject(err);
+                       } else {
+                            resolve();
+                      }
+                    })
+                } :
+                    (key, value, callback) => {
+                      try{
+                         localStorage.setItem(key, value);
+                            resolve();
+                        }
+                        catch (err){
+                          console.error("Ошибка при сохранения данных игры", err);
+                          reject(err)
+                        }
+                    }
+                 saveFunction('clickerData',JSON.stringify(data));
             } catch(error){
                console.error("Ошибка при сохранения данных игры", error);
                  reject(error)
          }
       })
    }
-    function loadGame() {
+
+  function loadGame() {
         return new Promise((resolve, reject) => {
            try{
-                const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-                loadFunction('clickerData', (err, value) =>{
-                    if (err) {
-                         console.error("Ошибка при загрузке данных:", err);
-                        reject(err);
-                     return;
-                 }
-                    if (value) {
-                        try{
-                            let savedData = JSON.parse(value);
-                            clickCount = savedData.clickCount || 0;
-                            clickValue = savedData.clickValue || 1;
-                           autoClickerValue = savedData.autoClickerValue || 0;
-                           clickUpgradeCost = savedData.clickUpgradeCost || 10;
-                           autoUpgradeCost = savedData.autoUpgradeCost || 50;
-                           clickUpgradeLevel = savedData.clickUpgradeLevel || 1;
-                           clickUpgradeLevelCost = savedData.clickUpgradeLevelCost || 100;
-                            prestigeLevel = savedData.prestigeLevel || 0;
-                           prestigeMultiplier = savedData.prestigeMultiplier || 1;
-                            achievements = savedData.achievements || [];
-                           achievementCount = savedData.achievementCount || 0;
-                          if(achievementsDisplay)achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-                          if (autoClickerValue > 0) {
-                            autoClickerInterval = setInterval(autoClick, 1000);
+             const loadFunction = isTWA ? (key, callback) => {
+                  tWebApp.CloudStorage.getItem(key, (err, value) =>{
+                         if (err) {
+                            console.error("Ошибка при загрузке данных:", err);
+                            reject(err);
+                           return;
+                      }
+                        if (value) {
+                             try{
+                                let savedData = JSON.parse(value);
+                                clickCount = savedData.clickCount || 0;
+                                clickValue = savedData.clickValue || 1;
+                                autoClickerValue = savedData.autoClickerValue || 0;
+                                 clickUpgradeCost = savedData.clickUpgradeCost || 10;
+                                 autoUpgradeCost = savedData.autoUpgradeCost || 50;
+                                 clickUpgradeLevel = savedData.clickUpgradeLevel || 1;
+                                 clickUpgradeLevelCost = savedData.clickUpgradeLevelCost || 100;
+                                  prestigeLevel = savedData.prestigeLevel || 0;
+                                  prestigeMultiplier = savedData.prestigeMultiplier || 1;
+                                achievements = savedData.achievements || [];
+                                achievementCount = savedData.achievementCount || 0;
+                                  if(achievementsDisplay)achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+                                 if (autoClickerValue > 0) {
+                                       autoClickerInterval = setInterval(autoClick, 1000);
+                                   }
+                                 if (savedData.bonusActive) {
+                                     bonusActive = true;
+                                      clickValue *= 2;
+                                    autoClickerValue *= 2;
+                                   bonusTimeout = setTimeout(() => {
+                                        bonusActive = false;
+                                       clickValue /= 2;
+                                         autoClickerValue /= 2;
+                                      }, 10000);
+                                }
+                                  appVersion = savedData.appVersion || '1.0.0';
+                                  updateDisplay();
+                                 resolve();
                             }
-                           if (savedData.bonusActive) {
-                             bonusActive = true;
-                             clickValue *= 2;
-                              autoClickerValue *= 2;
-                            bonusTimeout = setTimeout(() => {
-                                bonusActive = false;
-                                 clickValue /= 2;
-                                autoClickerValue /= 2;
-                               }, 10000);
+                             catch(parseError){
+                                 console.error("Ошибка при парсинге данных:", parseError);
+                                 resetGame();
+                                   reject(parseError);
+                                }
+                       } else {
+                          console.log('Нет сохранённых данных игры. Запуск новой игры.')
+                             resolve();
+                       }
+                 });
+             } :
+            (key, callback) => {
+              try{
+                 const value = localStorage.getItem(key);
+                     if (value) {
+                        try{
+                             let savedData = JSON.parse(value);
+                              clickCount = savedData.clickCount || 0;
+                             clickValue = savedData.clickValue || 1;
+                             autoClickerValue = savedData.autoClickerValue || 0;
+                             clickUpgradeCost = savedData.clickUpgradeCost || 10;
+                              autoUpgradeCost = savedData.autoUpgradeCost || 50;
+                             clickUpgradeLevel = savedData.clickUpgradeLevel || 1;
+                              clickUpgradeLevelCost = savedData.clickUpgradeLevelCost || 100;
+                             prestigeLevel = savedData.prestigeLevel || 0;
+                                prestigeMultiplier = savedData.prestigeMultiplier || 1;
+                                 achievements = savedData.achievements || [];
+                              achievementCount = savedData.achievementCount || 0;
+                                  if(achievementsDisplay)achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+                                 if (autoClickerValue > 0) {
+                                   autoClickerInterval = setInterval(autoClick, 1000);
+                                     }
+                                if (savedData.bonusActive) {
+                                  bonusActive = true;
+                                    clickValue *= 2;
+                                    autoClickerValue *= 2;
+                                   bonusTimeout = setTimeout(() => {
+                                        bonusActive = false;
+                                      clickValue /= 2;
+                                       autoClickerValue /= 2;
+                                    }, 10000);
+                                 }
+                                 appVersion = savedData.appVersion || '1.0.0';
+                                  updateDisplay();
+                              resolve();
+                           } catch(parseError){
+                              console.error("Ошибка при парсинге данных:", parseError);
+                                resetGame();
+                                   reject(parseError)
+                             }
                         }
-                        appVersion = savedData.appVersion || '1.0.0';
-                        updateDisplay();
-                        resolve();
-                        }
-                         catch(parseError){
-                             console.error("Ошибка при парсинге данных:", parseError);
-                             resetGame();
-                            reject(parseError)
-                         }
-                   } else {
-                       console.log('Нет сохранённых данных игры. Запуск новой игры.')
-                         resolve();
-                   }
-             });
-            } catch(error){
-                 console.error("Ошибка при загрузке игры", error);
+                           else{
+                            console.log('Нет сохранённых данных игры. Запуск новой игры.')
+                              resolve();
+                           }
+                      } catch(err){
+                          console.error("Ошибка при загрузке данных:", err);
+                             reject(err);
+                     }
+            };
+            loadFunction('clickerData');
+            }
+           catch(error){
+               console.error("Ошибка при загрузке игры", error);
                reject(error);
             }
        });
@@ -409,29 +523,42 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadVersion() {
           return new Promise((resolve, reject) => {
              try{
-                   const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-                loadFunction('appVersion', (err, value)=>{
-                    if(err){
-                        console.error("Ошибка при загрузки версии игры:", err);
-                       reject(err);
-                         return;
-                    }
-                     appVersion = value ? JSON.parse(value) : '1.0.0';
-                    resolve();
-                 })
-           } catch(error){
+               const loadFunction = isTWA ? (key, callback) => {
+                      tWebApp.CloudStorage.getItem(key, (err, value) =>{
+                        if(err){
+                           console.error("Ошибка при загрузки версии игры:", err);
+                          reject(err);
+                            return;
+                         }
+                           appVersion = value ? JSON.parse(value) : '1.0.0';
+                             resolve();
+                    });
+               } :
+                (key, callback) => {
+                 try{
+                      const value = localStorage.getItem(key);
+                        appVersion = value ? JSON.parse(value) : '1.0.0';
+                           resolve();
+                     }
+                      catch (err){
+                            console.error("Ошибка при загрузки версии игры:", err);
+                            reject(err)
+                        }
+                  };
+                loadFunction('appVersion');
+          } catch(error){
                console.error("Ошибка при загрузки версии игры", error)
-              reject(error);
+             reject(error);
          }
        });
     }
-    function checkVersion(){
+     function checkVersion(){
        return new Promise((resolve, reject) => {
          try{
               if (appVersion !== '1.0.0') {
                  console.log("Версия игры устарела, сбрасываем данные.");
-                   resetGame();
-                 reject("Версия игры устарела");
+                 resetGame();
+                  reject("Версия игры устарела");
             } else {
                   resolve();
             }
@@ -442,27 +569,39 @@ document.addEventListener('DOMContentLoaded', function() {
            }
         });
     }
-     function saveVersion() {
+    function saveVersion() {
          return new Promise((resolve, reject)=>{
              try{
-                 const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-                  saveFunction('appVersion', JSON.stringify(appVersion), (err) => {
-                    if (err) {
-                         console.error("Ошибка при сохранении версии:", err);
-                          reject(err);
-                        } else {
-                           resolve();
-                       }
-                 });
+                const saveFunction = isTWA ? (key, value, callback) => {
+                      tWebApp.CloudStorage.setItem(key, value, (err) => {
+                        if (err) {
+                          console.error("Ошибка при сохранении версии:", err);
+                            reject(err);
+                          } else {
+                             resolve();
+                          }
+                       });
+                  } :
+                   (key, value, callback) => {
+                        try{
+                           localStorage.setItem(key, value);
+                            resolve()
+                        } catch(err){
+                             console.error("Ошибка при сохранении версии:", err);
+                            reject(err);
+                          }
+                      } ;
+                  saveFunction('appVersion', JSON.stringify(appVersion));
              }catch(error){
                     console.error("Ошибка при сохранении версии:", error);
                       reject(error);
                  }
          })
      }
+
     // Сохранение данных при изменении прогресса
     function handleSave() {
-        saveData();
+         saveData();
     }
 
     window.addEventListener('click', handleSave);
