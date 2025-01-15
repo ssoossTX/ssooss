@@ -176,81 +176,80 @@ document.addEventListener('DOMContentLoaded', function() {
        }
    }
     function saveRating() {
-          return new Promise((resolve, reject) => {
-           try{
-                 const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-                saveFunction('playersRating', JSON.stringify(playersRating), (err) =>{
-                   if(err){
-                     console.log("Ошибка сохранения рейтинга", err);
-                    reject(err)
-                    } else {
-                         resolve();
-                    }
-              });
-           } catch(error){
-               console.error("Ошибка при сохранении рейтинга", error);
-              reject(error);
-           }
-         })
-    }
-     function loadRating() {
-       return new Promise((resolve, reject) =>{
-          try{
-              const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-               loadFunction('playersRating',(err, value) =>{
-                  if(err){
-                     console.error("Ошибка при загрузке рейтинга:", err);
-                    reject(err)
-                   return;
-                   }
-                  playersRating = value ? JSON.parse(value) : [];
-                     updateRatingDisplay();
-                     resolve();
-            });
-         } catch(error){
-             console.error("Ошибка при загрузке рейтинга", error);
-            reject(error);
-        }
-    })
-}
-    function savePlayerName() {
-       return new Promise((resolve, reject) =>{
-             try{
+        return new Promise((resolve, reject) => {
+            try {
                 const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-                 saveFunction('playerName',JSON.stringify(playerName), (err) =>{
-                    if(err){
-                      console.log("Ошибка при сохранении имени игрока", err)
-                       reject(err)
-                   }
-                    else{
-                       resolve();
+                saveFunction('playersRating', JSON.stringify(playersRating), (err) => {
+                    if (err) {
+                        console.log("Ошибка сохранения рейтинга", err);
+                        reject(err);
+                    } else {
+                        resolve();
                     }
                 });
-            } catch(error){
-                console.error("Ошибка при сохранении имени игрока", error);
-             reject(error);
+            } catch (error) {
+                console.error("Ошибка при сохранении рейтинга", error);
+                reject(error);
             }
-        })
+        });
     }
-  function loadPlayerName() {
-       return new Promise((resolve, reject) => {
-        try{
-           const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-          loadFunction('playerName', (err, value) =>{
-              if(err){
-                  console.error("Ошибка при загрузке имени игрока:", err)
-                  reject(err);
-                    return;
-               }
-              playerName = value ? JSON.parse(value) : null;
-                resolve();
-           });
-      } catch(error){
-         console.error("Ошибка при загрузке имени игрока", error);
-        reject(error)
-        }
-    });
-   }
+    function loadRating() {
+         return new Promise((resolve, reject) => {
+            try {
+                const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
+                loadFunction('playersRating', (err, value) => {
+                    if (err) {
+                        console.error("Ошибка при загрузке рейтинга:", err);
+                        reject(err);
+                        return;
+                    }
+                    playersRating = value ? JSON.parse(value) : [];
+                    updateRatingDisplay();
+                    resolve();
+                });
+            } catch (error) {
+                console.error("Ошибка при загрузке рейтинга", error);
+                reject(error);
+            }
+        });
+    }
+    function savePlayerName() {
+         return new Promise((resolve, reject) => {
+            try {
+                const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
+                saveFunction('playerName', JSON.stringify(playerName), (err) => {
+                    if (err) {
+                        console.log("Ошибка при сохранении имени игрока", err);
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            } catch (error) {
+                console.error("Ошибка при сохранении имени игрока", error);
+                reject(error);
+            }
+        });
+    }
+    function loadPlayerName() {
+        return new Promise((resolve, reject) => {
+            try {
+                const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
+                loadFunction('playerName', (err, value) => {
+                    if (err) {
+                        console.error("Ошибка при загрузке имени игрока:", err);
+                        reject(err);
+                        return;
+                    }
+                    playerName = value ? JSON.parse(value) : null;
+                    resolve();
+                });
+            } catch (error) {
+                console.error("Ошибка при загрузке имени игрока", error);
+                reject(error);
+            }
+        });
+    }
    function updateRatingDisplay() {
     try{
             if(ratingList){
@@ -306,68 +305,77 @@ document.addEventListener('DOMContentLoaded', function() {
                console.error("Ошибка при сбросе прогресса", error);
         }
     }
-    function saveData() {
-        return new Promise((resolve, reject) =>{
-            try{
-                 let data = {
-                     clickCount: clickCount,
-                     clickValue: clickValue,
-                     autoClickerValue: autoClickerValue,
-                     clickUpgradeCost: clickUpgradeCost,
-                      autoUpgradeCost: autoUpgradeCost,
-                     clickUpgradeLevel: clickUpgradeLevel,
-                    clickUpgradeLevelCost: clickUpgradeLevelCost,
-                     prestigeLevel: prestigeLevel,
-                     prestigeMultiplier: prestigeMultiplier,
+   function saveData() {
+       return new Promise((resolve, reject) => {
+           try {
+               const data = {
+                   clickCount: clickCount,
+                   clickValue: clickValue,
+                   autoClickerValue: autoClickerValue,
+                   clickUpgradeCost: clickUpgradeCost,
+                   autoUpgradeCost: autoUpgradeCost,
+                   clickUpgradeLevel: clickUpgradeLevel,
+                   clickUpgradeLevelCost: clickUpgradeLevelCost,
+                   prestigeLevel: prestigeLevel,
+                   prestigeMultiplier: prestigeMultiplier,
                    achievements: achievements,
                    achievementCount: achievementCount,
                    bonusActive: bonusActive
-                };
-                    const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-                   saveFunction('clickerData', JSON.stringify(data), (err) =>{
-                       if(err){
-                          console.error("Ошибка при сохранении игры", err);
-                            reject(err);
-                       } else {
-                           resolve();
-                        }
-                    });
-            } catch(error){
-                 console.error("Ошибка при сохранении данных игры", error);
-                  reject(error);
-            }
-        })
-   }
+               };
+
+               const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
+               console.log("Сохранение данных:", data);
+               saveFunction('clickerData', JSON.stringify(data), (err) => {
+                  if (err) {
+                      console.error("Ошибка при сохранении:", err);
+                      reject(err);
+                  } else {
+                      console.log("Данные успешно сохранены!");
+                      resolve();
+                  }
+               });
+
+           } catch (error) {
+               console.error("Ошибка при сохранении данных игры", error);
+               reject(error);
+           }
+       });
+    }
+
 
   function loadGame() {
-        return new Promise((resolve, reject) => {
-           try{
-                const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-                 loadFunction('clickerData', (err, value) =>{
-                       if (err) {
-                         console.error("Ошибка при загрузке данных:", err);
-                        reject(err);
-                     return;
-                 }
-                   if (value) {
-                        try{
-                              let savedData = JSON.parse(value);
-                              clickCount = savedData.clickCount || 0;
-                             clickValue = savedData.clickValue || 1;
-                              autoClickerValue = savedData.autoClickerValue || 0;
-                              clickUpgradeCost = savedData.clickUpgradeCost || 10;
-                              autoUpgradeCost = savedData.autoUpgradeCost || 50;
-                              clickUpgradeLevel = savedData.clickUpgradeLevel || 1;
-                             clickUpgradeLevelCost = savedData.clickUpgradeLevelCost || 100;
-                              prestigeLevel = savedData.prestigeLevel || 0;
-                              prestigeMultiplier = savedData.prestigeMultiplier || 1;
-                              achievements = savedData.achievements || [];
-                              achievementCount = savedData.achievementCount || 0;
-                            if(achievementsDisplay)achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-                               if (autoClickerValue > 0) {
-                                   autoClickerInterval = setInterval(autoClick, 1000);
-                              }
-                              if (savedData.bonusActive) {
+     return new Promise((resolve, reject) => {
+         try {
+             const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
+            loadFunction('clickerData', (err, value) => {
+               if (err) {
+                    console.error("Ошибка при загрузке данных:", err);
+                     reject(err);
+                    return;
+               }
+               if (value) {
+                    try {
+                        const savedData = JSON.parse(value);
+                         console.log("Данные загружены:", savedData);
+                        let tempClickValue = savedData.clickValue || 1;
+                         clickCount = savedData.clickCount || 0;
+                       clickValue = tempClickValue;
+                        autoClickerValue = savedData.autoClickerValue || 0;
+                        clickUpgradeCost = savedData.clickUpgradeCost || 10;
+                        autoUpgradeCost = savedData.autoUpgradeCost || 50;
+                        clickUpgradeLevel = savedData.clickUpgradeLevel || 1;
+                        clickUpgradeLevelCost = savedData.clickUpgradeLevelCost || 100;
+                        prestigeLevel = savedData.prestigeLevel || 0;
+                        prestigeMultiplier = savedData.prestigeMultiplier || 1;
+                        achievements = savedData.achievements || [];
+                        achievementCount = savedData.achievementCount || 0;
+                        bonusActive = savedData.bonusActive || false;
+
+                        if (achievementsDisplay) achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+                        if (autoClickerValue > 0) {
+                             autoClickerInterval = setInterval(autoClick, 1000);
+                        }
+                       if (bonusActive) {
                                 bonusActive = true;
                                   clickValue *= 2;
                                    autoClickerValue *= 2;
@@ -377,24 +385,26 @@ document.addEventListener('DOMContentLoaded', function() {
                                      autoClickerValue /= 2;
                                  }, 10000);
                            }
-                              updateDisplay();
-                             resolve();
-                       } catch(parseError){
-                             console.error("Ошибка при парсинге данных:", parseError);
-                            resetGame();
-                              reject(parseError);
-                          }
-                     } else {
-                          console.log("Нет данных игры. Начинаем новую игру");
+                        updateDisplay();
+                        console.log('clickValue после загрузки: ', clickValue)
                          resolve();
-                       }
-                   });
-             } catch(error){
-               console.error("Ошибка при загрузке игры", error);
-                reject(error);
-          }
-       });
-    }
+
+                    } catch (parseError) {
+                        console.error("Ошибка при парсинге данных:", parseError);
+                         resetGame();
+                        reject(parseError);
+                     }
+                 } else {
+                    console.log("Нет данных игры. Начинаем новую игру");
+                     resolve();
+               }
+            });
+         } catch (error) {
+             console.error("Ошибка при загрузке игры", error);
+             reject(error);
+         }
+     });
+  }
 
     // Сохранение данных при изменении прогресса
     function handleSave() {
@@ -404,32 +414,37 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('click', handleSave);
     window.addEventListener('keydown', handleSave);
 
-    if(clickButton){
-            clickButton.addEventListener('click', function() {
-                try{
-                     clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
-                     updateDisplay();
-                      checkAchievements();
-                      saveData();
-                       updatePlayerScore(); // Сохраняем данные игрока
-                } catch(error){
-                    console.error("Ошибка при клике на кнопку", error);
-               }
-             });
-    }
 
+  if(clickButton){
+         clickButton.addEventListener('click', function() {
+          try{
+             let clicksToAdd = (clickValue * clickUpgradeLevel) * prestigeMultiplier;
+                if (bonusActive) {
+                    clicksToAdd *= 2
+                }
+                console.log("Прибавляем кликов:", clicksToAdd);
+              clickCount += clicksToAdd;
+              updateDisplay();
+              checkAchievements();
+               saveData();
+              updatePlayerScore(); // Сохраняем данные игрока
+          } catch(error){
+             console.error("Ошибка при клике на кнопку", error);
+          }
+      });
+  }
   if(upgradeClickLevelButton){
          upgradeClickLevelButton.addEventListener('click', function() {
             try{
-                 if (clickCount >= clickUpgradeLevelCost) {
-                   clickCount -= clickUpgradeLevelCost;
-                 clickUpgradeLevel++;
-                   clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
-                   updateDisplay();
-                    displayMessage('Уровень улучшения клика повышен!');
-                     saveData();
-               } else {
-                  displayMessage('Недостаточно кликов!', 'red');
+                if (clickCount >= clickUpgradeLevelCost) {
+                    clickCount -= clickUpgradeLevelCost;
+                    clickUpgradeLevel++;
+                    clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
+                    updateDisplay();
+                      displayMessage('Уровень улучшения клика повышен!');
+                    saveData();
+                } else {
+                    displayMessage('Недостаточно кликов!', 'red');
                 }
             } catch(error){
                 console.error("Ошибка при улучшении уровня клика", error);
@@ -489,7 +504,6 @@ document.addEventListener('DOMContentLoaded', function() {
                       autoUpgradeCost = 50;
                     clickUpgradeLevel = 1;
                       clickUpgradeLevelCost = 100;
-                     clickUpgradeLevelCost = 100;
                      clearInterval(autoClickerInterval);
                        autoClickerInterval = null;
                    updateDisplay();
