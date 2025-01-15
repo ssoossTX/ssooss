@@ -9,44 +9,44 @@
 <body>
     <div class="container">
         <nav class="menu">
-            <button class="menu-toggle" aria-label="Открыть меню">☰</button>
-            <ul class="menu-items">
+            <button class="menu-toggle" aria-label="Открыть меню" aria-controls="menu-items" aria-expanded="false">☰</button>
+            <ul class="menu-items" id="menu-items">
                 <li><button data-tab="shop">Магазин</button></li>
                 <li><button data-tab="rating">Рейтинг</button></li>
             </ul>
         </nav>
         <div class="content">
-           <div id="game-content">
+           <div id="game-content" role="region" aria-label="Игровая область">
             <h1>Кликер</h1>
             <div class="counter">
                 <p id="click-count">0</p>
             </div>
-            <button id="click-button" class="game-button" aria-label="Кликнуть для увеличения счетчика">Клик!</button>
-            <div class="upgrades">
+            <button id="click-button" class="game-button" aria-label="Кликнуть для увеличения счетчика на 1">Клик!</button>
+            <section class="upgrades">
                 <h2>Улучшения</h2>
                 <div class="upgrade-item" id="upgrade-click">
                     <p>Улучшение клика (+1)</p>
                     <p>Цена: <span id="click-upgrade-cost">10</span></p>
-                    <button class="buy-upgrade game-button">Купить</button>
+                    <button class="buy-upgrade game-button" aria-label="Купить улучшение клика">Купить</button>
                 </div>
                 <div class="upgrade-item" id="upgrade-auto">
                     <p>Автокликер</p>
                     <p>Цена: <span id="auto-upgrade-cost">50</span></p>
-                    <button class="buy-upgrade game-button">Купить</button>
+                     <button class="buy-upgrade game-button" aria-label="Купить автокликер">Купить</button>
                 </div>
                  <div class="upgrade-item" id="upgrade-click-level">
                     <p>Уровень улучшения клика: <span id="click-upgrade-level-display">1</span></p>
                     <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
-                     <button class="buy-upgrade game-button">Купить уровень</button>
+                     <button class="buy-upgrade game-button" aria-label="Купить уровень улучшения клика">Купить уровень</button>
                  </div>
-                <div class="message" id="message"></div>
-            </div>
-            <button id="prestige-button" class="game-button" aria-label="Переродиться для получения бонуса">Переродиться</button>
+                <div class="message" id="message" aria-live="polite"></div>
+            </section>
+            <button id="prestige-button" class="game-button" aria-label="Переродиться для получения бонуса x2 и сброса прогресса">Переродиться</button>
             <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
             <div id="achievements">Достижения: 0</div>
-            <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры">Сбросить прогресс</button>
+            <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
            </div>
-            <div id="rating-content" style="display: none;">
+            <div id="rating-content" role="region" aria-label="Рейтинг игроков" style="display: none;">
                 <h2>Рейтинг игроков</h2>
                 <ul id="rating-list"></ul>
             </div>
@@ -55,4 +55,3 @@
     <script src="script.js"></script>
 </body>
     </html>
-    
