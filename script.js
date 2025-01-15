@@ -352,7 +352,6 @@ document.addEventListener('DOMContentLoaded', function() {
                    if (value) {
                         try{
                               let savedData = JSON.parse(value);
-                              console.log('Загруженные данные:', savedData);
                               clickCount = savedData.clickCount || 0;
                              clickValue = savedData.clickValue || 1;
                               autoClickerValue = savedData.autoClickerValue || 0;
@@ -405,37 +404,32 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('click', handleSave);
     window.addEventListener('keydown', handleSave);
 
+    if(clickButton){
+            clickButton.addEventListener('click', function() {
+                try{
+                     clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
+                     updateDisplay();
+                      checkAchievements();
+                      saveData();
+                       updatePlayerScore(); // Сохраняем данные игрока
+                } catch(error){
+                    console.error("Ошибка при клике на кнопку", error);
+               }
+             });
+    }
 
-  if(clickButton){
-         clickButton.addEventListener('click', function() {
-          try{
-             let clicksToAdd = (clickValue * clickUpgradeLevel) * prestigeMultiplier;
-                if (bonusActive) {
-                    clicksToAdd *= 2
-                }
-                console.log("Прибавляем кликов:", clicksToAdd);
-              clickCount += clicksToAdd;
-              updateDisplay();
-              checkAchievements();
-               saveData();
-              updatePlayerScore(); // Сохраняем данные игрока
-          } catch(error){
-             console.error("Ошибка при клике на кнопку", error);
-          }
-      });
-  }
   if(upgradeClickLevelButton){
          upgradeClickLevelButton.addEventListener('click', function() {
             try{
-                if (clickCount >= clickUpgradeLevelCost) {
-                    clickCount -= clickUpgradeLevelCost;
-                    clickUpgradeLevel++;
-                    clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
-                    updateDisplay();
-                      displayMessage('Уровень улучшения клика повышен!');
-                    saveData();
-                } else {
-                    displayMessage('Недостаточно кликов!', 'red');
+                 if (clickCount >= clickUpgradeLevelCost) {
+                   clickCount -= clickUpgradeLevelCost;
+                 clickUpgradeLevel++;
+                   clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
+                   updateDisplay();
+                    displayMessage('Уровень улучшения клика повышен!');
+                     saveData();
+               } else {
+                  displayMessage('Недостаточно кликов!', 'red');
                 }
             } catch(error){
                 console.error("Ошибка при улучшении уровня клика", error);
@@ -495,6 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       autoUpgradeCost = 50;
                     clickUpgradeLevel = 1;
                       clickUpgradeLevelCost = 100;
+                     clickUpgradeLevelCost = 100;
                      clearInterval(autoClickerInterval);
                        autoClickerInterval = null;
                    updateDisplay();
