@@ -348,9 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
              gameState.clickCount -= gameState.clickUpgradeLevelCost;
            gameState.clickUpgradeLevel++;
-           gameState.clickUpgradeCost = 10;
-            gameState.clickCount = 0;
-          gameState.clickValue = 1;
              gameState.clickUpgradeLevelCost = Math.round(gameState.clickUpgradeLevelCost * 2.5);
             updateDisplay();
             displayMessage('Уровень улучшения клика повышен!');
@@ -424,6 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadGame();
     startRandomEvent();
     checkAchievements();
-    switchTab('shop')
+    switchTab('shop');
+     loadRating(); // Загружаем рейтинг при старте игры
 });
         
