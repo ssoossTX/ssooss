@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
     const RATING_KEY = 'clickerRating'; // Ключ для сохранения рейтинга
-
+    const PLAYER_NAME_KEY = 'playerName'; // Ключ для сохранения имени игрока
 
     // --- Состояния игры ---
     let gameState = {
@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         autoClickerInterval: null,
         bonusTimeout: null,
         randomEventTimeout: null,
+        playerName: null,
     };
 
     // --- UI элементы ---
@@ -50,7 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
         gameContent: document.getElementById('game-content'),
         ratingContent: document.getElementById('rating-content'),
         menuItems: document.querySelectorAll('.menu-items li button'),
-         ratingList: document.getElementById('rating-list'), // Добавлен элемент для списка рейтинга
+        ratingList: document.getElementById('rating-list'),
+          nameInputContainer: document.getElementById('name-input-container'),
+          playerNameInput: document.getElementById('player-name'),
+          setNameButton: document.getElementById('set-name-button'),
     };
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
@@ -173,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             autoClickerInterval: null,
             bonusTimeout: null,
             randomEventTimeout: null,
+            playerName: null,
         };
         clearAllTimeouts();
         startRandomEvent();
@@ -180,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
         clearRating(); // Очищаем рейтинг при сбросе игры
+         showNameInput();
     }
 
     function clearAllTimeouts() {
@@ -222,11 +228,15 @@ document.addEventListener('DOMContentLoaded', () => {
                          handleBonusEvent();
                      }
                     updateDisplay();
+                      loadPlayerName(); // Загружаем имя игрока
                      loadRating(); // Загружаем рейтинг при загрузке игры
                 } catch (e) {
                     console.error('Error parsing saved data', e);
                     clearSaveData();
+                     showNameInput();
                 }
+            } else {
+                 showNameInput();
             }
         }
          if (tWebApp) {
@@ -237,6 +247,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (value) {
                      loadFromStorage({ getItem: () => value });
+                } else {
+                     showNameInput();
                 }
             });
         } else {
@@ -244,11 +256,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+     function loadPlayerName() {
+        const loadFromStorage = (storage) => {
+             const playerName = storage.getItem(PLAYER_NAME_KEY);
+                if (playerName) {
+                   gameState.playerName = playerName
+                } else {
+                      showNameInput();
+                 }
+        }
+          if (tWebApp) {
+           tWebApp.CloudStorage.getItem(PLAYER_NAME_KEY, (err, value) => {
+                if (err) {
+                     console.error('Error loading player name data from Telegram', err);
+                    return;
+               }
+               if (value) {
+                   loadFromStorage({ getItem: () => value });
+               } else {
+                     showNameInput();
+               }
+          });
+         } else {
+           loadFromStorage(localStorage);
+        }
+    }
+
+      function savePlayerName() {
+           if(gameState.playerName){
+              if (tWebApp) {
+                  tWebApp.CloudStorage.setItem(PLAYER_NAME_KEY, gameState.playerName);
+              } else {
+                 localStorage.setItem(PLAYER_NAME_KEY, gameState.playerName);
+               }
+           }
+       }
+
+      function clearPlayerName() {
+            if (tWebApp) {
+                tWebApp.CloudStorage.removeItem(PLAYER_NAME_KEY);
+            } else {
+                localStorage.removeItem(PLAYER_NAME_KEY);
+           }
+       }
     // --- Рейтинг ---
 
     function updateRating() {
-           const playerName = tWebApp ? tWebApp.initDataUnsafe?.user?.username || 'Anonymus' : 'Anonymus';
-
+       if (!gameState.playerName) {
+             return;
+        }
+           const playerName = gameState.playerName
           const newScore =  gameState.clickCount + (gameState.prestigeLevel * 100000) ;
         let rating = loadRatingData();
           const playerIndex = rating.findIndex(item => item.name === playerName);
@@ -329,6 +386,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+     function showNameInput() {
+           elements.gameContent.style.display = 'none';
+           elements.ratingContent.style.display = 'none';
+        elements.nameInputContainer.style.display = 'block';
+    }
+
+    function hideNameInput() {
+         elements.nameInputContainer.style.display = 'none';
+        elements.gameContent.style.display = 'block';
+    }
+
     function switchTab(tabId) {
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
         elements.ratingContent.style.display = tabId === 'rating' ? 'block' : 'none';
@@ -348,6 +416,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
              gameState.clickCount -= gameState.clickUpgradeLevelCost;
            gameState.clickUpgradeLevel++;
+           gameState.clickUpgradeCost = 10;
+            gameState.clickCount = 0;
+          gameState.clickValue = 1;
              gameState.clickUpgradeLevelCost = Math.round(gameState.clickUpgradeLevelCost * 2.5);
             updateDisplay();
             displayMessage('Уровень улучшения клика повышен!');
@@ -406,12 +477,32 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.menuButton.classList.toggle('active');
     });
 
+      elements.setNameButton.addEventListener('click', () => {
+        const newName = elements.playerNameInput.value.trim();
+            if (newName) {
+                 gameState.playerName = newName;
+                 savePlayerName();
+                  hideNameInput();
+                 updateRating();
+            } else {
+                  displayMessage('Введите имя!', 'red');
+          }
+     });
+
+     elements.menu.addEventListener('click', (event) => {
+         if (event.target.dataset.action === 'change-name'){
+             showNameInput();
+             elements.menu.classList.remove('active');
+            elements.menuButton.classList.remove('active');
+        }
+     });
+
     elements.menuItems.forEach(item => {
           item.addEventListener('click', () => {
              const tabId = item.dataset.tab;
               switchTab(tabId)
-             elements.menu.classList.remove('active');
-             elements.menuButton.classList.remove('active');
+              elements.menu.classList.remove('active');
+            elements.menuButton.classList.remove('active');
           })
       })
 
@@ -421,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadGame();
     startRandomEvent();
     checkAchievements();
-    switchTab('shop');
-     loadRating(); // Загружаем рейтинг при старте игры
+     switchTab('shop');
+    loadRating();
 });
         
