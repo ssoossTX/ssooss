@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 startRandomEvent();
                 checkAchievements();
                 await loadRating();
-                await loadPlayerName();
+                 await loadPlayerName();
                 if(!playerName) updatePlayerScore();
                    gameLoaded = true;
             } catch (error) {
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         try{
            clickCount += (autoClickerValue * clickUpgradeLevel) * prestigeMultiplier;
              updateDisplay();
-             if(gameLoaded) saveData();
+               if(gameLoaded) saveData();
         } catch(error){
              console.error("Ошибка в автоклике", error);
        }
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                   autoClickerValue *= 2;
                  displayMessage('Случайный бонус: удвоенный урон!', 'blue');
                  updateDisplay();
-                if(gameLoaded) saveData();
+                  if(gameLoaded) saveData();
                  clearTimeout(bonusTimeout);
                 bonusTimeout = setTimeout(() => {
                     bonusActive = false;
@@ -140,12 +140,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 displayMessage('Случайный штраф: клики уменьшены в 2 раза!', 'red');
                   clickValue /= 2;
                   updateDisplay();
-                  if(gameLoaded) saveData();
+                   if(gameLoaded) saveData();
                  setTimeout(() => {
                     clickValue *= 2;
                      displayMessage('Штраф закончился!');
                     updateDisplay();
-                   if(gameLoaded)  saveData();
+                  if(gameLoaded)  saveData();
                  }, 10000);
             }
          randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (120000 - 60000) + 60000);
@@ -177,12 +177,12 @@ document.addEventListener('DOMContentLoaded', async function() {
               achievements.push(achievement);
            achievementCount++;
             if(achievementsDisplay) achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-             if(gameLoaded) saveData();
+           if(gameLoaded) saveData();
        }catch(error){
            console.error("Ошибка при добавлении достижения", error)
        }
    }
-    async function saveRating() {
+   async function saveRating() {
         try {
             const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
            await new Promise((resolve, reject) => {
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 console.error("Ошибка при сохранении рейтинга:", error);
         }
     }
-    async function loadRating() {
+   async function loadRating() {
          return new Promise((resolve, reject) => {
             try {
                 const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
@@ -209,7 +209,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                         reject(err);
                         return;
                     }
-                    playersRating = value ? JSON.parse(value) : [];
+                     try {
+                         playersRating = value ? JSON.parse(value) : [];
+                      } catch (parseError){
+                          console.error("Ошибка при парсинге рейтинга:", parseError);
+                        playersRating = [];
+                    }
                     updateRatingDisplay();
                     resolve();
                 });
@@ -246,7 +251,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                         reject(err);
                         return;
                     }
-                    playerName = value ? JSON.parse(value) : null;
+                   try {
+                         playerName = value ? JSON.parse(value) : null;
+                      } catch (parseError) {
+                          console.error("Ошибка при парсинге имени игрока:", parseError);
+                          playerName = null;
+                      }
                     resolve();
                 });
             } catch (error) {
@@ -370,10 +380,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                                 prestigeMultiplier = savedData.prestigeMultiplier || 1;
                                 achievements = savedData.achievements || [];
                                 achievementCount = savedData.achievementCount || 0;
-                                playerName = savedData.playerName;
+                                 playerName = savedData.playerName;
                                bonusActive = savedData.bonusActive || false;
-
-                                if (achievementsDisplay) achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+                             if (achievementsDisplay) achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
                                  if (autoClickerValue > 0) {
                                      autoClickerInterval = setInterval(autoClick, 1000);
                                  }
@@ -395,7 +404,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                                 reject(error);
                             }
                     }
-                     resolve();
+                      resolve();
               });
             }
             catch(error) {
@@ -407,15 +416,20 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Сохранение данных перед закрытием или перезагрузкой страницы
     window.addEventListener('beforeunload', async function() {
-        if(isTWA){
+      if(isTWA){
            return;
         }
-        await saveData();
-       await saveRating();
+       // await saveData();
+       // await saveRating();
     });
 
+    // Чаще вызываем сохранение
+    setInterval(() => {
+         if(gameLoaded)  saveData();
+    }, 5000);
+
   function handleSave() {
-        if(gameLoaded) saveData();
+    if(gameLoaded) saveData();
     }
     window.addEventListener('click', handleSave);
     window.addEventListener('keydown', handleSave);
@@ -465,7 +479,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                       clickUpgradeCost = Math.round(clickUpgradeCost * 1.8);
                      updateDisplay();
                      displayMessage('Улучшение клика приобретено!');
-                       if(gameLoaded) saveData();
+                     if(gameLoaded) saveData();
                     } else {
                       displayMessage('Недостаточно кликов!', 'red');
                     }
@@ -486,7 +500,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                       autoUpgradeCost = Math.round(autoUpgradeCost * 2.2);
                      updateDisplay();
                     displayMessage('Автокликер приобретен!');
-                      if(gameLoaded) saveData();
+                       if(gameLoaded) saveData();
                    } else {
                       displayMessage('Недостаточно кликов!', 'red');
                   }
@@ -513,7 +527,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                        autoClickerInterval = null;
                    updateDisplay();
                     displayMessage('Перерождение!');
-                     if(gameLoaded) await saveData();
+                      if(gameLoaded) await saveData();
                    updatePlayerScore();
                   } else {
                      displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
@@ -536,7 +550,7 @@ document.addEventListener('DOMContentLoaded', async function() {
          try{
                if (!playerName) {
                    playerName = prompt('Введите ваше имя:', 'Игрок');
-                    await savePlayerName();
+                     if(playerName) await savePlayerName();
                  }
                  if (playerName) {
                     const playerScore = clickCount + (prestigeLevel * 10000);
@@ -544,7 +558,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     if (existingPlayerIndex > -1) {
                         if(playersRating[existingPlayerIndex].score !== playerScore){
                            playersRating[existingPlayerIndex].score = playerScore;
-                           await saveRating();
+                             await saveRating();
                            updateRatingDisplay();
                         }
                      } else {
