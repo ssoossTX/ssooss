@@ -13,7 +13,7 @@
             <ul class="menu-items">
                 <li><button data-tab="shop">Магазин</button></li>
                 <li><button data-tab="profile">Профиль</button></li>
-                <li><button data-tab="rating">Рейтинг</button></li>  <!-- Добавлено меню рейтинга -->
+                <li><button data-tab="rating">Рейтинг</button></li>
                 <li><button data-tab="settings">Настройки</button></li>
             </ul>
         </nav>
@@ -29,17 +29,17 @@
                 <div class="upgrade-item" id="upgrade-click">
                     <p>Улучшение клика (+1)</p>
                     <p>Цена: <span id="click-upgrade-cost">10</span></p>
-                    <button class="buy-upgrade" data-upgrade="click">Купить</button>
+                    <button class="buy-upgrade">Купить</button>
                 </div>
                 <div class="upgrade-item" id="upgrade-auto">
                     <p>Автокликер</p>
                     <p>Цена: <span id="auto-upgrade-cost">50</span></p>
-                    <button class="buy-upgrade" data-upgrade="auto">Купить</button>
+                    <button class="buy-upgrade">Купить</button>
                 </div>
                  <div class="upgrade-item" id="upgrade-click-level">
                     <p>Уровень улучшения клика: <span id="click-upgrade-level-display">1</span></p>
                     <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
-                    <button class="buy-upgrade" data-upgrade="level">Купить уровень</button>
+                     <button class="buy-upgrade">Купить уровень</button>
                  </div>
                 <div class="message" id="message"></div>
             </div>
@@ -48,12 +48,13 @@
             <div id="achievements">Достижения: 0</div>
             <button id="reset-button" aria-label="Сбросить прогресс игры">Сбросить прогресс</button>
            </div>
-            <div id="rating-content" style="display: none;"> <!-- Скрытое содержимое для рейтинга -->
+            <div id="rating-content" style="display: none;">
                 <h2>Рейтинг игроков</h2>
-                <ul id="rating-list"></ul> <!-- Список для отображения рейтинга -->
+                <ul id="rating-list"></ul>
             </div>
         </div>
     </div>
     <script src="script.js"></script>
 </body>
-    </html>
+               </html>
+    
