@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             checkAchievements();
             loadRating();
             loadPlayerName();
+             setupEventListeners();
         });
     } else {
         loadGame();
@@ -58,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkAchievements();
         loadRating();
         loadPlayerName();
+        setupEventListeners();
     }
 
     function updateDisplay() {
@@ -285,18 +287,62 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleSave() {
         saveData();
     }
-    window.addEventListener('click', handleSave);
-    window.addEventListener('keydown', handleSave);
-    clickButton.addEventListener('click', function() {
+      function setupEventListeners() {
+          window.addEventListener('click', handleSave);
+        window.addEventListener('keydown', handleSave);
+        clickButton.addEventListener('click', handleClick);
+        clickButton.addEventListener('mouseup', handleClick);
+        clickButton.addEventListener('touchstart', handleClick);
+        
+         upgradeClickLevelButton.addEventListener('click', handleUpgradeClickLevel);
+        upgradeClickLevelButton.addEventListener('mouseup', handleUpgradeClickLevel);
+        upgradeClickLevelButton.addEventListener('touchstart', handleUpgradeClickLevel);
+
+        upgradeClickButton.addEventListener('click', handleUpgradeClick);
+        upgradeClickButton.addEventListener('mouseup', handleUpgradeClick);
+         upgradeClickButton.addEventListener('touchstart', handleUpgradeClick);
+
+        upgradeAutoButton.addEventListener('click', handleUpgradeAuto);
+        upgradeAutoButton.addEventListener('mouseup', handleUpgradeAuto);
+        upgradeAutoButton.addEventListener('touchstart', handleUpgradeAuto);
+
+         prestigeButton.addEventListener('click', handlePrestige);
+        prestigeButton.addEventListener('mouseup', handlePrestige);
+         prestigeButton.addEventListener('touchstart', handlePrestige);
+
+        resetButton.addEventListener('click', handleReset);
+        resetButton.addEventListener('mouseup', handleReset);
+        resetButton.addEventListener('touchstart', handleReset);
+        // Menu logic
+         menuToggle.addEventListener('click', () => {
+             menuItems.classList.toggle('active');
+         });
+
+         // Логика для перехода между вкладками
+         menuItems.addEventListener('click', (e) => {
+             if (e.target.tagName === 'BUTTON') {
+                 const tab = e.target.dataset.tab;
+                 if (tab === 'rating') {
+                     gameContent.style.display = 'none';
+                     ratingContent.style.display = 'block';
+                     updateRatingDisplay();
+                 } else {
+                     gameContent.style.display = 'block';
+                     ratingContent.style.display = 'none';
+                 }
+                 menuItems.classList.remove('active');
+             }
+         });
+    }
+      function handleClick(e) {
         clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
         updateDisplay();
         checkAchievements();
         saveData();
-        updatePlayerScore(); // Сохраняем данные игрока
-    });
-
-    upgradeClickLevelButton.addEventListener('click', function() {
-        if (clickCount >= clickUpgradeLevelCost) {
+        updatePlayerScore();
+    }
+    function handleUpgradeClickLevel(e) {
+       if (clickCount >= clickUpgradeLevelCost) {
             clickCount -= clickUpgradeLevelCost;
             clickUpgradeLevel++;
             clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
@@ -306,9 +352,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
-    });
-
-    upgradeClickButton.addEventListener('click', function() {
+    }
+     function handleUpgradeClick(e) {
         if (clickCount >= clickUpgradeCost) {
             clickCount -= clickUpgradeCost;
             clickValue++;
@@ -319,26 +364,26 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
-    });
+    }
 
-    upgradeAutoButton.addEventListener('click', function() {
-        if (clickCount >= autoUpgradeCost) {
-            clickCount -= autoUpgradeCost;
-            autoClickerValue++;
-            if (!autoClickerInterval) {
-                autoClickerInterval = setInterval(autoClick, 1000);
+     function handleUpgradeAuto(e) {
+           if (clickCount >= autoUpgradeCost) {
+                clickCount -= autoUpgradeCost;
+                autoClickerValue++;
+                if (!autoClickerInterval) {
+                    autoClickerInterval = setInterval(autoClick, 1000);
+                }
+                autoUpgradeCost = Math.round(autoUpgradeCost * 2.2);
+                updateDisplay();
+                displayMessage('Автокликер приобретен!');
+                saveData();
+            } else {
+                displayMessage('Недостаточно кликов!', 'red');
             }
-            autoUpgradeCost = Math.round(autoUpgradeCost * 2.2);
-            updateDisplay();
-            displayMessage('Автокликер приобретен!');
-            saveData();
-        } else {
-            displayMessage('Недостаточно кликов!', 'red');
         }
-    });
 
-    prestigeButton.addEventListener('click', function() {
-        if (clickCount >= 10000) {
+     function handlePrestige(e) {
+       if (clickCount >= 10000) {
             prestigeLevel++;
             prestigeMultiplier *= 2;
             clickCount = 0;
@@ -353,16 +398,14 @@ document.addEventListener('DOMContentLoaded', function() {
             updateDisplay();
             displayMessage('Перерождение!');
             saveData();
-            updatePlayerScore(); // Сохраняем данные игрока
+            updatePlayerScore();
         } else {
             displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
         }
-    });
-
-    resetButton.addEventListener('click', function() {
-        resetGame();
-    });
-
+        }
+    function handleReset(e) {
+         resetGame();
+    }
     function updatePlayerScore() {
         if (!playerName) {
             playerName = prompt('Введите ваше имя:', 'Игрок');
@@ -382,24 +425,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Menu logic
-    menuToggle.addEventListener('click', () => {
-        menuItems.classList.toggle('active');
-    });
 
-    // Логика для перехода между вкладками
-    menuItems.addEventListener('click', (e) => {
-        if (e.target.tagName === 'BUTTON') {
-            const tab = e.target.dataset.tab;
-            if (tab === 'rating') {
-                gameContent.style.display = 'none';
-                ratingContent.style.display = 'block';
-                updateRatingDisplay();
-            } else {
-                gameContent.style.display = 'block';
-                ratingContent.style.display = 'none';
-            }
-            menuItems.classList.remove('active');
-        }
-    });
+
 });
