@@ -101,10 +101,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
      function autoClick() {
         try{
-           clickCount += (autoClickerValue * clickUpgradeLevel) * prestigeMultiplier;
+            const clicksToAdd = (autoClickerValue * clickUpgradeLevel) * prestigeMultiplier;
+              clickCount += clicksToAdd;
              updateDisplay();
-              saveData();
-        } catch(error){
+           // saveData(); // Убрано сохранение на каждый автоклик
+           } catch(error){
              console.error("Ошибка в автоклике", error);
        }
     }
@@ -176,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
        }
    }
     function saveRating() {
-          return new Promise((resolve, reject) => {
+           return new Promise((resolve, reject) => {
            try{
                  const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
                 saveFunction('playersRating', JSON.stringify(playersRating), (err) =>{
@@ -214,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 }
     function savePlayerName() {
-       return new Promise((resolve, reject) =>{
+        return new Promise((resolve, reject) =>{
              try{
                 const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
                  saveFunction('playerName',JSON.stringify(playerName), (err) =>{
@@ -233,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     }
   function loadPlayerName() {
-       return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         try{
            const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
           loadFunction('playerName', (err, value) =>{
@@ -401,35 +402,38 @@ document.addEventListener('DOMContentLoaded', function() {
         saveData();
     }
 
-    window.addEventListener('click', handleSave);
-    window.addEventListener('keydown', handleSave);
-
-    if(clickButton){
-            clickButton.addEventListener('click', function() {
-                try{
-                     clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
-                     updateDisplay();
-                      checkAchievements();
-                      saveData();
-                       updatePlayerScore(); // Сохраняем данные игрока
-                } catch(error){
-                    console.error("Ошибка при клике на кнопку", error);
-               }
-             });
-    }
-
+  if(clickButton){
+      let clickCountHandle = 0;
+         clickButton.addEventListener('click', function() {
+          try{
+              clickCountHandle++
+               console.log("Клик номер:" + clickCountHandle);
+               let clicksToAdd = (clickValue * clickUpgradeLevel) * prestigeMultiplier;
+                if (bonusActive) {
+                    clicksToAdd *= 2
+                  }
+                clickCount += clicksToAdd;
+              updateDisplay();
+              checkAchievements();
+              saveData();
+            updatePlayerScore();
+         } catch(error){
+            console.error("Ошибка при клике на кнопку", error);
+         }
+      });
+  }
   if(upgradeClickLevelButton){
          upgradeClickLevelButton.addEventListener('click', function() {
             try{
-                 if (clickCount >= clickUpgradeLevelCost) {
-                   clickCount -= clickUpgradeLevelCost;
-                 clickUpgradeLevel++;
-                   clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
-                   updateDisplay();
-                    displayMessage('Уровень улучшения клика повышен!');
-                     saveData();
-               } else {
-                  displayMessage('Недостаточно кликов!', 'red');
+                if (clickCount >= clickUpgradeLevelCost) {
+                    clickCount -= clickUpgradeLevelCost;
+                    clickUpgradeLevel++;
+                    clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
+                    updateDisplay();
+                      displayMessage('Уровень улучшения клика повышен!');
+                    saveData();
+                } else {
+                    displayMessage('Недостаточно кликов!', 'red');
                 }
             } catch(error){
                 console.error("Ошибка при улучшении уровня клика", error);
