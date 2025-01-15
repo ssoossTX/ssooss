@@ -1,763 +1,455 @@
+const gameConfig = {
+    saveInterval: 5000,
+    bonusDuration: 10000,
+    eventIntervalMin: 60000,
+    eventIntervalMax: 120000,
+    prestigeClicksNeeded: 10000,
+    clickUpgradeCostMultiplier: 1.8,
+    autoUpgradeCostMultiplier: 2.2,
+    clickLevelUpgradeCostMultiplier: 2.5,
+    initialClickUpgradeCost: 10,
+    initialAutoUpgradeCost: 50,
+    initialClickLevelUpgradeCost: 100,
+    saveVersion: 2,
+    backupKey: 'clickerBackup'
+};
 
-document.addEventListener('DOMContentLoaded', async function() {
+class SaveManager {
+    constructor(isTWA, gameConfig) {
+        this.isTWA = isTWA;
+        this.gameConfig = gameConfig;
+    }
 
-  let clickCount = 0;
-    let clickValue = 1;
-    let autoClickerInterval;
-    let autoClickerValue = 0;
-    let clickUpgradeCost = 10;
-    let autoUpgradeCost = 50;
-    let clickUpgradeLevel = 1;
-    let clickUpgradeLevelCost = 100;
-    let prestigeLevel = 0;
-    let prestigeMultiplier = 1;
-    let bonusActive = false;
-    let bonusTimeout;
-    let achievementCount = 0;
-    let randomEventTimeout;
-    let achievements = [];
-    let playerName;
-    let gameLoaded = false;
-
-    const clickCountDisplay = document.getElementById('click-count');
-    const clickButton = document.getElementById('click-button');
-    const upgradeClickButton = document.querySelector('#upgrade-click button');
-    const upgradeAutoButton = document.querySelector('#upgrade-auto button');
-    const upgradeClickLevelButton = document.querySelector('#upgrade-click-level button');
-    const clickUpgradeCostDisplay = document.getElementById('click-upgrade-cost');
-    const autoUpgradeCostDisplay = document.getElementById('auto-upgrade-cost');
-    const clickUpgradeLevelDisplay = document.getElementById('click-upgrade-level-display');
-    const clickUpgradeLevelCostDisplay = document.getElementById('click-upgrade-level-cost');
-    const messageDisplay = document.getElementById('message');
-    const prestigeButton = document.getElementById('prestige-button');
-    const prestigeLevelDisplay = document.getElementById('prestige-level');
-    const achievementsDisplay = document.getElementById('achievements');
-    const resetButton = document.getElementById('reset-button');
-
-    const ratingContent = document.getElementById('rating-content');
-    const gameContent = document.getElementById('game-content');
-    const ratingList = document.getElementById('rating-list');
-    let playersRating = [];
-
-    const menuToggle = document.querySelector('.menu-toggle');
-    const menuItems = document.querySelector('.menu-items');
-
-    const tWebApp = window.Telegram && window.Telegram.WebApp;
-    let isTWA = false;
-
-    let tWebAppReady = false;
-
-    if(tWebApp){
-        isTWA = true;
-        tWebApp.onEvent('web_app_ready', async function() {
-            if(tWebAppReady){
-                return;
-            }
-            tWebAppReady = true;
-            try {
-                await initializeGame();
-            } catch (error) {
-                console.error('Ошибка инициализации TWA:', error);
-            }
+    async save(key, data) {
+        const saveData = { ...data, version: this.gameConfig.saveVersion };
+        const saveFunction = this.isTWA ? window.Telegram.WebApp.CloudStorage.setItem : localStorage.setItem;
+        return new Promise((resolve, reject) => {
+            saveFunction(key, JSON.stringify(saveData), (err) => err ? reject(err) : resolve());
         });
-    } else {
-        try{
-             //  localStorage.clear(); // Очищаем localStorage для избежания конфликтов, только для браузера
-            await initializeGame();
-        } catch (error){
-            console.error('Ошибка загрузки игры в браузере:', error);
-        }
-    }
-    async function initializeGame() {
-        try{
-            await loadGame();
-            startRandomEvent();
-            checkAchievements();
-            await loadRating();
-            await loadPlayerName();
-            if(!playerName) updatePlayerScore();
-            gameLoaded = true;
-        } catch (error) {
-            console.error('Ошибка инициализации игры:', error);
-        }
-    }
-    function updateDisplay() {
-      try {
-          if (clickCountDisplay) clickCountDisplay.textContent = Math.round(clickCount);
-          if (clickUpgradeCostDisplay) clickUpgradeCostDisplay.textContent = clickUpgradeCost;
-          if (autoUpgradeCostDisplay) autoUpgradeCostDisplay.textContent = autoUpgradeCost;
-          if (clickUpgradeLevelDisplay) clickUpgradeLevelDisplay.textContent = clickUpgradeLevel;
-          if (clickUpgradeLevelCostDisplay) clickUpgradeLevelCostDisplay.textContent = clickUpgradeLevelCost;
-          if(prestigeLevelDisplay) prestigeLevelDisplay.textContent = prestigeLevel;
-      } catch(error) {
-          console.error("Ошибка при обновлении дисплея", error);
-      }
-  }
-  function displayMessage(msg, color = 'green') {
-      try{
-          if(messageDisplay){
-              messageDisplay.textContent = msg;
-              messageDisplay.style.color = color;
-              setTimeout(() => {
-                  messageDisplay.textContent = '';
-              }, 3000);
-          }
-      } catch(error){
-          console.error("Ошибка при отображении сообщения", error);
-      }
-  }
-  function autoClick() {
-      try{
-         clickCount += (autoClickerValue * clickUpgradeLevel) * prestigeMultiplier;
-            updateDisplay();
-            if(gameLoaded) saveData();
-      } catch(error){
-           console.error("Ошибка в автоклике", error);
-      }
-  }
-  function startRandomEvent() {
-      try{
-          const eventType = Math.random() < 0.5 ? 'bonus' : 'penalty';
-
-        if (eventType === 'bonus') {
-              bonusActive = true;
-              clickValue *= 2;
-              autoClickerValue *= 2;
-             displayMessage('Случайный бонус: удвоенный урон!', 'blue');
-             updateDisplay();
-              if(gameLoaded) saveData();
-             clearTimeout(bonusTimeout);
-            bonusTimeout = setTimeout(() => {
-                bonusActive = false;
-                 clickValue /= 2;
-                  autoClickerValue /= 2;
-                displayMessage('Действие бонуса закончилось!');
-                 updateDisplay();
-                if(gameLoaded) saveData();
-             }, 10000);
-        } else {
-            displayMessage('Случайный штраф: клики уменьшены в 2 раза!', 'red');
-              clickValue /= 2;
-              updateDisplay();
-               if(gameLoaded) saveData();
-             setTimeout(() => {
-                clickValue *= 2;
-                 displayMessage('Штраф закончился!');
-                updateDisplay();
-              if(gameLoaded)  saveData();
-             }, 10000);
-        }
-       randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (120000 - 60000) + 60000);
-      } catch(error){
-          console.error("Ошибка при запуске случайного события", error);
-      }
-  }
-    function checkAchievements() {
-        try{
-            if (clickCount >= 100000 && !achievements.includes('100000 clicks')) {
-                addAchievement('100000 clicks');
-            }
-            if (clickCount >= 1000000 && !achievements.includes('1000000 clicks')) {
-                addAchievement('1000000 clicks');
-            }
-            if (prestigeLevel >= 1 && !achievements.includes('first prestige')) {
-                addAchievement('first prestige');
-            }
-            if (autoClickerValue >= 5 && !achievements.includes('5 autoClicker')) {
-                addAchievement('5 autoClicker');
-            }
-        }catch(error){
-            console.error("Ошибка при проверки достижений", error);
-        }
-    }
-    function addAchievement(achievement) {
-        try{
-            achievements.push(achievement);
-            achievementCount++;
-            if(achievementsDisplay) achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-            if(gameLoaded) saveData();
-        }catch(error){
-            console.error("Ошибка при добавлении достижения", error)
-        }
     }
 
-  async function saveRating() {
-        try {
-              const saveFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.setItem : null) : null;
-            if(!saveFunction){
-               console.error("Нет доступного хранилища для рейтинга");
-                 return;
-            }
-            await new Promise((resolve, reject) => {
-                saveFunction('playersRating', JSON.stringify(playersRating), (err) => {
-                    if (err) {
-                        console.error("Ошибка при сохранении рейтинга:", err);
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                });
-            });
-        } catch (error) {
-            console.error("Ошибка при сохранении рейтинга:", error);
-        }
-    }
-    async function loadRating() {
-      return new Promise((resolve, reject) => {
-        try {
-               const loadFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.getItem : null) : null;
-          if(!loadFunction){
-               console.error("Нет доступного хранилища для загрузки рейтинга");
-                  reject("Нет доступного хранилища");
-                   return;
-          }
-          loadFunction('playersRating', (err, value) => {
-              if (err) {
-                  console.error("Ошибка при загрузке рейтинга:", err);
-                  reject(err);
-                  return;
-              }
-              try {
-                  playersRating = value ? JSON.parse(value) : [];
-              } catch (parseError) {
-                  console.error("Ошибка при парсинге рейтинга:", parseError);
-                  playersRating = [];
-              }
-              updateRatingDisplay();
-              resolve();
-          });
-        } catch (error) {
-            console.error("Ошибка при загрузке рейтинга:", error);
-            reject(error);
-        }
-      });
-  }
-
-     async function savePlayerName() {
-        try {
-              const saveFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.setItem : null) : null;
-           if(!saveFunction){
-                  console.error("Нет доступного хранилища для имени игрока");
-                   return;
-            }
-            await new Promise((resolve, reject) => {
-                saveFunction('playerName', JSON.stringify(playerName), (err) => {
-                    if (err) {
-                        console.error("Ошибка при сохранении имени игрока:", err);
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                });
-            });
-        } catch (error) {
-            console.error("Ошибка при сохранении имени игрока:", error);
-        }
-    }
-    function loadPlayerName() {
-      return new Promise((resolve, reject) => {
-        try {
-               const loadFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.getItem : null) : null;
-              if(!loadFunction){
-                    console.error("Нет доступного хранилища для загрузки имени игрока");
-                    reject("Нет доступного хранилища");
+    async load(key) {
+        const loadFunction = this.isTWA ? window.Telegram.WebApp.CloudStorage.getItem : localStorage.getItem;
+        return new Promise((resolve, reject) => {
+            loadFunction(key, async (err, value) => {
+                if (err) {
+                    reject(err);
                     return;
-              }
-          loadFunction('playerName', (err, value) => {
-            if (err) {
-                console.error("Ошибка при загрузке имени игрока:", err);
-                reject(err);
-                return;
-            }
-             try {
-                playerName = value ? JSON.parse(value) : null;
-             } catch (parseError) {
-                 console.error("Ошибка при парсинге имени игрока:", parseError);
-                  playerName = null;
-              }
-              resolve();
-          });
-        } catch (error) {
-            console.error("Ошибка при загрузке имени игрока:", error);
-          reject(error);
-        }
-      });
-  }
-  function updateRatingDisplay() {
-      try{
-          if(ratingList){
-              ratingList.innerHTML = '';
-              playersRating.sort((a, b) => b.score - a.score);
-              playersRating.forEach((player, index) => {
-                  const listItem = document.createElement('li');
-                  if(player.name){
-                      listItem.textContent = `${index + 1}. Игрок: ${player.name}, Очки: ${player.score}`;
-                      ratingList.appendChild(listItem);
-                  }
-              });
-          }
-      } catch(error){
-          console.error("Ошибка при обновлении рейтинга", error);
-      }
-  }
-    async function resetGame() {
-        try{
-            clickCount = 0;
-            clickValue = 1;
-            autoClickerValue = 0;
-            clickUpgradeCost = 10;
-            autoUpgradeCost = 50;
-            clickUpgradeLevel = 1;
-            clickUpgradeLevelCost = 100;
-            prestigeLevel = 0;
-            prestigeMultiplier = 1;
-            bonusActive = false;
-            achievements = [];
-            achievementCount = 0;
-            playerName = null;
-
-            clearInterval(autoClickerInterval);
-            autoClickerInterval = null;
-            clearTimeout(bonusTimeout);
-            clearTimeout(randomEventTimeout);
-            randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (120000 - 60000) + 60000);
-            updateDisplay();
-            if(achievementsDisplay)achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-            if (isTWA && tWebApp) {
-                tWebApp.CloudStorage.removeItem('clickerData');
-                tWebApp.CloudStorage.removeItem('playerName');
-            } else if(typeof localStorage !== 'undefined'){
-                  localStorage.removeItem('clickerData');
-                  localStorage.removeItem('playerName');
-            }
-
-            displayMessage('Прогресс сброшен!', 'orange');
-            if(gameLoaded) await saveData();
-             await saveRating();
-            await savePlayerName();
-        } catch(error){
-            console.error("Ошибка при сбросе прогресса", error);
-        }
-    }
-  async function saveData() {
-        if (!gameLoaded) {
-            return;
-        }
-        try {
-            const data = {
-                clickCount: clickCount,
-                clickValue: clickValue,
-                autoClickerValue: autoClickerValue,
-                clickUpgradeCost: clickUpgradeCost,
-                autoUpgradeCost: autoUpgradeCost,
-                clickUpgradeLevel: clickUpgradeLevel,
-                clickUpgradeLevelCost: clickUpgradeLevelCost,
-                prestigeLevel: prestigeLevel,
-                prestigeMultiplier: prestigeMultiplier,
-                achievements: achievements,
-                achievementCount: achievementCount,
-                playerName: playerName,
-                bonusActive: bonusActive
-            };
-              const saveFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.setItem : null) : null;
-            if(!saveFunction){
-                   console.error("Нет доступного хранилища для сохранения данных");
-                   return;
-            }
-
-            await new Promise((resolve, reject) => {
-                saveFunction('clickerData', JSON.stringify(data), (err) => {
-                    if (err) {
-                        console.error("Ошибка при сохранении данных игры:", err);
-                        reject(err);
-                        return;
+                }
+                try {
+                    if (value) {
+                        const parsedData = JSON.parse(value);
+                        if (!parsedData || typeof parsedData !== 'object') {
+                            resolve(null);
+                            return;
+                        }
+                        resolve(await this.migrateData(parsedData));
+                    } else {
+                        resolve(null);
                     }
-                  //  console.log("Данные сохранены:", data);
-                    resolve();
-                });
+                } catch (parseError) {
+                   resolve(null);
+                }
             });
-        } catch (error) {
-            console.error("Ошибка при сохранении данных игры:", error);
+        });
+    }
+
+   async migrateData(data) {
+        if (!data || !data.version) {
+            return data;
+        }
+        if(data.version === this.gameConfig.saveVersion) {
+            return data;
+        }
+        let migratedData = data;
+         if(data.version < 1) {
+            migratedData =  { ...migratedData, version: 1 }
+        }
+        if(data.version < 2) {
+             migratedData =  { ...migratedData, version: 2 }
+        }
+       return migratedData.version === this.gameConfig.saveVersion ? migratedData : data;
+    }
+
+    async remove(key) {
+        const removeFunction = this.isTWA ? window.Telegram.WebApp.CloudStorage.removeItem : localStorage.removeItem;
+        return new Promise((resolve, reject) => {
+            removeFunction(key, (err) => err ? reject(err) : resolve());
+        });
+    }
+
+    async backup(key, data) {
+       await this.save(key, data).catch(() => {});
+    }
+
+    async clearBackup(key) {
+       await this.remove(key).catch(() => {});
+    }
+}
+
+class AchievementManager {
+    constructor(display) {
+        this.achievements = [];
+        this.achievementCount = 0;
+        this.display = display;
+    }
+
+    addAchievement(achievement) {
+        if (this.achievements.includes(achievement)) return false;
+        this.achievements.push(achievement);
+        this.achievementCount++;
+        if (this.display) this.display.textContent = `Достижения: ${this.achievementCount}`;
+        return true;
+    }
+
+    checkAchievements(clickCount, prestigeLevel, autoClickerValue) {
+        let newAchievementAdded = false;
+        if (clickCount >= 100000) newAchievementAdded = this.addAchievement('100000 clicks') || newAchievementAdded;
+        if (clickCount >= 1000000) newAchievementAdded = this.addAchievement('1000000 clicks') || newAchievementAdded;
+        if (prestigeLevel >= 1) newAchievementAdded = this.addAchievement('first prestige') || newAchievementAdded;
+        if (autoClickerValue >= 5) newAchievementAdded = this.addAchievement('5 autoClicker') || newAchievementAdded;
+        return newAchievementAdded;
+    }
+
+    loadAchievements(achievements, count) {
+        this.achievements = achievements;
+        this.achievementCount = count;
+        if (this.display) this.display.textContent = `Достижения: ${this.achievementCount}`;
+    }
+}
+
+class MessageManager {
+    constructor(display) {
+        this.display = display;
+    }
+
+    displayMessage(msg, color = 'green') {
+        if (!this.display) return;
+        this.display.textContent = msg;
+        this.display.style.color = color;
+        setTimeout(() => {
+            if (this.display) this.display.textContent = '';
+        }, 3000);
+    }
+}
+
+class UIManager {
+    constructor(clickCountDisplay, clickUpgradeCostDisplay, autoUpgradeCostDisplay,
+                clickUpgradeLevelDisplay, clickUpgradeLevelCostDisplay, prestigeLevelDisplay) {
+        this.clickCountDisplay = clickCountDisplay;
+        this.clickUpgradeCostDisplay = clickUpgradeCostDisplay;
+        this.autoUpgradeCostDisplay = autoUpgradeCostDisplay;
+        this.clickUpgradeLevelDisplay = clickUpgradeLevelDisplay;
+        this.clickUpgradeLevelCostDisplay = clickUpgradeLevelCostDisplay;
+        this.prestigeLevelDisplay = prestigeLevelDisplay;
+    }
+
+    updateDisplay(clickCount, clickUpgradeCost, autoUpgradeCost, clickUpgradeLevel, clickUpgradeLevelCost, prestigeLevel) {
+        if (this.clickCountDisplay) this.clickCountDisplay.textContent = Math.round(clickCount);
+        if (this.clickUpgradeCostDisplay) this.clickUpgradeCostDisplay.textContent = clickUpgradeCost;
+        if (this.autoUpgradeCostDisplay) this.autoUpgradeCostDisplay.textContent = autoUpgradeCost;
+        if (this.clickUpgradeLevelDisplay) this.clickUpgradeLevelDisplay.textContent = clickUpgradeLevel;
+        if (this.clickUpgradeLevelCostDisplay) this.clickUpgradeLevelCostDisplay.textContent = clickUpgradeLevelCost;
+        if (this.prestigeLevelDisplay) this.prestigeLevelDisplay.textContent = prestigeLevel;
+    }
+}
+
+class ClickerGame {
+    constructor(gameConfig) {
+        this.gameConfig = gameConfig;
+        this.clickCount = 0;
+        this.clickValue = 1;
+        this.autoClickerInterval = null;
+        this.autoClickerValue = 0;
+        this.clickUpgradeCost = this.gameConfig.initialClickUpgradeCost;
+        this.autoUpgradeCost = this.gameConfig.initialAutoUpgradeCost;
+        this.clickUpgradeLevel = 1;
+        this.clickUpgradeLevelCost = this.gameConfig.initialClickLevelUpgradeCost;
+        this.prestigeLevel = 0;
+        this.prestigeMultiplier = 1;
+        this.bonusActive = false;
+        this.bonusTimeout = null;
+        this.gameLoaded = false;
+        this.saveManager = new SaveManager(!!window.Telegram?.WebApp, this.gameConfig);
+        this.achievementManager = null;
+        this.messageManager = null;
+        this.uiManager = null;
+
+        this.clickButton = document.getElementById('click-button');
+        this.upgradeClickButton = document.querySelector('#upgrade-click button');
+        this.upgradeAutoButton = document.querySelector('#upgrade-auto button');
+        this.upgradeClickLevelButton = document.querySelector('#upgrade-click-level button');
+        this.resetButton = document.getElementById('reset-button');
+        this.prestigeButton = document.getElementById('prestige-button');
+        this.gameContent = document.getElementById('game-content');
+        this.menuToggle = document.querySelector('.menu-toggle');
+        this.menuItems = document.querySelector('.menu-items');
+    }
+
+    async init() {
+        if (this.saveManager.isTWA) {
+            window.Telegram.WebApp.onEvent('web_app_ready', async () => {
+                if (window.Telegram.WebApp.ready) return;
+                window.Telegram.WebApp.ready = true;
+                await this.initializeGame();
+            });
+        } else {
+            await this.initializeGame();
         }
     }
- function loadGame() {
-        return new Promise(async (resolve, reject) => {
-            try {
-                 const loadFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.getItem : null) : null;
-               if(!loadFunction){
-                  console.error("Нет доступного хранилища для загрузки данных");
-                  reject("Нет доступного хранилища");
-                   return;
-               }
-                loadFunction('clickerData', async (err, value) => {
-                  if (err) {
-                        console.error("Ошибка при загрузке данных:", err);
-                      reject(err);
-                      return;
-                  }
-                   if (value) {
-                     try{
-                           const savedData = JSON.parse(value);
-                           console.log("Загружены данные:", savedData);
 
-                          clickCount = savedData.clickCount || 0;
-                             clickValue = savedData.clickValue || 1;
-                            autoClickerValue = savedData.autoClickerValue || 0;
-                            clickUpgradeCost = savedData.clickUpgradeCost || 10;
-                            autoUpgradeCost = savedData.autoUpgradeCost || 50;
-                            clickUpgradeLevel = savedData.clickUpgradeLevel || 1;
-                           clickUpgradeLevelCost = savedData.clickUpgradeLevelCost || 100;
-                            prestigeLevel = savedData.prestigeLevel || 0;
-                           prestigeMultiplier = savedData.prestigeMultiplier || 1;
-                           achievements = savedData.achievements || [];
-                            achievementCount = savedData.achievementCount || 0;
-                           playerName = savedData.playerName;
-                            bonusActive = savedData.bonusActive || false;
+    async initializeGame() {
+        this.uiManager = new UIManager(
+            document.getElementById('click-count'),
+            document.getElementById('click-upgrade-cost'),
+            document.getElementById('auto-upgrade-cost'),
+            document.getElementById('click-upgrade-level-display'),
+            document.getElementById('click-upgrade-level-cost'),
+            document.getElementById('prestige-level')
+        );
+        this.messageManager = new MessageManager(document.getElementById('message'));
+        this.achievementManager = new AchievementManager(document.getElementById('achievements'));
+        await this.loadGame();
+        this.startRandomEvent();
+        this.gameLoaded = true;
+    }
 
-                            if (achievementsDisplay) achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-                            if (autoClickerValue > 0) {
-                                autoClickerInterval = setInterval(autoClick, 1000);
-                           }
-                             if (bonusActive) {
-                                    bonusActive = true;
-                                  clickValue *= 2;
-                                      autoClickerValue *= 2;
-                                 bonusTimeout = setTimeout(() => {
-                                    bonusActive = false;
-                                      clickValue /= 2;
-                                    autoClickerValue /= 2;
-                                  }, 10000);
-                             }
-                            updateDisplay();
-                            resolve();
-                       } catch(error) {
-                           console.error("Ошибка при парсинге данных:", error);
-                         resetGame();
-                         reject(error);
-                     }
-                   }
-                    resolve();
-                });
+    updateDisplay() {
+        this.uiManager.updateDisplay(
+            this.clickCount,
+            this.clickUpgradeCost,
+            this.autoUpgradeCost,
+            this.clickUpgradeLevel,
+            this.clickUpgradeLevelCost,
+            this.prestigeLevel
+        );
+    }
+
+    displayMessage(msg, color = 'green') {
+        this.messageManager.displayMessage(msg, color);
+    }
+
+    autoClick() {
+        this.clickCount += (this.autoClickerValue * this.clickUpgradeLevel) * this.prestigeMultiplier;
+        this.updateDisplay();
+        if (this.gameLoaded) this.saveGame();
+    }
+
+    startRandomEvent() {
+        const eventType = Math.random() < 0.5 ? 'bonus' : 'penalty';
+        if (eventType === 'bonus') {
+            this.bonusActive = true;
+            this.clickValue *= 2;
+            this.autoClickerValue *= 2;
+            this.displayMessage('Случайный бонус: удвоенный урон!', 'blue');
+            this.updateDisplay();
+            if (this.gameLoaded) this.saveGame();
+            clearTimeout(this.bonusTimeout);
+            this.bonusTimeout = setTimeout(() => {
+                this.bonusActive = false;
+                this.clickValue /= 2;
+                this.autoClickerValue /= 2;
+                this.displayMessage('Действие бонуса закончилось!');
+                this.updateDisplay();
+                if (this.gameLoaded) this.saveGame();
+            }, this.gameConfig.bonusDuration);
+        } else {
+            this.displayMessage('Случайный штраф: клики уменьшены в 2 раза!', 'red');
+            this.clickValue /= 2;
+            this.updateDisplay();
+            if (this.gameLoaded) this.saveGame();
+            setTimeout(() => {
+                this.clickValue *= 2;
+                this.displayMessage('Штраф закончился!');
+                this.updateDisplay();
+                if (this.gameLoaded) this.saveGame();
+            }, this.gameConfig.bonusDuration);
+        }
+       clearTimeout(this.randomEventTimeout);
+        this.randomEventTimeout = setTimeout(() => this.startRandomEvent(), Math.random() * (this.gameConfig.eventIntervalMax - this.gameConfig.eventIntervalMin) + this.gameConfig.eventIntervalMin);
+    }
+
+    checkAchievements() {
+        if (this.achievementManager.checkAchievements(this.clickCount, this.prestigeLevel, this.autoClickerValue)) {
+            if (this.gameLoaded) this.saveGame();
+        }
+    }
+
+    async resetGame() {
+        this.clickCount = 0;
+        this.clickValue = 1;
+        this.autoClickerValue = 0;
+        this.clickUpgradeCost = this.gameConfig.initialClickUpgradeCost;
+        this.autoUpgradeCost = this.gameConfig.initialAutoUpgradeCost;
+        this.clickUpgradeLevel = 1;
+        this.clickUpgradeLevelCost = this.gameConfig.initialClickLevelUpgradeCost;
+        this.prestigeLevel = 0;
+        this.prestigeMultiplier = 1;
+        this.bonusActive = false;
+        clearInterval(this.autoClickerInterval);
+        this.autoClickerInterval = null;
+        clearTimeout(this.bonusTimeout);
+        clearTimeout(this.randomEventTimeout);
+        this.randomEventTimeout = setTimeout(() => this.startRandomEvent(), Math.random() * (this.gameConfig.eventIntervalMax - this.gameConfig.eventIntervalMin) + this.gameConfig.eventIntervalMin);
+        this.achievementManager.achievements = [];
+        this.achievementManager.achievementCount = 0;
+        this.updateDisplay();
+        if (document.getElementById('achievements')) document.getElementById('achievements').textContent = `Достижения: ${this.achievementManager.achievementCount}`;
+        await this.saveManager.remove('clickerData');
+        this.displayMessage('Прогресс сброшен!', 'orange');
+        if (this.gameLoaded) await this.saveGame();
+    }
+
+    async saveGame() {
+        if (!this.gameLoaded) return;
+        const data = {
+            clickCount: this.clickCount,
+            clickValue: this.clickValue,
+            autoClickerValue: this.autoClickerValue,
+            clickUpgradeCost: this.clickUpgradeCost,
+            autoUpgradeCost: this.autoUpgradeCost,
+            clickUpgradeLevel: this.clickUpgradeLevel,
+            clickUpgradeLevelCost: this.clickUpgradeLevelCost,
+            prestigeLevel: this.prestigeLevel,
+            prestigeMultiplier: this.prestigeMultiplier,
+            achievements: this.achievementManager.achievements,
+            achievementCount: this.achievementManager.achievementCount,
+            bonusActive: this.bonusActive
+        };
+        await this.saveManager.backup(this.gameConfig.backupKey, data);
+        await this.saveManager.save('clickerData', data);
+    }
+
+    async loadGame() {
+        const savedData = await this.saveManager.load('clickerData');
+        if (savedData) {
+            this.clickCount = savedData.clickCount || 0;
+            this.clickValue = savedData.clickValue || 1;
+            this.autoClickerValue = savedData.autoClickerValue || 0;
+            this.clickUpgradeCost = savedData.clickUpgradeCost || this.gameConfig.initialClickUpgradeCost;
+            this.autoUpgradeCost = savedData.autoUpgradeCost || this.gameConfig.initialAutoUpgradeCost;
+            this.clickUpgradeLevel = savedData.clickUpgradeLevel || 1;
+            this.clickUpgradeLevelCost = savedData.clickUpgradeLevelCost || this.gameConfig.initialClickLevelUpgradeCost;
+            this.prestigeLevel = savedData.prestigeLevel || 0;
+            this.prestigeMultiplier = savedData.prestigeMultiplier || 1;
+            this.bonusActive = savedData.bonusActive || false;
+            this.achievementManager.loadAchievements(savedData.achievements || [], savedData.achievementCount || 0);
+            if (this.autoClickerValue > 0) {
+                this.autoClickerInterval = setInterval(() => this.autoClick(), 1000);
             }
-            catch(error) {
-                console.error("Ошибка при загрузке игры", error);
-                reject(error);
+            if (this.bonusActive) {
+                this.bonusActive = true;
+                this.clickValue *= 2;
+                this.autoClickerValue *= 2;
+                this.bonusTimeout = setTimeout(() => {
+                    this.bonusActive = false;
+                    this.clickValue /= 2;
+                    this.autoClickerValue /= 2;
+                }, this.gameConfig.bonusDuration);
+            }
+            this.updateDisplay();
+        } else {
+            await this.resetGame();
+        }
+    }
+
+    setupEventListeners() {
+        setInterval(() => {
+            if (this.gameLoaded) this.saveGame();
+        }, this.gameConfig.saveInterval);
+
+        this.clickButton?.addEventListener('click', () => {
+            let clicksToAdd = (this.clickValue * this.clickUpgradeLevel) * this.prestigeMultiplier;
+            if (this.bonusActive) clicksToAdd *= 2;
+            this.clickCount += clicksToAdd;
+            this.updateDisplay();
+            this.checkAchievements();
+            if (this.gameLoaded) this.saveGame();
+        });
+
+        this.upgradeClickLevelButton?.addEventListener('click', () => {
+            if (this.clickCount >= this.clickUpgradeLevelCost) {
+                this.clickCount -= this.clickUpgradeLevelCost;
+                this.clickUpgradeLevel++;
+                this.clickUpgradeLevelCost = Math.round(this.clickUpgradeLevelCost * this.gameConfig.clickLevelUpgradeCostMultiplier);
+                this.updateDisplay();
+                this.displayMessage('Уровень улучшения клика повышен!');
+                if (this.gameLoaded) this.saveGame();
+            } else {
+                this.displayMessage('Недостаточно кликов!', 'red');
             }
         });
-  }
 
-    window.addEventListener('beforeunload', async function() {
-         if(isTWA){
-          return;
-        }
-      //  await saveData();
-     //   await saveRating();
-    });
-
-    setInterval(() => {
-        if(gameLoaded)  saveData();
-    }, 5000);
-
-    function handleSave() {
-        if(gameLoaded) saveData();
-    }
-    window.addEventListener('click', handleSave);
-    window.addEventListener('keydown', handleSave);
-  if(clickButton){
-         clickButton.addEventListener('click', function() {
-          try{
-             let clicksToAdd = (clickValue * clickUpgradeLevel) * prestigeMultiplier;
-                if (bonusActive) {
-                    clicksToAdd *= 2
-                }
-              clickCount += clicksToAdd;
-              updateDisplay();
-              checkAchievements();
-               if(gameLoaded) saveData();
-              updatePlayerScore();
-          } catch(error){
-               console.error("Ошибка при клике на кнопку", error);
-          }
-      });
-  }
-  if(upgradeClickLevelButton){
-         upgradeClickLevelButton.addEventListener('click', function() {
-            try{
-                if (clickCount >= clickUpgradeLevelCost) {
-                    clickCount -= clickUpgradeLevelCost;
-                    clickUpgradeLevel++;
-                    clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
-                    updateDisplay();
-                      displayMessage('Уровень улучшения клика повышен!');
-                      if(gameLoaded) saveData();
-                } else {
-                    displayMessage('Недостаточно кликов!', 'red');
-                }
-            } catch(error){
-                  console.error("Ошибка при улучшении уровня клика", error);
-           }
+        this.upgradeClickButton?.addEventListener('click', () => {
+            if (this.clickCount >= this.clickUpgradeCost) {
+                this.clickCount -= this.clickUpgradeCost;
+                this.clickValue++;
+                this.clickUpgradeCost = Math.round(this.clickUpgradeCost * this.gameConfig.clickUpgradeCostMultiplier);
+                this.updateDisplay();
+                this.displayMessage('Улучшение клика приобретено!');
+                if (this.gameLoaded) this.saveGame();
+            } else {
+                this.displayMessage('Недостаточно кликов!', 'red');
+            }
         });
-  }
-   if(upgradeClickButton){
-           upgradeClickButton.addEventListener('click', function() {
-              try{
-                  if (clickCount >= clickUpgradeCost) {
-                      clickCount -= clickUpgradeCost;
-                    clickValue++;
-                      clickUpgradeCost = Math.round(clickUpgradeCost * 1.8);
-                     updateDisplay();
-                     displayMessage('Улучшение клика приобретено!');
-                     if(gameLoaded) saveData();
-                    } else {
-                      displayMessage('Недостаточно кликов!', 'red');
-                    }
-              } catch(error){
-                    console.error("Ошибка при улучшении клика", error);
-               }
-          });
-   }
-   if(upgradeAutoButton){
-         upgradeAutoButton.addEventListener('click', function() {
-              try{
-                  if (clickCount >= autoUpgradeCost) {
-                    clickCount -= autoUpgradeCost;
-                      autoClickerValue++;
-                        if (!autoClickerInterval) {
-                            autoClickerInterval = setInterval(autoClick, 1000);
-                        }
-                      autoUpgradeCost = Math.round(autoUpgradeCost * 2.2);
-                     updateDisplay();
-                    displayMessage('Автокликер приобретен!');
-                       if(gameLoaded) saveData();
-                   } else {
-                      displayMessage('Недостаточно кликов!', 'red');
-                  }
-                } catch(error){
-                     console.error("Ошибка при покупке автокликера", error);
-                }
-         });
-   }
 
-   if(prestigeButton){
-        prestigeButton.addEventListener('click', async function() {
-           try{
-               if (clickCount >= 10000) {
-                    prestigeLevel++;
-                  prestigeMultiplier *= 2;
-                   clickCount = 0;
-                     clickValue = 1;
-                    autoClickerValue = 0;
-                    clickUpgradeCost = 10;
-                      autoUpgradeCost = 50;
-                    clickUpgradeLevel = 1;
-                      clickUpgradeLevelCost = 100;
-                     clearInterval(autoClickerInterval);
-                       autoClickerInterval = null;
-                   updateDisplay();
-                    displayMessage('Перерождение!');
-                      if(gameLoaded) await saveData();
-                   updatePlayerScore();
-                  } else {
-                     displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
+        this.upgradeAutoButton?.addEventListener('click', () => {
+            if (this.clickCount >= this.autoUpgradeCost) {
+                this.clickCount -= this.autoUpgradeCost;
+                this.autoClickerValue++;
+                if (!this.autoClickerInterval) {
+                    this.autoClickerInterval = setInterval(() => this.autoClick(), 1000);
                 }
-           } catch(error){
-                 console.error("Ошибка при перерождении", error);
+                this.autoUpgradeCost = Math.round(this.autoUpgradeCost * this.gameConfig.autoUpgradeCostMultiplier);
+                this.updateDisplay();
+                this.displayMessage('Автокликер приобретен!');
+                if (this.gameLoaded) this.saveGame();
+            } else {
+                this.displayMessage('Недостаточно кликов!', 'red');
             }
-         });
-    }
-    if(resetButton){
-            resetButton.addEventListener('click', function() {
-                try{
-                 resetGame();
-             } catch(error){
-                   console.error("Ошибка при сбросе прогресса", error);
-               }
-         });
-    }
-   async function updatePlayerScore() {
-        try{
-              if (!playerName) {
-                  playerName = prompt('Введите ваше имя:', 'Игрок');
-                 if(playerName) await savePlayerName();
-              }
-             if (playerName) {
-                const playerScore = clickCount + (prestigeLevel * 10000);
-                const existingPlayerIndex = playersRating.findIndex(player => player.name === playerName);
-                if (existingPlayerIndex > -1) {
-                    if(playersRating[existingPlayerIndex].score !== playerScore){
-                        playersRating[existingPlayerIndex].score = playerScore;
-                         await saveRating();
-                        updateRatingDisplay();
-                    }
-                } else {
-                    playersRating.push({ name: playerName, score: playerScore });
-                     await saveRating();
-                    updateRatingDisplay();
-                }
-            }
-        } catch(error){
-           console.error("Ошибка при обновлении очков игрока", error);
-        }
-    }
-  // Menu logic
-  if(menuToggle){
-         menuToggle.addEventListener('click', () => {
-            try {
-                if(menuItems)menuItems.classList.toggle('active');
-           } catch(error){
-                console.error("Ошибка при открытии меню", error);
-              }
-         });
-  }
+        });
 
-  // Логика для перехода между вкладками
-  if(menuItems){
-           menuItems.addEventListener('click', (e) => {
-                try{
-                   if (e.target.tagName === 'BUTTON') {
-                         const tab = e.target.dataset.tab;
-                        if (tab === 'rating') {
-                            if(gameContent)gameContent.style.display = 'none';
-                           if(ratingContent) ratingContent.style.display = 'block';
-                            updateRatingDisplay();
-                         } else {
-                           if(gameContent) gameContent.style.display = 'block';
-                            if(ratingContent)ratingContent.style.display = 'none';
-                     }
-                     if(menuItems)menuItems.classList.remove('active');
-                   }
-              } catch(error){
-                   console.error("Ошибка при переключении вкладок", error);
-             }
-       });
-  }
+        this.prestigeButton?.addEventListener('click', async () => {
+            if (this.clickCount >= this.gameConfig.prestigeClicksNeeded) {
+                this.prestigeLevel++;
+                this.prestigeMultiplier *= 2;
+                this.clickCount = 0;
+                this.clickValue = 1;
+                this.autoClickerValue = 0;
+                this.clickUpgradeCost = this.gameConfig.initialClickUpgradeCost;
+                this.autoUpgradeCost = this.gameConfig.initialAutoUpgradeCost;
+                this.clickUpgradeLevel = 1;
+                this.clickUpgradeLevelCost = this.gameConfig.initialClickLevelUpgradeCost;
+                clearInterval(this.autoClickerInterval);
+                this.autoClickerInterval = null;
+                this.updateDisplay();
+                this.displayMessage('Перерождение!');
+                if (this.gameLoaded) await this.saveGame();
+            } else {
+                this.displayMessage(`Недостаточно кликов! (нужно ${this.gameConfig.prestigeClicksNeeded})`, 'red');
+            }
+        });
+
+        this.resetButton?.addEventListener('click', async () => {
+           await this.resetGame();
+        });
+
+        this.menuToggle?.addEventListener('click', () => {
+            this.menuItems?.classList.toggle('active');
+        });
+
+        this.menuItems?.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const tab = e.target.dataset.tab;
+                 if(this.gameContent) this.gameContent.style.display = tab === 'game' ? 'block' : 'none';
+                 if(this.menuItems) this.menuItems.classList.remove('active');
+            }
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const game = new ClickerGame(gameConfig);
+    await game.init();
+    game.setupEventListeners();
 });
-                      clickUpgradeCost = Math.round(clickUpgradeCost * 1.8);
-                     updateDisplay();
-                     displayMessage('Улучшение клика приобретено!');
-                     if(gameLoaded) saveData();
-                    } else {
-                      displayMessage('Недостаточно кликов!', 'red');
-                    }
-              } catch(error){
-                    console.error("Ошибка при улучшении клика", error);
-               }
-          });
-   }
-   if(upgradeAutoButton){
-         upgradeAutoButton.addEventListener('click', function() {
-              try{
-                  if (clickCount >= autoUpgradeCost) {
-                    clickCount -= autoUpgradeCost;
-                      autoClickerValue++;
-                        if (!autoClickerInterval) {
-                            autoClickerInterval = setInterval(autoClick, 1000);
-                        }
-                      autoUpgradeCost = Math.round(autoUpgradeCost * 2.2);
-                     updateDisplay();
-                    displayMessage('Автокликер приобретен!');
-                       if(gameLoaded) saveData();
-                   } else {
-                      displayMessage('Недостаточно кликов!', 'red');
-                  }
-                } catch(error){
-                     console.error("Ошибка при покупке автокликера", error);
-                }
-         });
-   }
-
-   if(prestigeButton){
-        prestigeButton.addEventListener('click', async function() {
-           try{
-               if (clickCount >= 10000) {
-                    prestigeLevel++;
-                  prestigeMultiplier *= 2;
-                   clickCount = 0;
-                     clickValue = 1;
-                    autoClickerValue = 0;
-                    clickUpgradeCost = 10;
-                      autoUpgradeCost = 50;
-                    clickUpgradeLevel = 1;
-                      clickUpgradeLevelCost = 100;
-                     clearInterval(autoClickerInterval);
-                       autoClickerInterval = null;
-                   updateDisplay();
-                    displayMessage('Перерождение!');
-                      if(gameLoaded) await saveData();
-                   updatePlayerScore();
-                  } else {
-                     displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
-                }
-           } catch(error){
-                 console.error("Ошибка при перерождении", error);
-            }
-         });
-    }
-    if(resetButton){
-            resetButton.addEventListener('click', function() {
-                try{
-                 resetGame();
-             } catch(error){
-                   console.error("Ошибка при сбросе прогресса", error);
-               }
-         });
-    }
-   async function updatePlayerScore() {
-        try{
-              if (!playerName) {
-                  playerName = prompt('Введите ваше имя:', 'Игрок');
-                 if(playerName) await savePlayerName();
-              }
-             if (playerName) {
-                const playerScore = clickCount + (prestigeLevel * 10000);
-                const existingPlayerIndex = playersRating.findIndex(player => player.name === playerName);
-                if (existingPlayerIndex > -1) {
-                    if(playersRating[existingPlayerIndex].score !== playerScore){
-                        playersRating[existingPlayerIndex].score = playerScore;
-                         await saveRating();
-                        updateRatingDisplay();
-                    }
-                } else {
-                    playersRating.push({ name: playerName, score: playerScore });
-                     await saveRating();
-                    updateRatingDisplay();
-                }
-            }
-        } catch(error){
-           console.error("Ошибка при обновлении очков игрока", error);
-        }
-    }
-  // Menu logic
-  if(menuToggle){
-         menuToggle.addEventListener('click', () => {
-            try {
-                if(menuItems)menuItems.classList.toggle('active');
-           } catch(error){
-                console.error("Ошибка при открытии меню", error);
-              }
-         });
-  }
-
-  // Логика для перехода между вкладками
-  if(menuItems){
-           menuItems.addEventListener('click', (e) => {
-                try{
-                   if (e.target.tagName === 'BUTTON') {
-                         const tab = e.target.dataset.tab;
-                        if (tab === 'rating') {
-                            if(gameContent)gameContent.style.display = 'none';
-                           if(ratingContent) ratingContent.style.display = 'block';
-                            updateRatingDisplay();
-                         } else {
-                           if(gameContent) gameContent.style.display = 'block';
-                            if(ratingContent)ratingContent.style.display = 'none';
-                     }
-                     if(menuItems)menuItems.classList.remove('active');
-                   }
-              } catch(error){
-                   console.error("Ошибка при переключении вкладок", error);
-             }
-       });
-  }
-});
-                
