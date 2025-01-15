@@ -42,18 +42,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuItems = document.querySelector('.menu-items');
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
-    let isTWA = false;
+     let userId = null; // ID пользователя
+
     if (tWebApp) {
-        isTWA = true;
-        tWebApp.onEvent('web_app_ready', function() {
-            loadGame();
-            startRandomEvent();
-            checkAchievements();
-            loadRating();
-            loadPlayerName();
-             setupEventListeners();
-        });
-    } else {
+            tWebApp.onEvent('web_app_ready', function() {
+                 userId = tWebApp.initDataUnsafe?.user?.id;
+                    if (userId){
+                        loadGameFromBot(userId);
+                    }
+                    else {
+                    loadGame();
+                    }
+                startRandomEvent();
+                checkAchievements();
+                loadRatingFromBot(); //Рейтинг в боте тоже будет
+                loadPlayerNameFromBot();
+                setupEventListeners();
+            });
+        } else {
         loadGame();
         startRandomEvent();
         checkAchievements();
@@ -61,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadPlayerName();
         setupEventListeners();
     }
+
 
     function updateDisplay() {
         clickCountDisplay.textContent = Math.round(clickCount);
@@ -82,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function autoClick() {
         clickCount += (autoClickerValue * clickUpgradeLevel) * prestigeMultiplier;
         updateDisplay();
-        saveData();
+        saveDataToBot();
     }
 
     function startRandomEvent() {
@@ -94,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
             autoClickerValue *= 2;
             displayMessage('Случайный бонус: удвоенный урон!', 'blue');
             updateDisplay();
-            saveData();
+           saveDataToBot();
 
             clearTimeout(bonusTimeout);
             bonusTimeout = setTimeout(() => {
@@ -103,18 +110,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 autoClickerValue /= 2;
                 displayMessage('Действие бонуса закончилось!');
                 updateDisplay();
-                saveData();
+                saveDataToBot();
             }, 10000);
         } else {
             displayMessage('Случайный штраф: клики уменьшены в 2 раза!', 'red');
             clickValue /= 2;
             updateDisplay();
-            saveData();
+           saveDataToBot();
             setTimeout(() => {
                 clickValue *= 2;
                 displayMessage('Штраф закончился!');
                 updateDisplay();
-                saveData();
+                saveDataToBot();
             }, 10000);
         }
 
@@ -140,44 +147,53 @@ document.addEventListener('DOMContentLoaded', function() {
         achievements.push(achievement);
         achievementCount++;
         achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-        saveData();
+        saveDataToBot();
     }
+      function saveRatingToBot() {
+            if(!userId) return; // Не сохраняем если нет id пользователя
+            fetch(`https://api.telegram.org/bot${tWebApp.initDataUnsafe?.bot?.token}/setMyCommands`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        commands: [{
+                             command: "saveRating",
+                              description: JSON.stringify({
+                                userId: userId,
+                                  playersRating: playersRating
+                                })
+                            }]
+                    })
+             });
 
-    function saveRating() {
-          const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-         saveFunction( 'playersRating', JSON.stringify(playersRating), (err)=>{
-            if(err) console.log("Ошибка сохранения рейтинга", err);
-         });
-      }
-    function loadRating() {
-        const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-           loadFunction('playersRating', (err, value)=> {
-            if(err){
-                 console.error("Ошибка загрузки рейтинга:", err);
-               return;
-            }
-                playersRating = value ? JSON.parse(value) : [];
-                updateRatingDisplay();
-         });
-    }
-  function savePlayerName() {
-        const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-         saveFunction( 'playerName',JSON.stringify(playerName), (err)=>{
-           if (err) console.log("Ошибка сохранения имени", err)
-          });
+        }
+         function loadRatingFromBot() {
+            if(!userId) return; // Не загружаем если нет id пользователя
+            fetch(`https://api.telegram.org/bot${tWebApp.initDataUnsafe?.bot?.token}/getChat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({chat_id: userId})
+             })
+             .then(response => response.json())
+             .then(data => {
+                if (data?.result?.pinned_message?.text) {
+                     try{
+                          const command = data.result.pinned_message.text
+                         const rating =  JSON.parse(command.replace('/saveRating ', ''))
+                       playersRating = rating.playersRating;
+                      updateRatingDisplay();
+                    }
+                    catch (error){
+                          console.error("Ошибка разбора рейтинга из сообщения:", error);
+                    }
+                  }
+             })
+                .catch(error => console.error("Ошибка загрузки рейтинга:", error))
         }
 
-    function loadPlayerName() {
-       const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-         loadFunction('playerName', (err,value) =>{
-                if(err){
-                    console.error("Ошибка загрузки имени игрока:", err);
-                    return;
-                }
-              playerName = value ? JSON.parse(value) : null;
-           });
-
-    }
     function updateRatingDisplay() {
         ratingList.innerHTML = '';
         playersRating.sort((a, b) => b.score - a.score);
@@ -188,6 +204,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+        function savePlayerNameToBot() {
+           if(!userId) return; // Не сохраняем если нет id пользователя
+              fetch(`https://api.telegram.org/bot${tWebApp.initDataUnsafe?.bot?.token}/setMyCommands`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    commands: [{
+                     command: "savePlayerName",
+                      description: JSON.stringify({
+                        userId: userId,
+                          playerName: playerName
+                        })
+                    }]
+                  })
+            });
+
+        }
+    function loadPlayerNameFromBot() {
+          if(!userId) return; // Не загружаем если нет id пользователя
+          fetch(`https://api.telegram.org/bot${tWebApp.initDataUnsafe?.bot?.token}/getChat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({chat_id: userId})
+             })
+            .then(response => response.json())
+            .then(data =>{
+                if(data?.result?.pinned_message?.text){
+                    try {
+                         const command = data.result.pinned_message.text
+                        const name = JSON.parse(command.replace('/savePlayerName ', ''));
+                        playerName = name.playerName;
+
+                    }
+                    catch (error){
+                         console.error("Ошибка разбора имени игрока из сообщения:", error)
+                    }
+                }
+              })
+                .catch(error => console.error("Ошибка загрузки имени игрока:", error))
+        }
     function resetGame() {
         clickCount = 0;
         clickValue = 1;
@@ -212,18 +272,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         updateDisplay();
         achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-         if (isTWA) {
-             tWebApp.CloudStorage.removeItem('clickerData');
-            tWebApp.CloudStorage.removeItem('playerName');
-        }
+
         displayMessage('Прогресс сброшен!', 'orange');
-        saveData();
-        saveRating();
-        savePlayerName();
+        saveDataToBot();
+        saveRatingToBot();
+        savePlayerNameToBot();
+
     }
 
-      function saveData() {
-        let data = {
+      function saveDataToBot() {
+            if(!userId) return; // Не сохраняем если нет id пользователя
+          let data = {
             clickCount: clickCount,
             clickValue: clickValue,
             autoClickerValue: autoClickerValue,
@@ -237,23 +296,77 @@ document.addEventListener('DOMContentLoaded', function() {
             achievementCount: achievementCount,
             bonusActive: bonusActive
         };
-        const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
-         saveFunction( 'clickerData',JSON.stringify(data),(err)=>{
-            if(err) console.log("Ошибка сохранения игры", err);
-         });
+
+            fetch(`https://api.telegram.org/bot${tWebApp.initDataUnsafe?.bot?.token}/setMyCommands`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                     body: JSON.stringify({
+                        commands: [{
+                             command: "saveGameData",
+                              description: JSON.stringify({
+                                userId: userId,
+                                  data: data
+                                })
+                            }]
+                    })
+            });
     }
-
-
+    function loadGameFromBot() {
+            if(!userId) return; // Не загружаем если нет id пользователя
+             fetch(`https://api.telegram.org/bot${tWebApp.initDataUnsafe?.bot?.token}/getChat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({chat_id: userId})
+             })
+             .then(response => response.json())
+             .then(data => {
+               if (data?.result?.pinned_message?.text) {
+                  try{
+                      const command = data.result.pinned_message.text
+                     const savedData = JSON.parse(command.replace('/saveGameData ', ''));
+                        clickCount = savedData.data.clickCount || 0;
+                        clickValue = savedData.data.clickValue || 1;
+                        autoClickerValue = savedData.data.autoClickerValue || 0;
+                        clickUpgradeCost = savedData.data.clickUpgradeCost || 10;
+                        autoUpgradeCost = savedData.data.autoUpgradeCost || 50;
+                        clickUpgradeLevel = savedData.data.clickUpgradeLevel || 1;
+                        clickUpgradeLevelCost = savedData.data.clickUpgradeLevelCost || 100;
+                        prestigeLevel = savedData.data.prestigeLevel || 0;
+                        prestigeMultiplier = savedData.data.prestigeMultiplier || 1;
+                        achievements = savedData.data.achievements || [];
+                        achievementCount = savedData.data.achievementCount || 0;
+                        achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
+                            if (autoClickerValue > 0) {
+                                autoClickerInterval = setInterval(autoClick, 1000);
+                            }
+                             if (savedData.data.bonusActive) {
+                                 bonusActive = true;
+                                 clickValue *= 2;
+                                autoClickerValue *= 2;
+                               bonusTimeout = setTimeout(() => {
+                                   bonusActive = false;
+                                   clickValue /= 2;
+                                   autoClickerValue /= 2;
+                               }, 10000);
+                            }
+                        updateDisplay();
+                    }
+                   catch(error){
+                       console.error("Ошибка разбора данных из сообщения:", error);
+                   }
+                }
+           })
+                .catch(error => console.error("Ошибка загрузки данных:", error))
+    }
     function loadGame() {
-        const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
-
-        loadFunction('clickerData',(err,value)=> {
-             if (err) {
-                 console.error("Ошибка загрузки данных:", err);
-                 return;
-             }
-           if(value){
-                 let savedData = JSON.parse(value);
+        // Логика для загрузки игры из localStorage (или если нет Telegram Web App)
+          let savedData = localStorage.getItem('clickerData')
+              if(savedData){
+                 savedData = JSON.parse(savedData);
                 clickCount = savedData.clickCount || 0;
                 clickValue = savedData.clickValue || 1;
                 autoClickerValue = savedData.autoClickerValue || 0;
@@ -281,19 +394,37 @@ document.addEventListener('DOMContentLoaded', function() {
                   }
                 updateDisplay();
            }
-        });
     }
-    // Сохранение данных при изменении прогресса
-    function handleSave() {
-        saveData();
+
+
+     function handleSave() {
+        if (tWebApp){
+            saveDataToBot();
+           } else {
+          let data = {
+            clickCount: clickCount,
+            clickValue: clickValue,
+            autoClickerValue: autoClickerValue,
+            clickUpgradeCost: clickUpgradeCost,
+            autoUpgradeCost: autoUpgradeCost,
+            clickUpgradeLevel: clickUpgradeLevel,
+            clickUpgradeLevelCost: clickUpgradeLevelCost,
+            prestigeLevel: prestigeLevel,
+            prestigeMultiplier: prestigeMultiplier,
+            achievements: achievements,
+            achievementCount: achievementCount,
+            bonusActive: bonusActive
+        };
+             localStorage.setItem('clickerData', JSON.stringify(data));
+        }
     }
-      function setupEventListeners() {
+        function setupEventListeners() {
           window.addEventListener('click', handleSave);
         window.addEventListener('keydown', handleSave);
         clickButton.addEventListener('click', handleClick);
         clickButton.addEventListener('mouseup', handleClick);
         clickButton.addEventListener('touchstart', handleClick);
-        
+
          upgradeClickLevelButton.addEventListener('click', handleUpgradeClickLevel);
         upgradeClickLevelButton.addEventListener('mouseup', handleUpgradeClickLevel);
         upgradeClickLevelButton.addEventListener('touchstart', handleUpgradeClickLevel);
@@ -334,11 +465,12 @@ document.addEventListener('DOMContentLoaded', function() {
              }
          });
     }
+
       function handleClick(e) {
         clickCount += (clickValue * clickUpgradeLevel) * prestigeMultiplier;
         updateDisplay();
         checkAchievements();
-        saveData();
+       saveDataToBot();
         updatePlayerScore();
     }
     function handleUpgradeClickLevel(e) {
@@ -348,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clickUpgradeLevelCost = Math.round(clickUpgradeLevelCost * 2.5);
             updateDisplay();
             displayMessage('Уровень улучшения клика повышен!');
-            saveData();
+            saveDataToBot();
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
@@ -360,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clickUpgradeCost = Math.round(clickUpgradeCost * 1.8);
             updateDisplay();
             displayMessage('Улучшение клика приобретено!');
-            saveData();
+            saveDataToBot();
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
@@ -376,7 +508,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 autoUpgradeCost = Math.round(autoUpgradeCost * 2.2);
                 updateDisplay();
                 displayMessage('Автокликер приобретен!');
-                saveData();
+               saveDataToBot();
             } else {
                 displayMessage('Недостаточно кликов!', 'red');
             }
@@ -397,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
             autoClickerInterval = null;
             updateDisplay();
             displayMessage('Перерождение!');
-            saveData();
+           saveDataToBot();
             updatePlayerScore();
         } else {
             displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
@@ -409,7 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updatePlayerScore() {
         if (!playerName) {
             playerName = prompt('Введите ваше имя:', 'Игрок');
-            savePlayerName();
+             savePlayerNameToBot()
         }
         if (playerName) {
             const playerScore = clickCount + (prestigeLevel * 10000);
@@ -420,11 +552,8 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 playersRating.push({ name: playerName, score: playerScore });
             }
-            saveRating();
+           saveRatingToBot();
             updateRatingDisplay();
         }
     }
-
-
-
 });
