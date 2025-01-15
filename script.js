@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- Константы ---
     const SAVE_KEY = 'clickerData';
@@ -43,14 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
         achievementsDisplay: document.getElementById('achievements'),
         resetButton: document.getElementById('reset-button'),
 
-         menuButton: document.querySelector('.menu-toggle'), // Используем класс для переключателя меню
+        menuButton: document.querySelector('.menu-toggle'), // Используем класс для переключателя меню
         menu: document.getElementById('menu-items'), // Идентификатор меню
-        exportSaveButton: document.getElementById('export-save-button'), // Используем ID для кнопки экспорта
-        importSaveButton: document.getElementById('import-save-button'),// Используем ID для кнопки импорта
-         importInput: document.getElementById('import-input'), // Используем ID для инпута
+         exportSaveButton: document.querySelector('#menu-items [data-action="export"]'), // Кнопка экспорта (по data-action)
+         importSaveButton: document.querySelector('#menu-items [data-action="import"]'),// Кнопка импорта (по data-action)
+         importInput: document.getElementById('import-input'), // Инпут для импорта
         gameContent: document.getElementById('game-content'),
-         ratingContent: document.getElementById('rating-content'),
-         menuItems: document.querySelectorAll('.menu-items li button'), // Кнопки меню
+        ratingContent: document.getElementById('rating-content'),
+        menuItems: document.querySelectorAll('.menu-items li button'), // Кнопки меню
     };
 
 
@@ -155,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Управление игрой ---
-    function resetGame() {
+   function resetGame() {
         gameState = {
             clickCount: 0,
             clickValue: 1,
@@ -179,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
     }
+
 
     function clearAllTimeouts() {
         clearInterval(gameState.autoClickerInterval);
@@ -208,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    function loadGame() {
+   function loadGame() {
         const loadFromStorage = (storage) => {
             const savedDataString = storage.getItem(SAVE_KEY);
             if (savedDataString) {
@@ -241,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function exportSave() {
+   function exportSave() {
         const data = JSON.stringify(gameState);
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -251,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         a.click();
         URL.revokeObjectURL(url);
     }
-    function importSave() {
+   function importSave() {
         const file = elements.importInput.files[0];
         if (!file) {
             displayMessage('Файл не выбран', 'red');
@@ -280,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       function switchTab(tabId) {
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
-          elements.ratingContent.style.display = tabId === 'rating' ? 'block' : 'none';
+        elements.ratingContent.style.display = tabId === 'rating' ? 'block' : 'none';
 
           elements.menuItems.forEach(item => {
             item.classList.remove('active');
@@ -289,6 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
               }
           })
     }
+
 
     // --- Обработчики событий ---
     elements.clickButton.addEventListener('click', applyClick);
@@ -351,20 +354,21 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
         }
     });
-     elements.resetButton.addEventListener('click', resetGame);
+    elements.resetButton.addEventListener('click', resetGame);
+
     elements.menuButton.addEventListener('click', () => {
         elements.menu.classList.toggle('active');
-         elements.menuButton.classList.toggle('active');
+        elements.menuButton.classList.toggle('active');
     });
 
     elements.exportSaveButton.addEventListener('click', exportSave);
     elements.importSaveButton.addEventListener('click', importSave);
-      elements.menuItems.forEach(item => {
+    elements.menuItems.forEach(item => {
           item.addEventListener('click', () => {
              const tabId = item.dataset.tab;
               switchTab(tabId)
               elements.menu.classList.remove('active');
-             elements.menuButton.classList.remove('active');
+            elements.menuButton.classList.remove('active');
           })
       })
 
@@ -376,3 +380,4 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAchievements();
     switchTab('shop')
 });
+        
