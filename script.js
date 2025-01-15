@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let randomEventTimeout;
     let achievements = [];
     let playerName = null;
+    let gameLoaded = false;
 
     const clickCountDisplay = document.getElementById('click-count');
     const clickButton = document.getElementById('click-button');
@@ -57,7 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
                      .then(loadPlayerName)
                     .then(() => {
                             if(!playerName) updatePlayerScore();
-                      })
+                            gameLoaded = true;
+                       })
                   .catch(error => console.error('Ошибка инициализации TWA:', error));
          });
     } else {
@@ -69,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(loadPlayerName)
               .then(()=>{
                   if(!playerName) updatePlayerScore();
+                   gameLoaded = true;
               })
               .catch(error => console.error('Ошибка загрузки игры в браузере:', error));
     }
@@ -308,6 +311,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     function saveData() {
+         if (!gameLoaded) {
+            console.log('Игра еще не загружена, сохранение отменено');
+             return Promise.reject('Игра еще не загружена');
+            }
         return new Promise((resolve, reject) =>{
             try{
                  let data = {
@@ -326,10 +333,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                     const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
                    saveFunction('clickerData', JSON.stringify(data), (err) =>{
-                       if(err){
+                      if(err){
                           console.error("Ошибка при сохранении игры", err);
                             reject(err);
                        } else {
+                           console.log('Данные сохранены:', data);
                            resolve();
                         }
                     });
@@ -352,7 +360,8 @@ document.addEventListener('DOMContentLoaded', function() {
                  }
                    if (value) {
                         try{
-                              let savedData = JSON.parse(value);
+                            let savedData = JSON.parse(value);
+                            console.log('Загруженные данные:', savedData);
                               clickCount = savedData.clickCount || 0;
                              clickValue = savedData.clickValue || 1;
                               autoClickerValue = savedData.autoClickerValue || 0;
@@ -476,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   }
                 } catch(error){
                   console.error("Ошибка при покупке автокликера", error);
-                }
+        }
          });
    }
 
