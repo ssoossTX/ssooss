@@ -41,14 +41,18 @@ document.addEventListener('DOMContentLoaded', () => {
         prestigeButton: document.getElementById('prestige-button'),
         prestigeLevelDisplay: document.getElementById('prestige-level'),
         achievementsDisplay: document.getElementById('achievements'),
-         resetButton: document.getElementById('reset-button'),
-        menuButton: document.getElementById('menu-button'),
-        menu: document.getElementById('menu'),
-        closeMenuButton: document.getElementById('close-menu-button'),
-         exportSaveButton: document.getElementById('export-save-button'),
-         importSaveButton: document.getElementById('import-save-button'),
-          importInput: document.getElementById('import-input'),
+        resetButton: document.getElementById('reset-button'),
+
+         menuButton: document.querySelector('.menu-toggle'), // Используем класс для переключателя меню
+        menu: document.getElementById('menu-items'), // Идентификатор меню
+        exportSaveButton: document.getElementById('export-save-button'), // Используем ID для кнопки экспорта
+        importSaveButton: document.getElementById('import-save-button'),// Используем ID для кнопки импорта
+         importInput: document.getElementById('import-input'), // Используем ID для инпута
+        gameContent: document.getElementById('game-content'),
+         ratingContent: document.getElementById('rating-content'),
+         menuItems: document.querySelectorAll('.menu-items li button'), // Кнопки меню
     };
+
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
     if (tWebApp) {
@@ -63,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.clickUpgradeLevelDisplay.textContent = gameState.clickUpgradeLevel;
         elements.clickUpgradeLevelCostDisplay.textContent = gameState.clickUpgradeLevelCost;
         elements.prestigeLevelDisplay.textContent = gameState.prestigeLevel;
-         elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
+        elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
     }
     function displayMessage(msg, color = 'green') {
         elements.messageDisplay.textContent = msg;
@@ -85,47 +89,47 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
     }
 
-     function startAutoClicker() {
-          if(gameState.autoClickerValue > 0 && !gameState.autoClickerInterval) {
-               gameState.autoClickerInterval = setInterval(autoClick, AUTO_CLICK_INTERVAL);
-          }
-     }
+    function startAutoClicker() {
+        if (gameState.autoClickerValue > 0 && !gameState.autoClickerInterval) {
+            gameState.autoClickerInterval = setInterval(autoClick, AUTO_CLICK_INTERVAL);
+        }
+    }
 
     function handleBonusEvent() {
-          gameState.bonusActive = true;
+        gameState.bonusActive = true;
         gameState.clickValue *= 2;
         gameState.autoClickerValue *= 2;
         displayMessage('Случайный бонус: удвоенный урон!', 'blue');
         updateDisplay();
-         clearTimeout(gameState.bonusTimeout);
-           gameState.bonusTimeout = setTimeout(() => {
-               gameState.bonusActive = false;
-             gameState.clickValue /= 2;
-                gameState.autoClickerValue /= 2;
-              displayMessage('Действие бонуса закончилось!');
-                updateDisplay();
-            }, BONUS_DURATION);
-     }
+        clearTimeout(gameState.bonusTimeout);
+        gameState.bonusTimeout = setTimeout(() => {
+            gameState.bonusActive = false;
+            gameState.clickValue /= 2;
+            gameState.autoClickerValue /= 2;
+            displayMessage('Действие бонуса закончилось!');
+            updateDisplay();
+        }, BONUS_DURATION);
+    }
 
     function handlePenaltyEvent() {
-           displayMessage('Случайный штраф: клики уменьшены в 2 раза!', 'red');
-          gameState.clickValue /= 2;
+        displayMessage('Случайный штраф: клики уменьшены в 2 раза!', 'red');
+        gameState.clickValue /= 2;
+        updateDisplay();
+        setTimeout(() => {
+            gameState.clickValue *= 2;
+            displayMessage('Штраф закончился!');
             updateDisplay();
-            setTimeout(() => {
-                 gameState.clickValue *=2;
-                displayMessage('Штраф закончился!');
-                updateDisplay();
-            }, BONUS_DURATION);
+        }, BONUS_DURATION);
     }
     function startRandomEvent() {
         const eventType = Math.random() < 0.5 ? 'bonus' : 'penalty';
-          if (eventType === 'bonus') {
+        if (eventType === 'bonus') {
             handleBonusEvent();
         } else {
             handlePenaltyEvent();
         }
-            gameState.randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (EVENT_INTERVAL_MAX - EVENT_INTERVAL_MIN) + EVENT_INTERVAL_MIN);
-        }
+        gameState.randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (EVENT_INTERVAL_MAX - EVENT_INTERVAL_MIN) + EVENT_INTERVAL_MIN);
+    }
 
     // --- Достижения ---
     function checkAchievements() {
@@ -133,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             '100000 clicks': gameState.clickCount >= 100000,
             '1000000 clicks': gameState.clickCount >= 1000000,
             'first prestige': gameState.prestigeLevel >= 1,
-             '5 autoClicker': gameState.autoClickerValue >= 5,
+            '5 autoClicker': gameState.autoClickerValue >= 5,
         };
 
         for (const [achievement, condition] of Object.entries(achievementConditions)) {
@@ -146,14 +150,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function addAchievement(achievement) {
         gameState.achievements.push(achievement);
         gameState.achievementCount++;
-         updateDisplay();
+        updateDisplay();
         saveData();
     }
 
-     // --- Управление игрой ---
-     function resetGame() {
+    // --- Управление игрой ---
+    function resetGame() {
         gameState = {
-              clickCount: 0,
+            clickCount: 0,
             clickValue: 1,
             autoClickerValue: 0,
             clickUpgradeCost: 10,
@@ -162,40 +166,40 @@ document.addEventListener('DOMContentLoaded', () => {
             clickUpgradeLevelCost: 100,
             prestigeLevel: 0,
             prestigeMultiplier: 1,
-              bonusActive: false,
+            bonusActive: false,
             achievements: [],
             achievementCount: 0,
             autoClickerInterval: null,
             bonusTimeout: null,
             randomEventTimeout: null,
         };
-          clearAllTimeouts();
+        clearAllTimeouts();
         startRandomEvent();
-         updateDisplay();
-          clearSaveData();
+        updateDisplay();
+        clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
-     }
+    }
 
-     function clearAllTimeouts() {
-          clearInterval(gameState.autoClickerInterval);
+    function clearAllTimeouts() {
+        clearInterval(gameState.autoClickerInterval);
         gameState.autoClickerInterval = null;
         clearTimeout(gameState.bonusTimeout);
         clearTimeout(gameState.randomEventTimeout);
     }
-      function clearSaveData() {
-           if(tWebApp) {
+    function clearSaveData() {
+        if (tWebApp) {
             tWebApp.CloudStorage.removeItem(SAVE_KEY);
         } else {
-               localStorage.removeItem(SAVE_KEY);
-          }
-      }
-      function saveData() {
-          const data = { ...gameState };
+            localStorage.removeItem(SAVE_KEY);
+        }
+    }
+    function saveData() {
+        const data = { ...gameState };
         delete data.autoClickerInterval;
         delete data.bonusTimeout;
-         delete data.randomEventTimeout;
+        delete data.randomEventTimeout;
 
-          const dataString = JSON.stringify(data);
+        const dataString = JSON.stringify(data);
         if (tWebApp) {
             tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
         } else {
@@ -204,36 +208,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-     function loadGame() {
+    function loadGame() {
         const loadFromStorage = (storage) => {
-             const savedDataString = storage.getItem(SAVE_KEY);
-             if(savedDataString) {
-                 try{
-                     const savedData = JSON.parse(savedDataString);
-                     gameState = { ...gameState, ...savedData };
-                     startAutoClicker();
-                      if (gameState.bonusActive) {
-                           handleBonusEvent();
-                         }
-                     updateDisplay();
-                 } catch (e) {
-                     console.error('Error parsing saved data', e);
+            const savedDataString = storage.getItem(SAVE_KEY);
+            if (savedDataString) {
+                try {
+                    const savedData = JSON.parse(savedDataString);
+                    gameState = { ...gameState, ...savedData };
+                    startAutoClicker();
+                    if (gameState.bonusActive) {
+                        handleBonusEvent();
+                    }
+                    updateDisplay();
+                } catch (e) {
+                    console.error('Error parsing saved data', e);
                     clearSaveData();
-                 }
-             }
+                }
+            }
         }
         if (tWebApp) {
             tWebApp.CloudStorage.getItem(SAVE_KEY, (err, value) => {
-                if(err){
-                     console.error('Error loading data from Telegram', err);
+                if (err) {
+                    console.error('Error loading data from Telegram', err);
                     return;
                 }
-                if(value){
-                    loadFromStorage({getItem: () => value});
+                if (value) {
+                    loadFromStorage({ getItem: () => value });
                 }
             });
         } else {
-              loadFromStorage(localStorage);
+            loadFromStorage(localStorage);
         }
     }
 
@@ -272,6 +276,18 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         reader.readAsText(file);
         elements.importInput.value = '';
+    }
+
+      function switchTab(tabId) {
+        elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
+          elements.ratingContent.style.display = tabId === 'rating' ? 'block' : 'none';
+
+          elements.menuItems.forEach(item => {
+            item.classList.remove('active');
+              if(item.dataset.tab === tabId) {
+                  item.classList.add('active');
+              }
+          })
     }
 
     // --- Обработчики событий ---
@@ -336,18 +352,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
      elements.resetButton.addEventListener('click', resetGame);
-     elements.menuButton.addEventListener('click', () => {
-        elements.menu.style.display = 'flex';
+    elements.menuButton.addEventListener('click', () => {
+        elements.menu.classList.toggle('active');
+         elements.menuButton.classList.toggle('active');
     });
-     elements.closeMenuButton.addEventListener('click', () => {
-         elements.menu.style.display = 'none';
-     });
-     elements.exportSaveButton.addEventListener('click', exportSave);
-     elements.importSaveButton.addEventListener('click', importSave);
+
+    elements.exportSaveButton.addEventListener('click', exportSave);
+    elements.importSaveButton.addEventListener('click', importSave);
+      elements.menuItems.forEach(item => {
+          item.addEventListener('click', () => {
+             const tabId = item.dataset.tab;
+              switchTab(tabId)
+              elements.menu.classList.remove('active');
+             elements.menuButton.classList.remove('active');
+          })
+      })
+
 
     // --- Инициализация ---
-      window.addEventListener('beforeunload', saveData);
+    window.addEventListener('beforeunload', saveData);
     loadGame();
     startRandomEvent();
     checkAchievements();
+    switchTab('shop')
 });
