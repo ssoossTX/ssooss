@@ -184,7 +184,11 @@ document.addEventListener('DOMContentLoaded', async function() {
    }
    async function saveRating() {
         try {
-            const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
+               const saveFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.setItem : null) : (typeof localStorage !== 'undefined' ? localStorage.setItem : null);
+            if(!saveFunction) {
+                   console.error("Нет доступного хранилища для рейтинга");
+                   return;
+            }
            await new Promise((resolve, reject) => {
             saveFunction('playersRating', JSON.stringify(playersRating), (err) => {
                  if (err) {
@@ -202,7 +206,12 @@ document.addEventListener('DOMContentLoaded', async function() {
    async function loadRating() {
          return new Promise((resolve, reject) => {
             try {
-                const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
+                 const loadFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.getItem : null) : (typeof localStorage !== 'undefined' ? localStorage.getItem : null);
+                if(!loadFunction) {
+                    console.error("Нет доступного хранилища для рейтинга");
+                    reject("Нет доступного хранилища");
+                    return;
+                }
                 loadFunction('playersRating', (err, value) => {
                     if (err) {
                         console.error("Ошибка при загрузке рейтинга:", err);
@@ -226,7 +235,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     async function savePlayerName() {
         try {
-           const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
+              const saveFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.setItem : null) : (typeof localStorage !== 'undefined' ? localStorage.setItem : null);
+            if(!saveFunction){
+                 console.error("Нет доступного хранилища для имени игрока");
+                  return;
+             }
           await new Promise((resolve, reject) => {
               saveFunction('playerName', JSON.stringify(playerName), (err) => {
                   if (err) {
@@ -244,7 +257,12 @@ document.addEventListener('DOMContentLoaded', async function() {
    function loadPlayerName() {
         return new Promise((resolve, reject) => {
             try {
-                const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
+                const loadFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.getItem : null) : (typeof localStorage !== 'undefined' ? localStorage.getItem : null);
+                if(!loadFunction){
+                     console.error("Нет доступного хранилища для имени игрока");
+                     reject("Нет доступного хранилища");
+                     return;
+                 }
                 loadFunction('playerName', (err, value) => {
                     if (err) {
                        console.error("Ошибка при загрузке имени игрока:", err);
@@ -305,10 +323,10 @@ document.addEventListener('DOMContentLoaded', async function() {
            randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (120000 - 60000) + 60000);
             updateDisplay();
               if(achievementsDisplay)achievementsDisplay.textContent = `Достижения: ${achievementCount}`;
-               if (isTWA) {
+               if (isTWA && tWebApp) {
                   tWebApp.CloudStorage.removeItem('clickerData');
                  tWebApp.CloudStorage.removeItem('playerName');
-            } else {
+            } else if(typeof localStorage !== 'undefined') {
                 localStorage.removeItem('clickerData');
                 localStorage.removeItem('playerName');
            }
@@ -341,7 +359,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 bonusActive: bonusActive
             };
 
-           const saveFunction = isTWA ? tWebApp.CloudStorage.setItem : localStorage.setItem;
+            const saveFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.setItem : null) : (typeof localStorage !== 'undefined' ? localStorage.setItem : null);
+            if(!saveFunction){
+                   console.error("Нет доступного хранилища для сохранения данных");
+                   return;
+            }
+
             await new Promise((resolve, reject) => {
                saveFunction('clickerData', JSON.stringify(data), (err) => {
                  if (err) {
@@ -359,7 +382,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     function loadGame() {
         return new Promise(async (resolve, reject) => {
             try {
-                 const loadFunction = isTWA ? tWebApp.CloudStorage.getItem : localStorage.getItem;
+                 const loadFunction = isTWA ? (tWebApp ? tWebApp.CloudStorage.getItem : null) : (typeof localStorage !== 'undefined' ? localStorage.getItem : null);
+               if(!loadFunction){
+                  console.error("Нет доступного хранилища для загрузки данных");
+                  reject("Нет доступного хранилища");
+                   return;
+               }
                 loadFunction('clickerData', async (err, value) => {
                   if (err) {
                        console.error("Ошибка при загрузке данных:", err);
