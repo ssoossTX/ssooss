@@ -41,7 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
         prestigeButton: document.getElementById('prestige-button'),
         prestigeLevelDisplay: document.getElementById('prestige-level'),
         achievementsDisplay: document.getElementById('achievements'),
-        resetButton: document.getElementById('reset-button'),
+         resetButton: document.getElementById('reset-button'),
+        menuButton: document.getElementById('menu-button'),
+        menu: document.getElementById('menu'),
+        closeMenuButton: document.getElementById('close-menu-button'),
+         exportSaveButton: document.getElementById('export-save-button'),
+         importSaveButton: document.getElementById('import-save-button'),
+          importInput: document.getElementById('import-input'),
     };
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
@@ -57,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.clickUpgradeLevelDisplay.textContent = gameState.clickUpgradeLevel;
         elements.clickUpgradeLevelCostDisplay.textContent = gameState.clickUpgradeLevelCost;
         elements.prestigeLevelDisplay.textContent = gameState.prestigeLevel;
-        elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
+         elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
     }
     function displayMessage(msg, color = 'green') {
         elements.messageDisplay.textContent = msg;
@@ -78,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel) * gameState.prestigeMultiplier;
         updateDisplay();
     }
-
 
      function startAutoClicker() {
           if(gameState.autoClickerValue > 0 && !gameState.autoClickerInterval) {
@@ -141,12 +146,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function addAchievement(achievement) {
         gameState.achievements.push(achievement);
         gameState.achievementCount++;
-        updateDisplay();
+         updateDisplay();
         saveData();
     }
 
      // --- Управление игрой ---
-    function resetGame() {
+     function resetGame() {
         gameState = {
               clickCount: 0,
             clickValue: 1,
@@ -232,6 +237,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function exportSave() {
+        const data = JSON.stringify(gameState);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'clicker_save.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+    function importSave() {
+        const file = elements.importInput.files[0];
+        if (!file) {
+            displayMessage('Файл не выбран', 'red');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const savedData = JSON.parse(event.target.result);
+                 gameState = { ...gameState, ...savedData };
+                 clearAllTimeouts();
+                startAutoClicker();
+                startRandomEvent();
+               updateDisplay();
+               saveData();
+                displayMessage('Сохранение импортировано!');
+            } catch (e) {
+                console.error('Error parsing save data', e);
+                  displayMessage('Ошибка при импорте сохранения', 'red');
+            }
+        };
+        reader.readAsText(file);
+        elements.importInput.value = '';
+    }
 
     // --- Обработчики событий ---
     elements.clickButton.addEventListener('click', applyClick);
@@ -294,11 +335,19 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
         }
     });
-    elements.resetButton.addEventListener('click', resetGame);
+     elements.resetButton.addEventListener('click', resetGame);
+     elements.menuButton.addEventListener('click', () => {
+        elements.menu.style.display = 'flex';
+    });
+     elements.closeMenuButton.addEventListener('click', () => {
+         elements.menu.style.display = 'none';
+     });
+     elements.exportSaveButton.addEventListener('click', exportSave);
+     elements.importSaveButton.addEventListener('click', importSave);
 
     // --- Инициализация ---
       window.addEventListener('beforeunload', saveData);
     loadGame();
     startRandomEvent();
     checkAchievements();
-});                                             
+});
