@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const BONUS_DURATION = 10000;
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
-    const RATING_KEY = 'clickerRating'; // Ключ для сохранения рейтинга
     const PLAYER_NAME_KEY = 'playerName'; // Ключ для сохранения имени игрока
+      const SERVER_URL = 'https://your-server.com'; // Замените на URL вашего сервера
 
     // --- Состояния игры ---
     let gameState = {
@@ -184,8 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
-        clearRating(); // Очищаем рейтинг при сбросе игры
-         showNameInput();
+        showNameInput();
     }
 
     function clearAllTimeouts() {
@@ -212,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             localStorage.setItem(SAVE_KEY, dataString);
        }
-        updateRating();
     }
 
 
@@ -229,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      }
                     updateDisplay();
                       loadPlayerName(); // Загружаем имя игрока
-                     loadRating(); // Загружаем рейтинг при загрузке игры
+                     getRating(); // Загружаем рейтинг при загрузке игры
                 } catch (e) {
                     console.error('Error parsing saved data', e);
                     clearSaveData();
@@ -301,90 +299,54 @@ document.addEventListener('DOMContentLoaded', () => {
        }
     // --- Рейтинг ---
 
-    function updateRating() {
-       if (!gameState.playerName) {
-             return;
-        }
-           const playerName = gameState.playerName
-          const newScore =  gameState.clickCount + (gameState.prestigeLevel * 100000) ;
-        let rating = loadRatingData();
-          const playerIndex = rating.findIndex(item => item.name === playerName);
-        if (playerIndex !== -1) {
-            if(rating[playerIndex].score < newScore) {
-                 rating[playerIndex].score = newScore;
-            }
-        } else {
-              rating.push({ name: playerName, score: newScore });
-        }
-
-         rating.sort((a, b) => b.score - a.score); // Сортируем по убыванию
-           if (rating.length > 10) {
-               rating = rating.slice(0,10)
-           }
-
-           saveRating(rating);
-          displayRating(rating);
-    }
-
-    function loadRatingData() {
-        let rating = [];
-         const loadFromStorage = (storage) => {
-            const ratingDataString = storage.getItem(RATING_KEY);
-            if (ratingDataString) {
-                try {
-                  rating = JSON.parse(ratingDataString);
-                } catch (e) {
-                    console.error('Error parsing rating data', e);
-                    clearRating();
-                }
-            }
-        }
-         if (tWebApp) {
-           tWebApp.CloudStorage.getItem(RATING_KEY, (err, value) => {
-               if (err) {
-                   console.error('Error loading rating data from Telegram', err);
-                   return;
-               }
-               if (value) {
-                   loadFromStorage({ getItem: () => value });
-               }
-           });
-         } else {
-          loadFromStorage(localStorage);
-         }
-          return rating;
-    }
-
-    function saveRating(rating) {
-        const ratingString = JSON.stringify(rating);
-         if (tWebApp) {
-             tWebApp.CloudStorage.setItem(RATING_KEY, ratingString);
-        } else {
-           localStorage.setItem(RATING_KEY, ratingString);
-        }
-    }
-
-     function clearRating() {
-       if (tWebApp) {
-          tWebApp.CloudStorage.removeItem(RATING_KEY);
-      } else {
-            localStorage.removeItem(RATING_KEY);
+    async function updateRating() {
+      if (!gameState.playerName) {
+        return;
       }
-    }
-
-     function loadRating() {
-           const rating = loadRatingData()
-           displayRating(rating)
-    }
-
-      function displayRating(rating) {
-           elements.ratingList.innerHTML = '';
-          rating.forEach((player, index) => {
-                const li = document.createElement('li');
-                li.textContent = `${index + 1}. ${player.name}: ${Math.round(player.score)}`;
-                elements.ratingList.appendChild(li);
+      const playerName = gameState.playerName;
+      const newScore = gameState.clickCount + (gameState.prestigeLevel * 100000);
+      try {
+            const response = await fetch(`${SERVER_URL}/update_rating`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: playerName, score: newScore }),
             });
+
+            if (!response.ok) {
+                console.error('Failed to update rating', response.status);
+            } else {
+                   getRating();
+            }
+        } catch (error) {
+            console.error('Error while updating rating', error);
+        }
     }
+
+    async function getRating() {
+          try {
+              const response = await fetch(`${SERVER_URL}/get_rating`);
+             if (!response.ok) {
+                  console.error('Failed to get rating', response.status);
+                  return;
+              }
+            const rating = await response.json();
+            displayRating(rating);
+          } catch (error) {
+            console.error('Error getting rating:', error);
+        }
+    }
+
+    function displayRating(rating) {
+      elements.ratingList.innerHTML = '';
+      rating.forEach((player, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${index + 1}. ${player.name}: ${Math.round(player.score)}`;
+        elements.ratingList.appendChild(li);
+      });
+    }
+
 
      function showNameInput() {
            elements.gameContent.style.display = 'none';
@@ -513,6 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
     startRandomEvent();
     checkAchievements();
      switchTab('shop');
-    loadRating();
+    getRating();
 });
         
