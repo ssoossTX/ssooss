@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const BONUS_DURATION = 10000;
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
+    const PRESTIGE_BASE_COST = 10000; // Базовая стоимость перерождения
 
     // --- Состояния игры ---
     let gameState = {
@@ -35,6 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'medium': 10,
             'hard': 100,
         },
+        expeditionRewards: {
+            'easy': [1, 5],
+            'medium': [10, 50],
+            'hard': [100, 500],
+        },
+        prestigeCost: PRESTIGE_BASE_COST, // Добавляем начальную стоимость перерождения
     };
 
     // --- UI элементы ---
@@ -60,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mapContainer: document.getElementById('map-container'),
         expeditionProgressDisplay: document.getElementById('expedition-progress'),
         diamondDisplay: document.getElementById('diamond-display'),
+        prestigeCostDisplay: document.getElementById('prestige-cost'),
     };
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
@@ -77,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.prestigeLevelDisplay.textContent = gameState.prestigeLevel;
         elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
         elements.diamondDisplay.textContent = `Алмазы: ${gameState.diamonds}`;
+        elements.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
         updateExpeditionProgress();
     }
 
@@ -185,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Управление игрой ---
     function resetGame() {
-        gameState = {
+           gameState = {
             clickCount: 0,
             clickValue: 1,
             autoClickerValue: 0,
@@ -193,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
             autoUpgradeCost: 50,
             clickUpgradeLevel: 1,
             clickUpgradeLevelCost: 100,
-            prestigeLevel: 0,
+             prestigeLevel: 0,
             prestigeMultiplier: 1,
             bonusActive: false,
             achievements: [],
@@ -207,10 +216,16 @@ document.addEventListener('DOMContentLoaded', () => {
             expeditionDuration: 0,
             expeditionReward: 0,
             expeditionCosts: {
-                'easy': 0,
+                 'easy': 0,
                 'medium': 10,
-                'hard': 100,
+                 'hard': 100,
             },
+            expeditionRewards: {
+                'easy': [1, 5],
+                'medium': [10, 50],
+                'hard': [100, 500],
+            },
+            prestigeCost: PRESTIGE_BASE_COST, // Устанавливаем начальную стоимость перерождения при сбросе
         };
         clearAllTimeouts();
         startRandomEvent();
@@ -252,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-     function loadGame() {
+    function loadGame() {
         const loadFromStorage = (storage) => {
               const savedDataString = storage.getItem(SAVE_KEY);
             if (savedDataString) {
@@ -316,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     // --- Экспедиции ---
- function startExpedition(type) {
+    function startExpedition(type) {
          if(gameState.activeExpedition){
             displayMessage('Уже есть активная экспедиция', 'red');
             return;
@@ -329,32 +344,29 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
             let duration;
-            let rewardRange;
-        switch (type) {
-            case 'easy':
-                duration = 60000;
-                rewardRange = [1, 5];
-                break;
-            case 'medium':
-                duration = 300000;
-                rewardRange = [10, 50];
-                break;
-            case 'hard':
-                duration = 600000;
-                rewardRange = [100, 500];
-                break;
+            let rewardRange = gameState.expeditionRewards[type];
+            switch (type) {
+                case 'easy':
+                    duration = 60000;
+                    break;
+                case 'medium':
+                    duration = 300000;
+                    break;
+                case 'hard':
+                    duration = 600000;
+                    break;
+            }
+
+            gameState.diamonds -= cost;
+            gameState.activeExpedition = type;
+            gameState.expeditionStartTime = Date.now();
+            gameState.expeditionDuration = duration;
+            gameState.expeditionReward = Math.floor(Math.random() * (rewardRange[1] - rewardRange[0] + 1)) + rewardRange[0];
+
+            startExpeditionTimer();
+            updateDisplay();
+            displayMessage(`Экспедиция "${type}" началась!`, 'green')
         }
-
-        gameState.diamonds -= cost;
-        gameState.activeExpedition = type;
-        gameState.expeditionStartTime = Date.now();
-        gameState.expeditionDuration = duration;
-        gameState.expeditionReward = Math.floor(Math.random() * (rewardRange[1] - rewardRange[0] + 1)) + rewardRange[0];
-
-        startExpeditionTimer();
-        updateDisplay();
-        displayMessage(`Экспедиция "${type}" началась!`, 'green')
-    }
 
 
     function startExpeditionTimer() {
@@ -416,24 +428,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    elements.prestigeButton.addEventListener('click', () => {
-        if (gameState.clickCount >= 10000) {
+     elements.prestigeButton.addEventListener('click', () => {
+        if (gameState.clickCount >= gameState.prestigeCost) {
             gameState.prestigeLevel++;
             gameState.prestigeMultiplier *= 2;
             gameState.clickCount = 0;
-            gameState.clickValue = 1;
+             gameState.clickValue = 1;
             gameState.autoClickerValue = 0;
             gameState.clickUpgradeCost = 10;
             gameState.autoUpgradeCost = 50;
             gameState.clickUpgradeLevel = 1;
             gameState.clickUpgradeLevelCost = 100;
+            gameState.prestigeCost = Math.round(PRESTIGE_BASE_COST * Math.pow(10, gameState.prestigeLevel));
             clearAllTimeouts();
             updateDisplay();
             displayMessage('Перерождение!');
         } else {
-            displayMessage('Недостаточно кликов! (нужно 10000)', 'red');
+            displayMessage(`Недостаточно кликов! (нужно ${gameState.prestigeCost})`, 'red');
         }
     });
+
 
     elements.resetButton.addEventListener('click', resetGame);
 
