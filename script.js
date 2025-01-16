@@ -118,13 +118,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const displayMessage = (msg, color = 'white') => {
+    const displayMessage = (msg, color = 'white', fontSize = '1em') => {
         elements.messageDisplay.textContent = msg;
         elements.messageDisplay.style.color = color;
+        elements.messageDisplay.style.fontSize = fontSize;
         setTimeout(() => {
             elements.messageDisplay.textContent = '';
+            elements.messageDisplay.style.fontSize = '1em'; // Возвращаем стандартный размер
         }, MESSAGE_DURATION);
     };
+
 
     // --- Основная логика игры ---
     const applyClick = () => {
@@ -278,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 expeditionInterval,
                 ...dataToSave
             } = gameState;
-             const dataString = JSON.stringify(dataToSave);
+            const dataString = JSON.stringify(dataToSave);
             if (tWebApp) {
                 tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
             } else {
@@ -308,15 +311,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (savedData.clickUpgradeLevel == undefined) {
                     gameState.clickUpgradeLevel = 1;
                 }
-
-                startAutoClicker();
+                 startAutoClicker();
                 if (gameState.activeExpedition) {
                     startExpeditionTimer();
                 }
                  if (gameState.bonusActive) {
                      handleBonusEvent();
                  }
-                updateDisplay();
+                 updateDisplay();
             } catch (e) {
                 clearSaveData();
                 console.error('Failed to load game', e)
@@ -400,19 +402,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const finishExpedition = () => {
         clearInterval(gameState.expeditionInterval);
         gameState.expeditionInterval = null;
-        const reward = gameState.expeditionReward
-         gameState.diamonds += reward;
+        const reward = gameState.expeditionReward;
+        gameState.diamonds += reward;
         const expeditionType = gameState.activeExpedition;
         gameState.activeExpedition = null;
         gameState.expeditionStartTime = null;
         gameState.expeditionDuration = 0;
         gameState.expeditionReward = 0;
 
-        displayMessage(`Экспедиция "${EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${reward} алмазов`, 'gold');
-         updateDisplay();
-          saveData(); // Сохранение после завершения экспедиции
+        displayMessage(`Экспедиция "${EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${reward} алмазов`, 'gold', '1.2em');
+        updateDisplay();
+        saveData();
     };
-
 
     // --- Обработчики событий ---
     elements.clickButton.addEventListener('click', applyClick);
@@ -506,4 +507,4 @@ document.addEventListener('DOMContentLoaded', () => {
         startExpeditionTimer();
     }
 });
-        
+                     
