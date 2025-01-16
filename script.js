@@ -184,14 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Управление игрой ---
-   function resetGame() {
+    function resetGame() {
         gameState = {
             clickCount: 0,
-            clickValue: 1,
+            clickValue: 1, // Гарантируем начальное значение 1
             autoClickerValue: 0,
             clickUpgradeCost: 10,
             autoUpgradeCost: 50,
-            clickUpgradeLevel: 1,
+            clickUpgradeLevel: 1, // Гарантируем начальное значение 1
             clickUpgradeLevelCost: 100,
             prestigeLevel: 0,
             prestigeMultiplier: 1,
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         clearAllTimeouts();
         startRandomEvent();
-         updateDisplay();
+        updateDisplay();
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
     }
@@ -224,10 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.autoClickerInterval = null;
         clearTimeout(gameState.bonusTimeout);
         clearTimeout(gameState.randomEventTimeout);
-        // Не сбрасываем экспедицию, она должна продолжаться
          if (gameState.expeditionInterval) {
             clearInterval(gameState.expeditionInterval);
-             gameState.expeditionInterval = null;
+            gameState.expeditionInterval = null;
         }
     }
 
@@ -244,8 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
         delete data.autoClickerInterval;
         delete data.bonusTimeout;
         delete data.randomEventTimeout;
-        const dataString = JSON.stringify(data);
          delete data.expeditionInterval;
+        const dataString = JSON.stringify(data);
         if (tWebApp) {
             tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
         } else {
@@ -255,23 +254,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadGame() {
         const loadFromStorage = (storage) => {
-            const savedDataString = storage.getItem(SAVE_KEY);
+              const savedDataString = storage.getItem(SAVE_KEY);
             if (savedDataString) {
                 try {
-                    const savedData = JSON.parse(savedDataString);
-                    gameState = { ...gameState, ...savedData };
+                     const savedData = JSON.parse(savedDataString);
+                     gameState = { ...gameState, ...savedData };
+                    //  Инициализация clickValue и clickUpgradeLevel при первом запуске
+                    if(savedData.clickValue == undefined){
+                        gameState.clickValue = 1;
+                    }
+                     if(savedData.clickUpgradeLevel == undefined){
+                        gameState.clickUpgradeLevel = 1;
+                    }
                     startAutoClicker();
-                    if (gameState.activeExpedition) {
+                     if (gameState.activeExpedition) {
                         startExpeditionTimer();
                     }
-                     if (gameState.bonusActive) {
+                    if (gameState.bonusActive) {
                         handleBonusEvent();
                     }
                     updateDisplay();
                 } catch (e) {
                     console.error('Error parsing saved data', e);
-                    clearSaveData();
+                   clearSaveData();
                 }
+            } else {
+                // Если нет сохраненных данных, устанавливаем значения по умолчанию
+                 gameState.clickValue = 1;
+                 gameState.clickUpgradeLevel = 1;
+                  updateDisplay();
             }
         };
         if (tWebApp) {
@@ -282,12 +293,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (value) {
                     loadFromStorage({ getItem: () => value });
+                } else {
+                // Если нет сохраненных данных, устанавливаем значения по умолчанию
+                    gameState.clickValue = 1;
+                    gameState.clickUpgradeLevel = 1;
+                     updateDisplay();
                 }
             });
         } else {
             loadFromStorage(localStorage);
         }
     }
+
 
     function switchTab(tabId) {
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
@@ -362,12 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
             gameState.clickCount -= gameState.clickUpgradeLevelCost;
             gameState.clickUpgradeLevel++;
-            gameState.clickUpgradeCost = 10;
-            gameState.clickCount = 0;
-            gameState.clickValue = 1;
             gameState.clickUpgradeLevelCost = Math.round(gameState.clickUpgradeLevelCost * 2.5);
             updateDisplay();
-            displayMessage('Уровень улучшения клика повышен!');
+            displayMessage('Уровень улучшения базового клика повышен!');
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
@@ -443,8 +457,8 @@ document.addEventListener('DOMContentLoaded', () => {
     startRandomEvent();
     checkAchievements();
     switchTab('shop');
-     if (gameState.activeExpedition) {
+    if (gameState.activeExpedition) {
         startExpeditionTimer();
     }
 });
-                                             
+        
