@@ -14,10 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const EXPEDITION_TYPES = {
-        'easy': 'легкая',
-        'medium': 'средняя',
-        'hard': 'тяжелая',
+        'easy': 'Легкая',
+        'medium': 'Средняя',
+        'hard': 'Тяжелая',
     };
+
+     const SKIN_BOX_COST = 500;
+    const ARTIFACT_BOX_COST = 1000;
 
     // --- Состояния игры ---
     let gameState = {
@@ -51,6 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'medium': [10, 50],
             'hard': [100, 500],
         },
+          skinBoxCount: 0,
+        artifactBoxCount: 0,
         prestigeCost: PRESTIGE_BASE_COST,
     };
 
@@ -74,11 +79,18 @@ document.addEventListener('DOMContentLoaded', () => {
         menuButton: document.querySelector('.menu-toggle'),
         menu: document.getElementById('menu-items'),
         gameContent: document.getElementById('game-content'),
+          clickerTab: document.getElementById('clicker-tab'), // Кнопка кликера в меню
+          shopTab: document.getElementById('shop-tab'), // Кнопка магазина в меню
         menuItems: document.querySelectorAll('.menu-items li button'),
         mapContainer: document.getElementById('map-container'),
+         skinBoxButton: document.getElementById('buy-skin-box'),
+        artifactBoxButton: document.getElementById('buy-artifact-box'),
         expeditionProgressDisplay: document.getElementById('expedition-progress'),
         diamondDisplay: document.getElementById('diamond-display'),
+        skinBoxCountDisplay: document.getElementById('skin-box-count'),
+         artifactBoxCountDisplay: document.getElementById('artifact-box-count'),
         prestigeCostDisplay: document.getElementById('prestige-cost'),
+        shopContent: document.getElementById('shop-content'),
     };
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
@@ -96,7 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.prestigeLevelDisplay.textContent = gameState.prestigeLevel;
         elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
         elements.diamondDisplay.textContent = `Алмазы: ${gameState.diamonds}`;
-        elements.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
+          elements.skinBoxCountDisplay.textContent = `Ящики скинов: ${gameState.skinBoxCount}`;
+        elements.artifactBoxCountDisplay.textContent = `Ящики артефактов: ${gameState.artifactBoxCount}`;
+         elements.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
         updateExpeditionProgress();
         updateExpeditionButtonInfo();
     };
@@ -209,6 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 'medium': [10, 50],
                 'hard': [100, 500],
             },
+             skinBoxCount: 0,
+            artifactBoxCount: 0,
             prestigeCost: PRESTIGE_BASE_COST,
         };
         clearAllTimeouts();
@@ -304,7 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     const switchTab = (tabId) => {
-        elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
+        elements.gameContent.style.display = tabId === 'clicker' ? 'block' : 'none';
+        elements.shopContent.style.display = tabId === 'shop' ? 'block' : 'none';
         elements.mapContainer.classList.toggle('active', tabId === 'map');
         elements.menuItems.forEach(item => {
             item.classList.remove('active');
@@ -377,6 +394,29 @@ document.addEventListener('DOMContentLoaded', () => {
         saveData();
     };
 
+    const buySkinBox = () => {
+        if (gameState.diamonds >= SKIN_BOX_COST) {
+            gameState.diamonds -= SKIN_BOX_COST;
+            gameState.skinBoxCount++;
+            updateDisplay();
+            displayMessage('Куплен ящик со скинами!', 'green');
+            saveData();
+        } else {
+            displayMessage('Недостаточно алмазов!', 'red');
+        }
+    };
+    const buyArtifactBox = () => {
+        if (gameState.diamonds >= ARTIFACT_BOX_COST) {
+            gameState.diamonds -= ARTIFACT_BOX_COST;
+            gameState.artifactBoxCount++;
+            updateDisplay();
+            displayMessage('Куплен ящик с артефактами!', 'green');
+            saveData();
+        } else {
+             displayMessage('Недостаточно алмазов!', 'red');
+        }
+    };
+
 
     // --- Обработчики событий ---
     elements.clickButton.addEventListener('click', applyClick);
@@ -429,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
               gameState.autoUpgradeCost = 50;
                gameState.clickUpgradeLevel = 1;
               gameState.clickUpgradeLevelCost = 100;
-               gameState.prestigeCost = Math.round(PRESTIGE_BASE_COST * Math.pow(10, gameState.prestigeLevel));
+              gameState.prestigeCost = Math.round(PRESTIGE_BASE_COST * Math.pow(10, gameState.prestigeLevel));
                clearAllTimeouts();
               updateDisplay();
               displayMessage('Перерождение!');
@@ -459,6 +499,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    elements.skinBoxButton.addEventListener('click', buySkinBox);
+    elements.artifactBoxButton.addEventListener('click', buyArtifactBox);
 
     // --- Инициализация ---
     const AUTO_SAVE_INTERVAL = 30000; // 30 секунд
@@ -488,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     startRandomEvent();
     checkAchievements();
-    switchTab('shop');
+     switchTab('clicker'); // По умолчанию открываем вкладку кликера
     updateExpeditionButtonInfo();
     if (gameState.activeExpedition) {
         startExpeditionTimer();
@@ -509,4 +551,5 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(globalMessageContainer);
     elements.globalMessageDisplay = globalMessageContainer;
 });
-                
+
+  
