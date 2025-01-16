@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const remaining = Math.max(0, gameState.expeditionDuration - elapsed);
             const progress = Math.min(100, Math.round((elapsed / gameState.expeditionDuration) * 100));
             const remainingSeconds = Math.ceil(remaining / 1000);
-             elements.expeditionProgressDisplay.textContent = `Экспедиция ${gameState.activeExpedition}: ${progress}%  (${remainingSeconds} сек. осталось)`;
+            elements.expeditionProgressDisplay.textContent = `Экспедиция ${gameState.activeExpedition}: ${progress}%  (${remainingSeconds} сек. осталось)`;
             if (remaining <= 0) {
                 finishExpedition();
             }
@@ -187,11 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetGame() {
         gameState = {
             clickCount: 0,
-            clickValue: 1, // Гарантируем начальное значение 1
+            clickValue: 1,
             autoClickerValue: 0,
             clickUpgradeCost: 10,
             autoUpgradeCost: 50,
-            clickUpgradeLevel: 1, // Гарантируем начальное значение 1
+            clickUpgradeLevel: 1,
             clickUpgradeLevelCost: 100,
             prestigeLevel: 0,
             prestigeMultiplier: 1,
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.autoClickerInterval = null;
         clearTimeout(gameState.bonusTimeout);
         clearTimeout(gameState.randomEventTimeout);
-         if (gameState.expeditionInterval) {
+        if (gameState.expeditionInterval) {
             clearInterval(gameState.expeditionInterval);
             gameState.expeditionInterval = null;
         }
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function loadGame() {
+     function loadGame() {
         const loadFromStorage = (storage) => {
               const savedDataString = storage.getItem(SAVE_KEY);
             if (savedDataString) {
@@ -305,7 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     function switchTab(tabId) {
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
         elements.mapContainer.classList.toggle('active', tabId === 'map');
@@ -317,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     // --- Экспедиции ---
-    function startExpedition(type) {
+ function startExpedition(type) {
          if(gameState.activeExpedition){
             displayMessage('Уже есть активная экспедиция', 'red');
             return;
@@ -325,7 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
        const cost = gameState.expeditionCosts[type];
         if (gameState.diamonds < cost) {
-            displayMessage('Недостаточно алмазов для этой экспедиции', 'red');
+            const needed = cost - gameState.diamonds
+            displayMessage(`Не хватает ${needed} алмазов для этой экспедиции`, 'red');
             return;
         }
             let duration;
@@ -356,6 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(`Экспедиция "${type}" началась!`, 'green')
     }
 
+
     function startExpeditionTimer() {
         gameState.expeditionInterval = setInterval(updateExpeditionProgress, 1000);
     }
@@ -379,9 +380,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
             gameState.clickCount -= gameState.clickUpgradeLevelCost;
             gameState.clickUpgradeLevel++;
+            gameState.clickUpgradeCost = 10;
+            gameState.clickCount = 0;
+            gameState.clickValue = 1;
             gameState.clickUpgradeLevelCost = Math.round(gameState.clickUpgradeLevelCost * 2.5);
             updateDisplay();
-            displayMessage('Уровень улучшения базового клика повышен!');
+            displayMessage('Уровень улучшения клика повышен!');
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
