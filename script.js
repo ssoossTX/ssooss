@@ -29,7 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
         activeExpedition: null,
         expeditionStartTime: null,
         expeditionDuration: 0,
-        expeditionReward: 0, // Добавляем для сохранения награды
+        expeditionReward: 0,
+        expeditionCosts: {
+            'easy': 0,
+            'medium': 10,
+            'hard': 100,
+        },
     };
 
     // --- UI элементы ---
@@ -179,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Управление игрой ---
-    function resetGame() {
+   function resetGame() {
         gameState = {
             clickCount: 0,
             clickValue: 1,
@@ -201,10 +206,15 @@ document.addEventListener('DOMContentLoaded', () => {
             expeditionStartTime: null,
             expeditionDuration: 0,
             expeditionReward: 0,
+            expeditionCosts: {
+                'easy': 0,
+                'medium': 10,
+                'hard': 100,
+            },
         };
         clearAllTimeouts();
         startRandomEvent();
-        updateDisplay();
+         updateDisplay();
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
     }
@@ -214,9 +224,10 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.autoClickerInterval = null;
         clearTimeout(gameState.bonusTimeout);
         clearTimeout(gameState.randomEventTimeout);
-        if (gameState.expeditionInterval) {
+        // Не сбрасываем экспедицию, она должна продолжаться
+         if (gameState.expeditionInterval) {
             clearInterval(gameState.expeditionInterval);
-            gameState.expeditionInterval = null;
+             gameState.expeditionInterval = null;
         }
     }
 
@@ -233,8 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
         delete data.autoClickerInterval;
         delete data.bonusTimeout;
         delete data.randomEventTimeout;
-        delete data.expeditionInterval;
         const dataString = JSON.stringify(data);
+         delete data.expeditionInterval;
         if (tWebApp) {
             tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
         } else {
@@ -253,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (gameState.activeExpedition) {
                         startExpeditionTimer();
                     }
-                    if (gameState.bonusActive) {
+                     if (gameState.bonusActive) {
                         handleBonusEvent();
                     }
                     updateDisplay();
@@ -294,6 +305,12 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage('Уже есть активная экспедиция', 'red');
             return;
         }
+
+       const cost = gameState.expeditionCosts[type];
+        if (gameState.diamonds < cost) {
+            displayMessage('Недостаточно алмазов для этой экспедиции', 'red');
+            return;
+        }
             let duration;
             let rewardRange;
         switch (type) {
@@ -311,10 +328,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
 
+        gameState.diamonds -= cost;
         gameState.activeExpedition = type;
         gameState.expeditionStartTime = Date.now();
         gameState.expeditionDuration = duration;
-           gameState.expeditionReward = Math.floor(Math.random() * (rewardRange[1] - rewardRange[0] + 1)) + rewardRange[0];
+        gameState.expeditionReward = Math.floor(Math.random() * (rewardRange[1] - rewardRange[0] + 1)) + rewardRange[0];
 
         startExpeditionTimer();
         updateDisplay();
@@ -425,6 +443,8 @@ document.addEventListener('DOMContentLoaded', () => {
     startRandomEvent();
     checkAchievements();
     switchTab('shop');
-    setInterval(updateExpeditionProgress, 1000);
+     if (gameState.activeExpedition) {
+        startExpeditionTimer();
+    }
 });
- 
+                                             
