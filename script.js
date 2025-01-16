@@ -1,5 +1,5 @@
 
-document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
     // --- Константы ---
     const SAVE_KEY = 'clickerData';
     const EVENT_INTERVAL_MIN = 60000;
@@ -26,15 +26,19 @@ document.addEventListener('DOMContentLoaded', () => {
         autoClickerInterval: null,
         bonusTimeout: null,
         randomEventTimeout: null,
+        diamonds: 0,
+        activeExpedition: null,
+        expeditionStartTime: null,
+        expeditionDuration: 0,
     };
 
     // --- UI элементы ---
     const elements = {
         clickCountDisplay: document.getElementById('click-count'),
         clickButton: document.getElementById('click-button'),
-        upgradeClickButton: document.querySelector('#upgrade-click button'),
-        upgradeAutoButton: document.querySelector('#upgrade-auto button'),
-        upgradeClickLevelButton: document.querySelector('#upgrade-click-level button'),
+        upgradeClickButton: document.querySelector('#upgrade-click .buy-upgrade'),
+        upgradeAutoButton: document.querySelector('#upgrade-auto .buy-upgrade'),
+        upgradeClickLevelButton: document.querySelector('#upgrade-click-level .buy-upgrade'),
         clickUpgradeCostDisplay: document.getElementById('click-upgrade-cost'),
         autoUpgradeCostDisplay: document.getElementById('auto-upgrade-cost'),
         clickUpgradeLevelDisplay: document.getElementById('click-upgrade-level-display'),
@@ -44,11 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
         prestigeLevelDisplay: document.getElementById('prestige-level'),
         achievementsDisplay: document.getElementById('achievements'),
         resetButton: document.getElementById('reset-button'),
-         menuButton: document.querySelector('.menu-toggle'),
+        menuButton: document.querySelector('.menu-toggle'),
         menu: document.getElementById('menu-items'),
         gameContent: document.getElementById('game-content'),
-         menuItems: document.querySelectorAll('.menu-items li button'),
-
+        menuItems: document.querySelectorAll('.menu-items li button'),
+         mapContainer: document.getElementById('map-container'),
+         expeditionProgressDisplay: document.getElementById('expedition-progress'),
+        diamondDisplay: document.getElementById('diamond-display'),
     };
 
     const tWebApp = window.Telegram && window.Telegram.WebApp;
@@ -65,7 +71,24 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.clickUpgradeLevelCostDisplay.textContent = gameState.clickUpgradeLevelCost;
         elements.prestigeLevelDisplay.textContent = gameState.prestigeLevel;
         elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
+         elements.diamondDisplay.textContent = `Алмазы: ${gameState.diamonds}`;
+        updateExpeditionProgress();
     }
+
+     function updateExpeditionProgress() {
+            if (gameState.activeExpedition) {
+                const elapsed = Date.now() - gameState.expeditionStartTime;
+                const remaining = Math.max(0, gameState.expeditionDuration - elapsed);
+                 const remainingSeconds = Math.ceil(remaining / 1000);
+                elements.expeditionProgressDisplay.textContent = `Экспедиция ${gameState.activeExpedition}: осталось ${remainingSeconds} сек.`;
+                 if (remaining <= 0) {
+                    finishExpedition();
+                 }
+            }else{
+                elements.expeditionProgressDisplay.textContent = '';
+            }
+        }
+
 
     function displayMessage(msg, color = 'white') {
         elements.messageDisplay.textContent = msg;
@@ -155,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Управление игрой ---
-    function resetGame() {
+       function resetGame() {
         gameState = {
             clickCount: 0,
             clickValue: 1,
@@ -172,6 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
             autoClickerInterval: null,
             bonusTimeout: null,
             randomEventTimeout: null,
+            diamonds: 0,
+             activeExpedition: null,
+            expeditionStartTime: null,
+            expeditionDuration: 0,
         };
         clearAllTimeouts();
         startRandomEvent();
@@ -185,6 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.autoClickerInterval = null;
         clearTimeout(gameState.bonusTimeout);
         clearTimeout(gameState.randomEventTimeout);
+         if(gameState.expeditionInterval){
+            clearInterval(gameState.expeditionInterval);
+           gameState.expeditionInterval = null;
+         }
     }
      function clearSaveData() {
         if (tWebApp) {
@@ -198,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         delete data.autoClickerInterval;
         delete data.bonusTimeout;
         delete data.randomEventTimeout;
+        delete data.expeditionInterval;
         const dataString = JSON.stringify(data);
         if (tWebApp) {
             tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
@@ -214,6 +246,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const savedData = JSON.parse(savedDataString);
                     gameState = { ...gameState, ...savedData };
                     startAutoClicker();
+                     if (gameState.activeExpedition) {
+                     startExpeditionTimer();
+                     }
                     if (gameState.bonusActive) {
                         handleBonusEvent();
                     }
@@ -238,8 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
             loadFromStorage(localStorage);
         }
     }
-    function switchTab(tabId) {
+      function switchTab(tabId) {
     elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
+     elements.mapContainer.classList.toggle('active', tabId === 'map');
       elements.menuItems.forEach(item => {
           item.classList.remove('active');
           if(item.dataset.tab === tabId){
@@ -247,6 +283,54 @@ document.addEventListener('DOMContentLoaded', () => {
           }
       });
   }
+    // --- Экспедиции ---
+     function startExpedition(type) {
+         if(gameState.activeExpedition){
+            displayMessage('Уже есть активная экспедиция', 'red');
+            return;
+        }
+            let duration;
+            let reward;
+            switch (type) {
+                case 'easy':
+                    duration = 60000;
+                    reward = 10;
+                    break;
+                case 'medium':
+                    duration = 300000;
+                    reward = 50;
+                    break;
+                case 'hard':
+                    duration = 600000;
+                    reward = 100;
+                    break;
+            }
+
+             gameState.activeExpedition = type;
+            gameState.expeditionStartTime = Date.now();
+             gameState.expeditionDuration = duration;
+            gameState.expeditionReward = reward;
+             startExpeditionTimer();
+            updateDisplay();
+            displayMessage(`Экспедиция "${type}" началась!`, 'green')
+        }
+     function startExpeditionTimer() {
+            gameState.expeditionInterval = setInterval(updateExpeditionProgress,1000);
+    }
+
+
+        function finishExpedition() {
+            clearInterval(gameState.expeditionInterval);
+             gameState.expeditionInterval = null;
+            gameState.diamonds += gameState.expeditionReward;
+             gameState.activeExpedition = null;
+             gameState.expeditionStartTime = null;
+              gameState.expeditionDuration = 0;
+             displayMessage(`Экспедиция завершена! Получено ${gameState.expeditionReward} алмазов`, 'gold');
+            updateDisplay();
+        }
+
+
 
     // --- Обработчики событий ---
     elements.clickButton.addEventListener('click', applyClick);
@@ -302,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameState.autoUpgradeCost = 50;
             gameState.clickUpgradeLevel = 1;
             gameState.clickUpgradeLevelCost = 100;
-            clearAllTimeouts();
+             clearAllTimeouts();
             updateDisplay();
             displayMessage('Перерождение!');
         } else {
@@ -324,6 +408,11 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.menuButton.classList.remove('active');
     });
 });
+    elements.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
+            button.addEventListener('click', () => {
+            startExpedition(button.dataset.type);
+          });
+        });
 
     // --- Инициализация ---
     window.addEventListener('beforeunload', saveData);
@@ -331,5 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startRandomEvent();
     checkAchievements();
     switchTab('shop');
+
+    setInterval(updateExpeditionProgress, 1000);
 });
-      
+     
