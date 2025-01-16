@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const SAVE_KEY = 'clickerData';
     const EVENT_INTERVAL_MIN = 60000;
     const EVENT_INTERVAL_MAX = 120000;
-    const BONUS_DURATION = 10000;
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
     const PRESTIGE_BASE_COST = 10000;
@@ -124,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.messageDisplay.style.fontSize = fontSize;
         setTimeout(() => {
             elements.messageDisplay.textContent = '';
-            elements.messageDisplay.style.fontSize = '1em'; // Возвращаем стандартный размер
+            elements.messageDisplay.style.fontSize = '1em';
         }, MESSAGE_DURATION);
     };
 
@@ -147,46 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const applyBonus = () => {
-        gameState.bonusActive = true;
-        gameState.clickValue *= 2;
-        gameState.autoClickerValue *= 2;
-    };
-
-    const removeBonus = () => {
-        gameState.bonusActive = false;
-        gameState.clickValue /= 2;
-        gameState.autoClickerValue /= 2;
-    };
-
-    const handleBonusEvent = () => {
-        applyBonus()
-        displayMessage('Случайный бонус: удвоенный урон!', 'blue');
-        updateDisplay();
-        clearTimeout(gameState.bonusTimeout);
-        gameState.bonusTimeout = setTimeout(() => {
-            removeBonus();
-            displayMessage('Действие бонуса закончилось!');
-            updateDisplay();
-        }, BONUS_DURATION);
-    };
-
-    const handlePenaltyEvent = () => {
-        displayMessage('Случайный штраф: клики уменьшены в 2 раза!', 'red');
-        gameState.clickValue /= 2;
-        updateDisplay();
-        setTimeout(() => {
-            gameState.clickValue *= 2;
-            displayMessage('Штраф закончился!');
-            updateDisplay();
-        }, BONUS_DURATION);
-    };
 
     const startRandomEvent = () => {
-        const eventType = Math.random() < 0.5 ? 'bonus' : 'penalty';
-        eventType === 'bonus' ? handleBonusEvent() : handlePenaltyEvent();
-        gameState.randomEventTimeout = setTimeout(startRandomEvent, Math.random() * (EVENT_INTERVAL_MAX - EVENT_INTERVAL_MIN) + EVENT_INTERVAL_MIN);
     };
+
+
 
     // --- Достижения ---
     const checkAchievements = () => {
@@ -213,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Управление игрой ---
     const resetGame = () => {
-        gameState = {
+         gameState = {
             clickCount: 0,
             clickValue: 1,
             autoClickerValue: 0,
@@ -247,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             prestigeCost: PRESTIGE_BASE_COST,
         };
         clearAllTimeouts();
-        startRandomEvent();
+         startRandomEvent();
         updateDisplay();
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
@@ -256,13 +220,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearAllTimeouts = () => {
         clearInterval(gameState.autoClickerInterval);
         gameState.autoClickerInterval = null;
-        clearTimeout(gameState.bonusTimeout);
-        clearTimeout(gameState.randomEventTimeout);
         if (gameState.expeditionInterval) {
             clearInterval(gameState.expeditionInterval);
             gameState.expeditionInterval = null;
         }
+           clearAutoSave();
     };
+
 
     const clearSaveData = () => {
         if (tWebApp) {
@@ -273,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const saveData = () => {
-        try {
+         try {
             const {
                 autoClickerInterval,
                 bonusTimeout,
@@ -283,63 +247,60 @@ document.addEventListener('DOMContentLoaded', () => {
             } = gameState;
             const dataString = JSON.stringify(dataToSave);
             if (tWebApp) {
-                tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
+                 tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
             } else {
-                localStorage.setItem(SAVE_KEY, dataString);
+               localStorage.setItem(SAVE_KEY, dataString);
             }
         } catch (e) {
             console.error('Failed to save game', e);
-            displayMessage('Не удалось сохранить игру', 'red');
         }
     };
 
     const loadGame = () => {
         const loadFromStorage = (storage) => {
-            const savedDataString = storage.getItem(SAVE_KEY);
+           const savedDataString = storage.getItem(SAVE_KEY);
             if (!savedDataString) {
                 gameState.clickValue = 1;
                 gameState.clickUpgradeLevel = 1;
-                updateDisplay();
+                 updateDisplay();
                 return;
             }
             try {
                 const savedData = JSON.parse(savedDataString);
                 gameState = { ...gameState, ...savedData };
-                  if (savedData.clickValue == undefined) {
+                 if (savedData.clickValue == undefined) {
                     gameState.clickValue = 1;
                 }
-                if (savedData.clickUpgradeLevel == undefined) {
-                    gameState.clickUpgradeLevel = 1;
-                }
-                 startAutoClicker();
+                 if (savedData.clickUpgradeLevel == undefined) {
+                     gameState.clickUpgradeLevel = 1;
+                 }
+                startAutoClicker();
                 if (gameState.activeExpedition) {
                     startExpeditionTimer();
                 }
-                 if (gameState.bonusActive) {
-                     handleBonusEvent();
-                 }
                  updateDisplay();
             } catch (e) {
-                clearSaveData();
+               clearSaveData();
                 console.error('Failed to load game', e)
                 displayMessage('Не удалось загрузить игру', 'red');
             }
         };
 
-        if (tWebApp) {
+         if (tWebApp) {
             tWebApp.CloudStorage.getItem(SAVE_KEY, (err, value) => {
-                if (!value) {
+               if (!value) {
                      gameState.clickValue = 1;
                     gameState.clickUpgradeLevel = 1;
                     updateDisplay();
-                    return;
-                }
+                     return;
+               }
                 loadFromStorage({ getItem: () => value });
             });
         } else {
             loadFromStorage(localStorage);
         }
     };
+
 
     const switchTab = (tabId) => {
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
@@ -352,15 +313,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+
     // --- Экспедиции ---
     const startExpedition = (type) => {
         if (gameState.activeExpedition) {
             displayMessage('Уже есть активная экспедиция', 'red');
             return;
         }
-        const cost = gameState.expeditionCosts[type];
-
-        if (cost > 0 && gameState.diamonds < cost) {
+         const cost = gameState.expeditionCosts[type];
+          if (cost > 0 && gameState.diamonds < cost) {
             const needed = cost - gameState.diamonds;
             displayMessage(`Не хватает ${needed} алмазов для этой экспедиции`, 'red');
             return;
@@ -378,20 +339,20 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(`Экспедиция "${EXPEDITION_TYPES[type]}" началась!`, 'green');
     };
 
-    const updateExpeditionButtonInfo = () => {
-        elements.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
+     const updateExpeditionButtonInfo = () => {
+         elements.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
             const type = button.dataset.type;
             const cost = gameState.expeditionCosts[type];
             const [minReward, maxReward] = gameState.expeditionRewards[type];
             button.textContent = `${EXPEDITION_TYPES[type]} (Стоимость: ${cost}💎, Награда: ${minReward}-${maxReward}💎)`;
 
-             if (cost > 0 && gameState.diamonds < cost) {
-                 button.classList.add('disabled');
+            if (cost > 0 && gameState.diamonds < cost) {
+                button.classList.add('disabled');
                 button.disabled = true
             } else {
-                 button.classList.remove('disabled');
+                button.classList.remove('disabled');
                 button.disabled = false
-           }
+            }
         });
     };
 
@@ -399,14 +360,14 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.expeditionInterval = setInterval(updateExpeditionProgress, 1000);
     };
 
-    const finishExpedition = () => {
-        clearInterval(gameState.expeditionInterval);
+     const finishExpedition = () => {
+          clearInterval(gameState.expeditionInterval);
         gameState.expeditionInterval = null;
-        const reward = gameState.expeditionReward;
+         const reward = gameState.expeditionReward;
         gameState.diamonds += reward;
         const expeditionType = gameState.activeExpedition;
         gameState.activeExpedition = null;
-        gameState.expeditionStartTime = null;
+         gameState.expeditionStartTime = null;
         gameState.expeditionDuration = 0;
         gameState.expeditionReward = 0;
 
@@ -414,6 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
         saveData();
     };
+
 
     // --- Обработчики событий ---
     elements.clickButton.addEventListener('click', applyClick);
@@ -435,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameState.clickCount -= gameState.clickUpgradeCost;
             gameState.clickValue++;
             gameState.clickUpgradeCost = Math.round(gameState.clickUpgradeCost * 1.8);
-            updateDisplay();
+             updateDisplay();
             displayMessage('Улучшение клика приобретено!');
         } else {
             displayMessage('Недостаточно кликов!', 'red');
@@ -455,21 +417,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    elements.prestigeButton.addEventListener('click', () => {
-        if (gameState.clickCount >= gameState.prestigeCost) {
-            gameState.prestigeLevel++;
-            gameState.prestigeMultiplier *= 2;
-            gameState.clickCount = 0;
-            gameState.clickValue = 1;
-            gameState.autoClickerValue = 0;
-            gameState.clickUpgradeCost = 10;
-            gameState.autoUpgradeCost = 50;
-            gameState.clickUpgradeLevel = 1;
-            gameState.clickUpgradeLevelCost = 100;
-            gameState.prestigeCost = Math.round(PRESTIGE_BASE_COST * Math.pow(10, gameState.prestigeLevel));
-            clearAllTimeouts();
-            updateDisplay();
-            displayMessage('Перерождение!');
+     elements.prestigeButton.addEventListener('click', () => {
+          if (gameState.clickCount >= gameState.prestigeCost) {
+              gameState.prestigeLevel++;
+              gameState.prestigeMultiplier *= 2;
+              gameState.clickCount = 0;
+              gameState.clickValue = 1;
+              gameState.autoClickerValue = 0;
+              gameState.clickUpgradeCost = 10;
+              gameState.autoUpgradeCost = 50;
+               gameState.clickUpgradeLevel = 1;
+              gameState.clickUpgradeLevelCost = 100;
+               gameState.prestigeCost = Math.round(PRESTIGE_BASE_COST * Math.pow(10, gameState.prestigeLevel));
+               clearAllTimeouts();
+              updateDisplay();
+              displayMessage('Перерождение!');
         } else {
             displayMessage(`Недостаточно кликов! (нужно ${gameState.prestigeCost})`, 'red');
         }
@@ -482,10 +444,10 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.menuButton.classList.toggle('active');
     });
 
-    elements.menuItems.forEach(item => {
+   elements.menuItems.forEach(item => {
         item.addEventListener('click', () => {
             switchTab(item.dataset.tab);
-            elements.menu.classList.remove('active');
+             elements.menu.classList.remove('active');
             elements.menuButton.classList.remove('active');
         });
     });
@@ -496,9 +458,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+
     // --- Инициализация ---
-    window.addEventListener('beforeunload', saveData);
+    const AUTO_SAVE_INTERVAL = 30000; // 30 секунд
+
+   //Функция для авто сохранения
+    const autoSave = () => {
+     saveData();
+    };
+   //Устанавливаем интервал сохранения
+    let autoSaveInterval = setInterval(autoSave, AUTO_SAVE_INTERVAL);
+
+     //   Очищаем авто сохранения
+    const clearAutoSave = () => {
+        if(autoSaveInterval){
+              clearInterval(autoSaveInterval);
+               autoSaveInterval = null;
+        }
+    }
+     window.addEventListener('beforeunload', () => {
+         clearAutoSave()
+        saveData();
+    });
+
     loadGame();
+    if (autoSaveInterval == null){
+          autoSaveInterval = setInterval(autoSave, AUTO_SAVE_INTERVAL);
+        }
     startRandomEvent();
     checkAchievements();
     switchTab('shop');
@@ -507,4 +493,4 @@ document.addEventListener('DOMContentLoaded', () => {
         startExpeditionTimer();
     }
 });
-                     
+        
