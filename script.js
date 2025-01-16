@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const AUTO_CLICK_INTERVAL = 1000;
     const PRESTIGE_BASE_COST = 10000;
      const EXPEDITION_DURATIONS = {
-        'легкая': 60000,
-        'средняя': 300000,
-        'тяжелая': 600000,
+        'Легкая': 60000,
+        'Средняя': 300000,
+        'Тяжелая': 600000,
     };
 
      const EXPEDITION_TYPES = {
