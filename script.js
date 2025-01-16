@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.diamondDisplay.textContent = `Алмазы: ${gameState.diamonds}`;
         elements.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
         updateExpeditionProgress();
-        updateExpeditionButtonInfo(); // Обновление информации на кнопках
+        updateExpeditionButtonInfo();
     };
 
     const updateExpeditionProgress = () => {
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 expeditionInterval,
                 ...dataToSave
             } = gameState;
-            const dataString = JSON.stringify(dataToSave);
+             const dataString = JSON.stringify(dataToSave);
             if (tWebApp) {
                 tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
             } else {
@@ -302,19 +302,20 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const savedData = JSON.parse(savedDataString);
                 gameState = { ...gameState, ...savedData };
-                if (savedData.clickValue == undefined) {
+                  if (savedData.clickValue == undefined) {
                     gameState.clickValue = 1;
                 }
                 if (savedData.clickUpgradeLevel == undefined) {
                     gameState.clickUpgradeLevel = 1;
                 }
+
                 startAutoClicker();
                 if (gameState.activeExpedition) {
                     startExpeditionTimer();
                 }
-                if (gameState.bonusActive) {
-                    handleBonusEvent();
-                }
+                 if (gameState.bonusActive) {
+                     handleBonusEvent();
+                 }
                 updateDisplay();
             } catch (e) {
                 clearSaveData();
@@ -326,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tWebApp) {
             tWebApp.CloudStorage.getItem(SAVE_KEY, (err, value) => {
                 if (!value) {
-                    gameState.clickValue = 1;
+                     gameState.clickValue = 1;
                     gameState.clickUpgradeLevel = 1;
                     updateDisplay();
                     return;
@@ -357,10 +358,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const cost = gameState.expeditionCosts[type];
 
-        if(cost > 0 && gameState.diamonds < cost){
-          const needed = cost - gameState.diamonds;
-           displayMessage(`Не хватает ${needed} алмазов для этой экспедиции`, 'red');
-           return;
+        if (cost > 0 && gameState.diamonds < cost) {
+            const needed = cost - gameState.diamonds;
+            displayMessage(`Не хватает ${needed} алмазов для этой экспедиции`, 'red');
+            return;
         }
 
         gameState.diamonds -= cost;
@@ -389,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  button.classList.remove('disabled');
                 button.disabled = false
            }
-       });
+        });
     };
 
     const startExpeditionTimer = () => {
@@ -399,14 +400,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const finishExpedition = () => {
         clearInterval(gameState.expeditionInterval);
         gameState.expeditionInterval = null;
-        gameState.diamonds += gameState.expeditionReward;
+        const reward = gameState.expeditionReward
+         gameState.diamonds += reward;
+        const expeditionType = gameState.activeExpedition;
         gameState.activeExpedition = null;
         gameState.expeditionStartTime = null;
         gameState.expeditionDuration = 0;
         gameState.expeditionReward = 0;
-        displayMessage(`Экспедиция завершена! Получено ${gameState.expeditionReward} алмазов`, 'gold');
-        updateDisplay();
+
+        displayMessage(`Экспедиция "${EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${reward} алмазов`, 'gold');
+         updateDisplay();
+          saveData(); // Сохранение после завершения экспедиции
     };
+
 
     // --- Обработчики событий ---
     elements.clickButton.addEventListener('click', applyClick);
