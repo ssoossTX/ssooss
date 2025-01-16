@@ -2,10 +2,11 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-image: url('IMG_20250114_111552_356.jpg'); /* Ссылка на ваше фоновое изображение */
+    background-image: url('IMG_20250114_111552_356.jpg'); /* Относительный путь к изображению */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+     background-attachment: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,7 +17,7 @@ body {
 
 .container {
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон для лучшей читаемости текста */
+   background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный фон для лучшей читаемости текста */
     padding: 20px;
     border-radius: 10px;
     max-width: 400px;
@@ -33,7 +34,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Стили для кнопок */
+/* Общие стили для кнопок */
 .game-button,
 .menu-items li button {
   padding: 10px 20px;
@@ -42,9 +43,8 @@ h1 {
   cursor: pointer;
   margin-bottom: 10px;
   border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease; /* Плавные переходы */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавные переходы */
 }
-
 
 #click-button {
     background-color: green;
@@ -103,7 +103,7 @@ h1 {
 }
 
 /* Menu Styles */
-.menu {
+.menu-bar {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -125,7 +125,7 @@ h1 {
 }
 
 
-.menu-items {
+#menu-items {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -137,7 +137,7 @@ h1 {
       transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.menu-items li button {
+#menu-items li button {
   display: block;
   width: 100%;
   padding: 10px;
@@ -148,17 +148,17 @@ h1 {
   color: white;
   text-align: left;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
-.menu-items li:last-child button{
+#menu-items li:last-child button{
   border-bottom: none;
 }
-.menu-items li button:hover {
+#menu-items li button:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.menu-items.active {
+#menu-items.active {
   display: block;
     opacity: 1;
     transform: translateY(0);
@@ -168,7 +168,7 @@ h1 {
     padding-top: 30px;
 }
 
-.menu-items li button.active {
+#menu-items li button.active {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
