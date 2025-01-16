@@ -15,7 +15,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.container {
+.app-container {
     text-align: center;
     background-color: rgba(0, 0, 0, 0.7);
     padding: 20px;
@@ -25,10 +25,29 @@ body {
     position: relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
+     display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.game-container {
-    padding-top: 20px;
+.content-container {
+    width: 100%;
+   display: flex;
+    flex-direction: column;
+   align-items: center;
+}
+
+.game-container,
+.shop-container,
+.map-container {
+    width: 100%;
+    display: none;
+     padding-top: 20px;
+}
+
+.game-container.active,
+.shop-container.active,
+.map-container.active {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -216,17 +235,11 @@ body {
 
 /* Карта */
 .map-container {
-    display: none;
     margin-top: 20px;
-    padding: 10px;
+     padding: 10px;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     box-sizing: border-box;
-}
-
-.map-container.active {
-    display: block;
-    width: 100%;
 }
 
 .expedition-button {
@@ -270,7 +283,7 @@ body {
 
 /* Адаптивность */
 @media (max-width: 600px) {
-    .container {
+    .app-container {
         width: 95%;
     }
     
@@ -294,7 +307,7 @@ body {
 }
 
 @media (min-width: 1200px) {
-    .container {
+    .app-container {
         max-width: 800px;
     }
     }
