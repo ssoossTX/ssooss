@@ -12,11 +12,13 @@
             <button class="menu-toggle" aria-label="Открыть меню" aria-controls="menu-items" aria-expanded="false">☰</button>
             <ul class="menu-items" id="menu-items">
                 <li><button class="active" data-tab="shop">Магазин</button></li>
+                <li><button data-tab="map">Карта</button></li>
             </ul>
         </div>
-        <div class="content">
+         <div class="content">
            <div id="game-content" role="region" aria-label="Игровая область">
             <h1>Кликер</h1>
+               <div id="diamond-display">Алмазы: 0</div>
             <div class="counter">
                 <p id="click-count">0</p>
             </div>
@@ -45,9 +47,15 @@
             <div id="achievements">Достижения: 0</div>
             <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
            </div>
+            <div class="map-container" id="map-container">
+                <h2>Экспедиции</h2>
+                <button class="expedition-button" data-type="easy">Лёгкая (1 мин)</button>
+                <button class="expedition-button" data-type="medium">Средняя (5 мин)</button>
+                <button class="expedition-button" data-type="hard">Сложная (10 мин)</button>
+                <div id="expedition-progress" class="expedition-progress"></div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
 </body>
-                </html>
-                    
+                        </html>
