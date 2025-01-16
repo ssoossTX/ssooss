@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game-container">
-     <div class="menu-container">
+    <div class="container">
+        <div class="menu-bar">
           <button class="menu-toggle">☰ Меню</button>
         <ul class="menu-items" id="menu-items">
           <li><button data-tab="clicker" class="active">Кликер</button></li>
@@ -16,30 +16,31 @@
           <li><button data-tab="map">Карта</button></li>
         </ul>
         </div>
-
-      <div id="game-content">
-         <p id="click-count">Клики: 0 ✨</p>
-          <button id="click-button" class="game-button">Клик! ✨</button>
-
-          <div class="upgrade-item" id="upgrade-click">
-            <span>Улучшение клика: <span id="click-upgrade-cost">10</span> ✨</span>
-              <button class="buy-upgrade game-button">Купить</button>
-        </div>
-       <div class="upgrade-item" id="upgrade-click-level">
-            <span>Уровень клика: <span id="click-upgrade-level-display">1</span> (<span id="click-upgrade-level-cost">100</span> ✨)</span>
-              <button class="buy-upgrade game-button">Купить</button>
-        </div>
-        <div class="upgrade-item" id="upgrade-auto">
-            <span>Автокликер: <span id="auto-upgrade-cost">50</span> ✨</span>
-              <button class="buy-upgrade game-button">Купить</button>
-          </div>
-         <button id="prestige-button" class="game-button">Перерождение: <span id="prestige-cost">10000</span> ✨</button>
+        <div class="game-container">
+        <h1 id="game-title">Кликер</h1>
+         <p class="counter" id="click-count">Клики: 0 ✨</p>
+            <button id="click-button" class="game-button">Клик! ✨</button>
+               <div class="upgrades">
+                <div class="upgrade-item" id="upgrade-click">
+                <p>Улучшение клика: <span id="click-upgrade-cost">10</span> ✨</p>
+                 <button class="buy-upgrade">Купить</button>
+                </div>
+                 <div class="upgrade-item" id="upgrade-click-level">
+                   <p>Уровень клика: <span id="click-upgrade-level-display">1</span> (<span id="click-upgrade-level-cost">100</span> ✨)</p>
+                 <button class="buy-upgrade">Купить</button>
+                 </div>
+                <div class="upgrade-item" id="upgrade-auto">
+                <p>Автокликер: <span id="auto-upgrade-cost">50</span> ✨</p>
+                   <button class="buy-upgrade">Купить</button>
+                </div>
+           </div>
+             <button id="prestige-button" class="game-button">Перерождение: <span id="prestige-cost">10000</span> ✨</button>
          <p>Уровень перерождения: <span id="prestige-level">0</span></p>
 
          <p id="achievements">Достижения: 0 🏆</p>
-         <p id="diamond-display">Алмазы: 0 💎</p>
-      </div>
-        <div id="shop-content">
+          <p class="diamond-display" id="diamond-display">Алмазы: 0 💎</p>
+        </div>
+           <div class="content" id="shop-content">
         <div class="shop-item">
             <p>Ящик со скинами</p>
             <p>Цена: 500 ✨</p>
@@ -55,17 +56,16 @@
             <p id="artifact-box-count">Ящики артефактов: 0 📦</p>
         </div>
         </div>
-
-          <div id="map-container">
+           <div class="map-container" id="map-container">
          <p>Карта Экспедиций</p>
          <button data-type="easy" class="expedition-button">Легкая (Стоимость: 0 💎, Награда: 1-5 💎)</button>
            <button data-type="medium" class="expedition-button">Средняя (Стоимость: 10 💎, Награда: 10-50 💎)</button>
            <button data-type="hard" class="expedition-button">Тяжелая (Стоимость: 100 💎, Награда: 100-500 💎)</button>
-           <p id="expedition-progress"></p>
+           <p class="expedition-progress" id="expedition-progress"></p>
        </div>
         <button id="reset-button" class="game-button">Сбросить игру</button>
-        <p id="message"></p>
+        <p class="message" id="message"></p>
     </div>
-   <script src="script.js"></script>
+     <script src="script.js"></script>
 </body>
-            </html>
+                                                                                 </html>
