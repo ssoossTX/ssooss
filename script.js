@@ -7,11 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const BONUS_DURATION = 10000;
   const MESSAGE_DURATION = 3000;
   const AUTO_CLICK_INTERVAL = 1000;
-  const PLAYER_NAME_KEY = 'playerName'; // Ключ для сохранения имени игрока
-  const SERVER_URL = 'https://ssooss.pythonanywhere.com'; // Замените на URL вашего сервера
+  const PLAYER_NAME_KEY = 'playerName';
+    const GITHUB_TOKEN =  "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"; // Замените на ваш GITHUB_TOKEN
+  const GITHUB_REPO = "ssoossTX/ssooss"; // Замените на YOUR_USERNAME/YOUR_REPO_NAME
+  const GITHUB_FILE = "ranking.json";
+  const GITHUB_USER = "ssoossTX";
+  const GITHUB_EMAIL = "sananoskov8992@gmail.com";
+  
 
   // --- Состояния игры ---
-  let gameState = {
+    let gameState = {
     clickCount: 0,
     clickValue: 1,
     autoClickerValue: 0,
@@ -30,8 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     playerName: null,
   };
 
-  // --- UI элементы ---
-  const elements = {
+    // --- UI элементы ---
+ const elements = {
     clickCountDisplay: document.getElementById('click-count'),
     clickButton: document.getElementById('click-button'),
     upgradeClickButton: document.querySelector('#upgrade-click button'),
@@ -56,14 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
     playerNameInput: document.getElementById('player-name'),
     setNameButton: document.getElementById('set-name-button'),
   };
-
   const tWebApp = window.Telegram && window.Telegram.WebApp;
   if (tWebApp) {
     tWebApp.ready();
   }
 
   // --- Обновление UI ---
-  function updateDisplay() {
+   function updateDisplay() {
     elements.clickCountDisplay.textContent = Math.round(gameState.clickCount);
     elements.clickUpgradeCostDisplay.textContent = gameState.clickUpgradeCost;
     elements.autoUpgradeCostDisplay.textContent = gameState.autoUpgradeCost;
@@ -72,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.prestigeLevelDisplay.textContent = gameState.prestigeLevel;
     elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
   }
-  function displayMessage(msg, color = 'green') {
+  function displayMessage(msg, color = 'white') {
     elements.messageDisplay.textContent = msg;
     elements.messageDisplay.style.color = color;
     setTimeout(() => {
@@ -81,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Основная логика игры ---
-  function applyClick() {
+   function applyClick() {
     console.log("Click event"); // Добавлено
     gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel) * gameState.prestigeMultiplier;
     updateDisplay();
@@ -95,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDisplay();
     updateRating();
   }
-
   function startAutoClicker() {
     if (gameState.autoClickerValue > 0 && !gameState.autoClickerInterval) {
       gameState.autoClickerInterval = setInterval(autoClick, AUTO_CLICK_INTERVAL);
@@ -139,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Достижения ---
-  function checkAchievements() {
+   function checkAchievements() {
     const achievementConditions = {
       '100000 clicks': gameState.clickCount >= 100000,
       '1000000 clicks': gameState.clickCount >= 1000000,
@@ -153,15 +156,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
-
-  function addAchievement(achievement) {
+    function addAchievement(achievement) {
     gameState.achievements.push(achievement);
     gameState.achievementCount++;
     updateDisplay();
     saveData();
   }
 
-  // --- Управление игрой ---
+   // --- Управление игрой ---
   function resetGame() {
     gameState = {
       clickCount: 0,
@@ -179,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
       autoClickerInterval: null,
       bonusTimeout: null,
       randomEventTimeout: null,
-      playerName: null,
+       playerName: null,
     };
     clearAllTimeouts();
     startRandomEvent();
@@ -195,14 +197,14 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(gameState.bonusTimeout);
     clearTimeout(gameState.randomEventTimeout);
   }
-  function clearSaveData() {
+    function clearSaveData() {
     if (tWebApp) {
       tWebApp.CloudStorage.removeItem(SAVE_KEY);
     } else {
       localStorage.removeItem(SAVE_KEY);
     }
   }
-  function saveData() {
+    function saveData() {
     const data = { ...gameState };
     delete data.autoClickerInterval;
     delete data.bonusTimeout;
@@ -227,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             handleBonusEvent();
           }
           updateDisplay();
-          loadPlayerName(); // Загружаем имя игрока
+         loadPlayerName(); // Загружаем имя игрока
           getRating(); // Загружаем рейтинг при загрузке игры
         } catch (e) {
           console.error('Error parsing saved data', e);
@@ -254,7 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
       loadFromStorage(localStorage);
     }
   }
-
   function loadPlayerName() {
     const loadFromStorage = (storage) => {
       const playerName = storage.getItem(PLAYER_NAME_KEY);
@@ -298,65 +299,121 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.removeItem(PLAYER_NAME_KEY);
     }
   }
-  // --- Рейтинг ---
-
-  async function updateRating() {
-    console.log("SERVER_URL:", SERVER_URL);
-    console.log('updateRating called', gameState.playerName, gameState.clickCount);
-    if (!gameState.playerName) {
-      return;
-    }
-    const playerName = gameState.playerName;
-    const newScore = gameState.clickCount + (gameState.prestigeLevel * 100000);
-    const data = { name: playerName, score: newScore };
-    console.log('Data being sent:', data);
-    console.log("Data being sent:", typeof data);
-    console.log("Before fetch");
+ // --- Рейтинг ---
+   async function getRankingFromGitHub() {
+    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+    const headers = { Authorization: `token ${GITHUB_TOKEN}` };
     try {
-      const response = await fetch(`${SERVER_URL}/update_rating`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
+      const response = await fetch(url, { headers });
       if (!response.ok) {
-        console.error('Failed to update rating', response.status);
-      } else {
-        getRating();
+        throw new Error(`Failed to get ranking: ${response.status}`);
       }
+      const data = await response.json();
+        const downloadUrl = data.download_url;
+      const downloadResponse = await fetch(downloadUrl);
+        if (!downloadResponse.ok) {
+        throw new Error(`Failed to download ranking content: ${downloadResponse.status}`)
+      }
+      const decodedContent = await downloadResponse.json();
+
+      return decodedContent;
     } catch (error) {
-      console.error('Error while updating rating', error);
+      console.error(`Error getting ranking from GitHub: ${error}`);
+      return [];
     }
   }
+
+ async function updateRankingOnGitHub(ranking) {
+    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+    const headers = {
+      Authorization: `token ${GITHUB_TOKEN}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      const response_get = await fetch(url, {headers});
+      if (!response_get.ok) {
+       throw new Error(`Failed to fetch ranking data: ${response_get.status}`);
+      }
+      const data = await response_get.json();
+      const sha = data.sha;
+      const commitData = {
+      message: "Update ranking",
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(ranking, null, 2)))),
+        sha: sha,
+        committer: {
+           name: GITHUB_USER,
+            email: GITHUB_EMAIL,
+        },
+      };
+    const response_put =  await fetch(url, {
+        method: "PUT",
+        headers: headers,
+        body: JSON.stringify(commitData),
+      });
+      if (!response_put.ok) {
+          throw new Error(`Failed to update ranking data: ${response_put.status}`);
+      }
+      return true
+    } catch(error) {
+     console.error(`Error updating ranking on GitHub: ${error}`);
+      return false;
+    }
+  }
+
+  async function updateRating() {
+      console.log("updateRating called", gameState.playerName, gameState.clickCount);
+     if (!gameState.playerName) {
+        return;
+    }
+    const playerName = gameState.playerName;
+      const newScore = gameState.clickCount + (gameState.prestigeLevel * 100000);
+      const data = { name: playerName, score: newScore };
+   try {
+      const ranking = await getRankingFromGitHub();
+    let playerFound = false;
+    for (let player of ranking) {
+        if(player.name === playerName){
+            if(player.score < newScore){
+                player.score = newScore;
+            }
+            playerFound = true;
+            break;
+        }
+    }
+    if (!playerFound) {
+      ranking.push({ name: playerName, score: newScore });
+    }
+        ranking.sort((a, b) => b.score - a.score);
+      await updateRankingOnGitHub(ranking);
+      getRating();
+      } catch (error) {
+        console.error('Error while updating rating:', error);
+        displayMessage('Ошибка обновления рейтинга', 'red');
+      }
+   }
+
 
    async function getRating() {
     try {
-      const response = await fetch(`${SERVER_URL}/get_rating`);
-      if (!response.ok) {
-        console.error('Failed to get rating', response.status);
-         displayRating('Ошибка загрузки данных');
-        return;
-      }
-      const rating = await response.json();
-      console.log('Rating received:', rating);
-       if (rating && rating.length > 0) {
-         displayRating(rating);
-       } else {
-          displayRating("Игроков нет");
+        const ranking = await getRankingFromGitHub();
+        const limitedRanking = ranking.slice(0, 10);
+        if (limitedRanking && limitedRanking.length > 0) {
+           displayRating(limitedRanking);
+        } else {
+           displayRating('Игроков нет');
        }
     } catch (error) {
-      console.error('Error getting rating:', error);
-       displayRating('Ошибка загрузки данных');
+        console.error('Error getting rating:', error);
+        displayMessage('Ошибка загрузки данных');
     }
   }
 
+
   function displayRating(rating) {
-     if (typeof rating === 'string'){
-         elements.ratingList.innerHTML = `<li>${rating}</li>`
-         return;
-     }
+    if (typeof rating === 'string') {
+      elements.ratingList.innerHTML = `<li>${rating}</li>`;
+      return;
+    }
     elements.ratingList.innerHTML = '';
     rating.forEach((player, index) => {
       const li = document.createElement('li');
@@ -365,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function showNameInput() {
+   function showNameInput() {
     elements.gameContent.style.display = 'none';
     elements.ratingContent.style.display = 'none';
     elements.nameInputContainer.style.display = 'block';
@@ -390,7 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Обработчики событий ---
-  elements.clickButton.addEventListener('click', applyClick);
+   elements.clickButton.addEventListener('click', applyClick);
 
   elements.upgradeClickLevelButton.addEventListener('click', () => {
     if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
@@ -419,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  elements.upgradeAutoButton.addEventListener('click', () => {
+    elements.upgradeAutoButton.addEventListener('click', () => {
     if (gameState.clickCount >= gameState.autoUpgradeCost) {
       gameState.clickCount -= gameState.autoUpgradeCost;
       gameState.autoClickerValue++;
@@ -452,34 +509,33 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   elements.resetButton.addEventListener('click', resetGame);
 
-  elements.menuButton.addEventListener('click', () => {
+    elements.menuButton.addEventListener('click', () => {
     elements.menu.classList.toggle('active');
     elements.menuButton.classList.toggle('active');
   });
 
   elements.setNameButton.addEventListener('click', () => {
-     console.log("Name set event");
+    console.log("Name set event");
     const newName = elements.playerNameInput.value.trim();
     if (newName) {
       gameState.playerName = newName;
-      elements.playerNameInput.value = ''; // Добавлено
-      console.log('gameState.playerName:', gameState.playerName); // Добавлено
+      elements.playerNameInput.value = '';
+      console.log('gameState.playerName:', gameState.playerName);
       savePlayerName();
-       hideNameInput();
-       updateRating();
+      hideNameInput();
+      updateRating();
     } else {
       displayMessage('Введите имя!', 'red');
     }
   });
 
-  elements.menu.addEventListener('click', (event) => {
+   elements.menu.addEventListener('click', (event) => {
     if (event.target.dataset.action === 'change-name') {
       showNameInput();
       elements.menu.classList.remove('active');
       elements.menuButton.classList.remove('active');
     }
   });
-
   elements.menuItems.forEach(item => {
     item.addEventListener('click', () => {
       const tabId = item.dataset.tab;
@@ -491,9 +547,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Инициализация ---
   window.addEventListener('beforeunload', saveData);
-  loadGame();
+   loadGame();
   startRandomEvent();
   checkAchievements();
-  switchTab('shop');
-  getRating();
+   switchTab('shop');
+   getRating();
 });
+      
