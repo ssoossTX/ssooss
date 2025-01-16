@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
     const PLAYER_NAME_KEY = 'playerName'; // Ключ для сохранения имени игрока
-      const SERVER_URL = 'https://ssooss.pythonanywhere.com/'; // Замените на URL вашего сервера
+    const SERVER_URL = 'https://ssooss.pythonanywhere.com'; // Замените на URL вашего сервера
 
     // --- Состояния игры ---
     let gameState = {
