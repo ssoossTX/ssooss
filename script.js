@@ -331,22 +331,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  async function getRating() {
+   async function getRating() {
     try {
       const response = await fetch(`${SERVER_URL}/get_rating`);
       if (!response.ok) {
         console.error('Failed to get rating', response.status);
+         displayRating('Ошибка загрузки данных');
         return;
       }
       const rating = await response.json();
-      console.log('Rating received:', rating); // Добавлено
-      displayRating(rating);
+      console.log('Rating received:', rating);
+       if (rating && rating.length > 0) {
+         displayRating(rating);
+       } else {
+          displayRating("Игроков нет");
+       }
     } catch (error) {
       console.error('Error getting rating:', error);
+       displayRating('Ошибка загрузки данных');
     }
   }
 
   function displayRating(rating) {
+     if (typeof rating === 'string'){
+         elements.ratingList.innerHTML = `<li>${rating}</li>`
+         return;
+     }
     elements.ratingList.innerHTML = '';
     rating.forEach((player, index) => {
       const li = document.createElement('li');
@@ -487,4 +497,3 @@ document.addEventListener('DOMContentLoaded', () => {
   switchTab('shop');
   getRating();
 });
-      
