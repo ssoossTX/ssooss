@@ -2,8 +2,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-image: url('IMG_20250114_111552_356.jpg');
-    background-size: cover;
+     background-image: url('IMG_20250114_111552_356.jpg');
+     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -20,22 +20,30 @@ body {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 20px;
     border-radius: 10px;
-    max-width: 600px; /* Увеличена максимальная ширина контейнера */
+    max-width: 600px;
     width: 90%;
     position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень для контейнера */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box; /* Чтобы padding не увеличивал ширину контейнера */
 }
 
+
+.game-container {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 #game-title {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     font-size: 2.5em;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Тень для заголовка */
+     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .counter {
     font-size: 3em;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Тень для счетчика */
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Общие стили для кнопок */
@@ -47,39 +55,41 @@ body {
     border: none;
     cursor: pointer;
     margin-bottom: 10px;
-    border-radius: 8px; /* Скругленные края для кнопок */
-    transition: transform 0.2s, box-shadow 0.2s; /* Анимация для кнопок */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Тень для кнопок */
+    border-radius: 8px;
+     transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .game-button:hover,
 .menu-items li button:hover,
 .expedition-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Тень при наведении для кнопок */
+      transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .game-button:active,
 .menu-items li button:active,
 .expedition-button:active {
     transform: translateY(1px);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /*  Эффект сжатия при нажатии */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 #click-button {
-    background-color: #2ecc71; /* Зеленый цвет для клик-кнопки */
+    background-color: #2ecc71;
     color: white;
-    text-transform: uppercase;
+     text-transform: uppercase;
     font-weight: bold;
 }
 
 .upgrades {
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: left;
+    width: 100%;
+     box-sizing: border-box;
 }
 
 .upgrade-item {
-    background-color: rgba(255, 255, 255, 0.1); /* Прозрачный фон для улучшений */
+     background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 8px;
@@ -87,7 +97,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Тень для текста улучшений */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .upgrade-item p {
@@ -95,7 +105,7 @@ body {
 }
 
 .buy-upgrade {
-    background-color: #3498db; /* Синий цвет для кнопок покупки */
+    background-color: #3498db;
     color: white;
     padding: 8px 15px;
     border: none;
@@ -104,29 +114,31 @@ body {
 }
 
 .buy-upgrade:hover {
-    background-color: #2980b9; /* Более темный синий при наведении */
+    background-color: #2980b9;
 }
 
 #prestige-button {
-    background-color: #f39c12; /* Оранжевый цвет для кнопки престижа */
+     background-color: #f39c12;
     color: white;
     text-transform: uppercase;
     font-weight: bold;
 }
 
 #reset-button {
-    background-color: #e74c3c; /* Красный цвет для кнопки сброса */
+    background-color: #e74c3c;
     color: white;
     text-transform: uppercase;
     font-weight: bold;
 }
+
 .message {
     text-align: center;
-    color: #f1c40f; /* Желтый цвет для сообщений */
+    color: #f1c40f;
     margin-top: 10px;
     font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Тень для сообщений */
+     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
+
 /* Menu Styles */
 .menu-bar {
     position: absolute;
@@ -134,7 +146,6 @@ body {
     left: 10px;
     z-index: 10;
 }
-
 .menu-toggle {
     font-size: 1.5em;
     background-color: transparent;
@@ -149,7 +160,6 @@ body {
 .menu-toggle.active {
     transform: rotate(90deg);
 }
-
 #menu-items {
     list-style: none;
     padding: 0;
@@ -160,8 +170,10 @@ body {
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
+     position: absolute;
+    top: 40px;
+    left: 0;
 }
-
 #menu-items li button {
     display: block;
     width: 100%;
@@ -174,52 +186,48 @@ body {
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: background-color 0.3s ease;
-    text-transform: uppercase;
+      text-transform: uppercase;
     font-weight: bold;
+    box-sizing: border-box;
 }
-
 #menu-items li:last-child button {
     border-bottom: none;
 }
-
 #menu-items li button:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
-
 #menu-items.active {
     display: block;
     opacity: 1;
     transform: translateY(0);
 }
-
 .content {
     padding-top: 30px;
 }
 #menu-items li button.active {
-    background-color: rgba(255, 255, 255, 0.2);
+     background-color: rgba(255, 255, 255, 0.2);
 }
-
 .map-container {
     display: none;
     margin-top: 20px;
-    padding: 10px;
+      padding: 10px;
     background-color: rgba(0, 0, 0, 0.5);
-     border-radius: 8px;
+    border-radius: 8px;
+    box-sizing: border-box;
 }
-
 .map-container.active {
     display: block;
+    width: 100%;
 }
-
 .expedition-button {
     display: block;
     margin: 10px auto;
-    background-color: #337ab7; /* Синий цвет для кнопки экспедиции */
+      background-color: #337ab7;
     color: white;
-    text-transform: uppercase;
+     text-transform: uppercase;
     font-weight: bold;
+    box-sizing: border-box;
 }
-
 .expedition-button:hover {
     background-color: #286090;
 }
@@ -227,20 +235,21 @@ body {
 .expedition-progress {
     margin: 10px 0;
     padding: 10px;
-    background-color: rgba(0,0,0, 0.5);
-    border-radius: 5px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Тень для текста прогресса */
+     background-color: rgba(0,0,0, 0.5);
+      border-radius: 5px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
+
 .diamond-display {
-    margin-top: 10px;
-    font-size: 1.2em;
+     margin-top: 10px;
+     font-size: 1.2em;
     color: gold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Тень для алмазов */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .expedition-button.disabled {
-    background-color: #7f8c8d;
-    cursor: not-allowed; /* Меняем курсор на "запрещено" */
+      background-color: #7f8c8d;
+    cursor: not-allowed;
     box-shadow: none;
     transform: none;
 }
@@ -248,31 +257,30 @@ body {
      box-shadow: none;
     transform: none;
 }
-
-
 /* Адаптивность на мобильных устройствах */
 @media (max-width: 600px) {
     .container {
         width: 95%;
     }
-
-    .upgrade-item {
+      .upgrade-item {
         flex-direction: column;
         align-items: flex-start;
     }
-
     .upgrade-item > p:last-of-type {
         margin-bottom: 10px;
     }
-     .game-button,
+    .game-button,
     .menu-items li button {
         padding: 10px 20px;
     }
+    #menu-items {
+          top: 35px;
+    }
 }
-
-/* Добавьте адаптивность для больших экранов */
+/* Адаптивность на больших экранах */
 @media (min-width: 1200px) {
     .container {
         max-width: 800px;
     }
-}
+    }
+    
