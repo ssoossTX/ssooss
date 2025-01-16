@@ -3,77 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Продвинутый Кликер</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Clicker Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
- <div class="container">
-      <div class="menu-bar">
-            <button class="menu-toggle" aria-label="Открыть меню" aria-controls="menu-items" aria-expanded="false">☰</button>
-            <ul class="menu-items" id="menu-items">
-                <li><button class="active" data-tab="clicker" id="clicker-tab">Кликер</button></li>
-                <li><button data-tab="shop" id="shop-tab">Магазин</button></li>
-                <li><button data-tab="map">Карта</button></li>
-            </ul>
+    <div id="game-container">
+     <div class="menu-container">
+          <button class="menu-toggle">☰ Меню</button>
+        <ul class="menu-items" id="menu-items">
+          <li><button data-tab="clicker" class="active">Кликер</button></li>
+          <li><button data-tab="shop">Магазин</button></li>
+          <li><button data-tab="map">Карта</button></li>
+        </ul>
         </div>
-         <main class="game-container">
-            <div id="game-content" role="region" aria-label="Игровая область">
-                <h1 id="game-title">Кликер</h1>
-                <div class="diamond-display" id="diamond-display">Алмазы: 0</div>
-                <div class="counter">
-                    <p id="click-count">0</p>
-                </div>
-                <button id="click-button" class="game-button" aria-label="Кликнуть для увеличения счетчика на 1">Клик!</button>
-                <section class="upgrades">
-                    <h2>Улучшения</h2>
-                    <div class="upgrade-item" id="upgrade-click">
-                        <p>Улучшение клика (+1)</p>
-                        <p>Цена: <span id="click-upgrade-cost">10</span></p>
-                        <button class="buy-upgrade game-button" aria-label="Купить улучшение клика">Купить</button>
-                    </div>
-                    <div class="upgrade-item" id="upgrade-auto">
-                        <p>Автокликер</p>
-                        <p>Цена: <span id="auto-upgrade-cost">50</span></p>
-                        <button class="buy-upgrade game-button" aria-label="Купить автокликер">Купить</button>
-                    </div>
-                    <div class="upgrade-item" id="upgrade-click-level">
-                        <p>Уровень улучшения базового клика: <span id="click-upgrade-level-display">1</span></p>
-                        <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
-                        <button class="buy-upgrade game-button" aria-label="Купить уровень улучшения клика">Купить уровень</button>
-                           <div class="message" id="message" aria-live="polite"></div>
-                </section>
-                <button id="prestige-button" class="game-button">
-                    Перерождение <br>
-                    <span id="prestige-cost">Стоимость: 10000</span>
-                </button>
-                <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
-                <div id="achievements">Достижения: 0</div>
-                <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
-            </div>
-            <div class="map-container" id="map-container">
-                <h2>Экспедиции</h2>
-                <button class="expedition-button" data-type="easy">Лёгкая (1 мин)</button>
-                <button class="expedition-button" data-type="medium">Средняя (5 мин)</button>
-                <button class="expedition-button" data-type="hard">Сложная (10 мин)</button>
-                <div id="expedition-progress" class="expedition-progress"></div>
-            </div>
-            <div id="shop-content" style="display: none;" role="region" aria-label="Магазин">
-                <h2>Магазин</h2>
-                  <div class="shop-item">
-                        <p>Ящик со скинами</p>
-                        <p>Цена: 500 </p>
-                        <button id="buy-skin-box" class="game-button">Купить</button>
-                         <p id="skin-box-count">Ящики скинов: 0</p>
-                    </div>
-                   <div class="shop-item">
-                        <p>Ящик с артефактами</p>
-                        <p>Цена: 1000 </p>
-                         <button id="buy-artifact-box" class="game-button">Купить</button>
-                           <p id="artifact-box-count">Ящики артефактов: 0</p>
-                    </div>
-            </div>
-         </main>
+
+      <div id="game-content">
+         <p id="click-count">Клики: 0 ✨</p>
+          <button id="click-button" class="game-button">Клик! ✨</button>
+
+          <div class="upgrade-item" id="upgrade-click">
+            <span>Улучшение клика: <span id="click-upgrade-cost">10</span> ✨</span>
+              <button class="buy-upgrade game-button">Купить</button>
+        </div>
+       <div class="upgrade-item" id="upgrade-click-level">
+            <span>Уровень клика: <span id="click-upgrade-level-display">1</span> (<span id="click-upgrade-level-cost">100</span> ✨)</span>
+              <button class="buy-upgrade game-button">Купить</button>
+        </div>
+        <div class="upgrade-item" id="upgrade-auto">
+            <span>Автокликер: <span id="auto-upgrade-cost">50</span> ✨</span>
+              <button class="buy-upgrade game-button">Купить</button>
+          </div>
+         <button id="prestige-button" class="game-button">Перерождение: <span id="prestige-cost">10000</span> ✨</button>
+         <p>Уровень перерождения: <span id="prestige-level">0</span></p>
+
+         <p id="achievements">Достижения: 0 🏆</p>
+         <p id="diamond-display">Алмазы: 0 💎</p>
+      </div>
+        <div id="shop-content">
+        <div class="shop-item">
+            <p>Ящик со скинами</p>
+            <p>Цена: 500 ✨</p>
+            <button id="buy-skin-box" class="game-button">Купить</button>
+            <button id="open-skin-box" class="game-button">Открыть</button>
+            <p id="skin-box-count">Ящики скинов: 0 📦</p>
+        </div>
+       <div class="shop-item">
+           <p>Ящик с артефактами</p>
+            <p>Цена: 1000 ✨</p>
+            <button id="buy-artifact-box" class="game-button">Купить</button>
+            <button id="open-artifact-box" class="game-button">Открыть</button>
+            <p id="artifact-box-count">Ящики артефактов: 0 📦</p>
+        </div>
+        </div>
+
+          <div id="map-container">
+         <p>Карта Экспедиций</p>
+         <button data-type="easy" class="expedition-button">Легкая (Стоимость: 0 💎, Награда: 1-5 💎)</button>
+           <button data-type="medium" class="expedition-button">Средняя (Стоимость: 10 💎, Награда: 10-50 💎)</button>
+           <button data-type="hard" class="expedition-button">Тяжелая (Стоимость: 100 💎, Награда: 100-500 💎)</button>
+           <p id="expedition-progress"></p>
+       </div>
+        <button id="reset-button" class="game-button">Сбросить игру</button>
+        <p id="message"></p>
     </div>
-    <script src="script.js"></script>
+   <script src="script.js"></script>
 </body>
-    </html>
+            </html>
