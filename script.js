@@ -65,7 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
         autoUpgradeCostDisplay: document.getElementById('auto-upgrade-cost'),
         clickUpgradeLevelDisplay: document.getElementById('click-upgrade-level-display'),
         clickUpgradeLevelCostDisplay: document.getElementById('click-upgrade-level-cost'),
-        messageDisplay: document.getElementById('message'),
+        messageDisplay: document.getElementById('message'), // Старый элемент
+        globalMessageDisplay: document.getElementById('global-message'), // Новый элемент
         prestigeButton: document.getElementById('prestige-button'),
         prestigeLevelDisplay: document.getElementById('prestige-level'),
         achievementsDisplay: document.getElementById('achievements'),
@@ -117,13 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const displayMessage = (msg, color = 'white', fontSize = '1em') => {
-        elements.messageDisplay.textContent = msg;
-        elements.messageDisplay.style.color = color;
-        elements.messageDisplay.style.fontSize = fontSize;
+     const displayMessage = (msg, color = 'white', fontSize = '1em') => {
+        elements.globalMessageDisplay.textContent = msg;
+        elements.globalMessageDisplay.style.color = color;
+        elements.globalMessageDisplay.style.fontSize = fontSize;
         setTimeout(() => {
-            elements.messageDisplay.textContent = '';
-            elements.messageDisplay.style.fontSize = '1em';
+            elements.globalMessageDisplay.textContent = '';
+             elements.globalMessageDisplay.style.fontSize = '1em';
         }, MESSAGE_DURATION);
     };
 
@@ -492,5 +493,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gameState.activeExpedition) {
         startExpeditionTimer();
     }
+
+    // Создаем контейнер для сообщений
+    const globalMessageContainer = document.createElement('div');
+    globalMessageContainer.id = 'global-message';
+    globalMessageContainer.style.position = 'fixed';
+    globalMessageContainer.style.top = '10px';
+    globalMessageContainer.style.left = '50%';
+    globalMessageContainer.style.transform = 'translateX(-50%)';
+    globalMessageContainer.style.zIndex = '1000';
+    globalMessageContainer.style.backgroundColor = '#2c3e50';
+    globalMessageContainer.style.padding = '10px';
+    globalMessageContainer.style.borderRadius = '5px';
+    globalMessageContainer.style.color = 'white';
+    document.body.appendChild(globalMessageContainer);
+    elements.globalMessageDisplay = globalMessageContainer;
 });
-        
+            
