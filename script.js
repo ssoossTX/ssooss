@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menuItems: document.querySelectorAll('.menu-items li button'),
         mapContainer: document.getElementById('map-container'),
         expeditionProgressDisplay: document.getElementById('expedition-progress'),
-        diamondDisplay: document.getElementById('diamond-display'),
+        diamondDisplay: document.getElementById('diamonds-menu'),
         prestigeCostDisplay: document.getElementById('prestige-cost'),
            keyDisplay: document.getElementById('key-display'),
         chestDisplay: {
@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const switchTab = (tabId) => {
         elements.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
-        elements.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
+         elements.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
         elements.inventoryContainer.style.display = tabId === 'profile' ? 'block' : 'none';
         elements.menuItems.forEach(item => {
             item.classList.remove('active');
@@ -688,7 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
     globalMessageContainer.style.left = '50%';
     globalMessageContainer.style.transform = 'translateX(-50%)';
     globalMessageContainer.style.zIndex = '1000';
-    globalMessageContainer.style.backgroundColor = '#2c3e50';
+    globalMessageContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
     globalMessageContainer.style.padding = '10px';
     globalMessageContainer.style.borderRadius = '5px';
     globalMessageContainer.style.color = 'white';
