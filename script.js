@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'hard': 600000,
     };
     const EXPEDITION_TYPES = {
-        'easy': 'Легкая',
-        'medium': 'Средняя',
-        'hard': 'Тяжелая',
+        'easy': 'легкая',
+        'medium': 'средняя',
+        'hard': 'тяжелая',
     };
     const CHEST_RARITY_CHANCE = {
         'common': 0.7,
@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetButton: document.getElementById('reset-button'),
         menuButton: document.querySelector('.menu-toggle'),
         menu: document.getElementById('menu-items'),
+         clickerContent: document.getElementById('clicker-content'),
         gameContent: document.getElementById('game-content'),
         menuItems: document.querySelectorAll('.menu-items li button'),
         mapContainer: document.getElementById('map-container'),
@@ -374,9 +375,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     const switchTab = (tabId) => {
+        elements.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
         elements.mapContainer.classList.toggle('active', tabId === 'map');
-        elements.inventoryContainer.classList.toggle('active', tabId === 'inventory');
+        elements.inventoryContainer.classList.toggle('active', tabId === 'profile');
         elements.menuItems.forEach(item => {
             item.classList.remove('active');
             if (item.dataset.tab === tabId) {
@@ -653,9 +655,6 @@ document.addEventListener('DOMContentLoaded', () => {
             startExpedition(button.dataset.type);
         });
     });
-    elements.inventoryButton.addEventListener('click', () => {
-        switchTab('inventory');
-    });
     const AUTO_SAVE_INTERVAL = 30000;
     const autoSave = () => {
      saveData();
@@ -672,12 +671,12 @@ document.addEventListener('DOMContentLoaded', () => {
         saveData();
     });
     loadGame();
-    if (autoSaveInterval == null){
+     if (autoSaveInterval == null){
           autoSaveInterval = setInterval(autoSave, AUTO_SAVE_INTERVAL);
         }
     startRandomEvent();
     checkAchievements();
-    switchTab('shop');
+    switchTab('clicker');
     updateExpeditionButtonInfo();
     if (gameState.activeExpedition) {
         startExpeditionTimer();
