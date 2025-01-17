@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const SAVE_KEY = 'clickerData';
     const MESSAGE_DURATION = 3000;
@@ -73,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let gameState = {
         clickCount: 0,
-        clickValue: 10000,
+        clickValue: 1,
         autoClickerValue: 0,
         clickUpgradeCost: 10,
         autoUpgradeCost: 50,
