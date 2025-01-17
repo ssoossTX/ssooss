@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'hard': 600000,
     };
     const EXPEDITION_TYPES = {
-        'easy': 'Легкая',
-        'medium': 'Средняя',
-        'hard': 'Тяжелая',
+        'easy': 'легкая',
+        'medium': 'средняя',
+        'hard': 'тяжелая',
     };
     const CHEST_RARITY_CHANCE = {
         'common': 0.7,
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clickBonus *= SKIN_EFFECTS[skin].clickValueBonus;
             }
         });
-        gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * clickBonus) * gameState.prestigeMultiplier;
+         gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * clickBonus) * gameState.prestigeMultiplier;
         updateDisplay();
         checkAchievements();
     };
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 autoClickBonus *= SKIN_EFFECTS[skin].autoClickerBonus;
             }
         });
-        gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * autoClickBonus) * gameState.prestigeMultiplier;
+         gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * autoClickBonus) * gameState.prestigeMultiplier;
         updateDisplay();
     };
     const startAutoClicker = () => {
@@ -607,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage('Недостаточно кликов!', 'red');
         }
     });
-    elements.prestigeButton.addEventListener('click', () => {
+     elements.prestigeButton.addEventListener('click', () => {
           if (gameState.clickCount >= gameState.prestigeCost) {
               gameState.prestigeLevel++;
                   let prestigeBonus = 1;
@@ -616,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
                        prestigeBonus *= ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus;
                   }
                 });
-              gameState.prestigeMultiplier = gameState.prestigeMultiplier * prestigeBonus ; // Умножаем на бонус
+              gameState.prestigeMultiplier = Math.round(gameState.prestigeMultiplier * prestigeBonus) ;
               gameState.clickCount = 0;
               gameState.clickValue = 1;
               gameState.autoClickerValue = 0;
@@ -631,7 +631,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             displayMessage(`Недостаточно кликов! (нужно ${gameState.prestigeCost})`, 'red');
         }
-    });
     });
      elements.buyKeyButton.addEventListener('click', buyKey);
      elements.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
