@@ -377,8 +377,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const switchTab = (tabId) => {
         elements.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
-        elements.mapContainer.classList.toggle('active', tabId === 'map');
-        elements.inventoryContainer.classList.toggle('active', tabId === 'profile');
+        elements.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
+        elements.inventoryContainer.style.display = tabId === 'profile' ? 'block' : 'none';
         elements.menuItems.forEach(item => {
             item.classList.remove('active');
             if (item.dataset.tab === tabId) {
