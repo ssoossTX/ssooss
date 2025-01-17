@@ -75,7 +75,7 @@ body {
 }
 
 #click-button {
-    background-color: #2ecc71;
+    background-image: linear-gradient(to bottom right, #2ecc71, #3498db);
     color: white;
      text-transform: uppercase;
     font-weight: bold;
@@ -145,6 +145,8 @@ body {
     top: 10px;
     left: 10px;
     z-index: 10;
+        display: flex;
+        align-items: center;
 }
 .menu-toggle {
     font-size: 1.5em;
@@ -185,116 +187,132 @@ body {
     color: white;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    transition: background-color 0.3s ease;
-      text-transform: uppercase;
-    font-weight: bold;
-    box-sizing: border-box;
 }
-#menu-items li:last-child button {
-    border-bottom: none;
-}
-#menu-items li button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
+
 #menu-items.active {
     display: block;
     opacity: 1;
     transform: translateY(0);
 }
-.content {
-    padding-top: 30px;
+
+.diamonds-menu {
+    margin-left: 10px;
+    font-size: 1.2em;
 }
-#menu-items li button.active {
-     background-color: rgba(255, 255, 255, 0.2);
-}
-.map-container {
+
+/* Game content */
+#clicker-content,
+#game-content,
+.map-container,
+.inventory-container {
     display: none;
-    margin-top: 20px;
-      padding: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    box-sizing: border-box;
-}
-.map-container.active {
-    display: block;
-    width: 100%;
-}
-.expedition-button {
-    display: block;
-    margin: 10px auto;
-      background-color: #337ab7;
-    color: white;
-     text-transform: uppercase;
-    font-weight: bold;
-    box-sizing: border-box;
-}
-.expedition-button:hover {
-    background-color: #286090;
 }
 
-.expedition-progress {
-    margin: 10px 0;
+#clicker-content,
+#game-content,
+.map-container {
+    padding: 15px;
+     background-color: rgba(255, 255, 255, 0.1);
+     border-radius: 5px;
+    margin-bottom: 20px;
+     width: 100%;
+    box-sizing: border-box;
+}
+
+
+#clicker-content h1 {
+    text-align: center;
+     margin-bottom: 20px;
+}
+.prestige-level {
+   margin-top: 20px;
+}
+/* Стили магазина */
+.chests {
+    margin-bottom: 20px;
+}
+.chest-item {
+  background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
-     background-color: rgba(0,0,0, 0.5);
-      border-radius: 5px;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    margin: 10px 0;
+    border-radius: 5px;
 }
 
-.diamond-display {
-     margin-top: 10px;
-     font-size: 1.2em;
-    color: gold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+/* Экспедиции */
+.expedition-button {
+    margin: 5px 0;
+    display: block;
+     width: 100%;
+    text-align: center;
+}
+ .expedition-progress {
+    margin-top: 10px;
+     background-color:  rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
 }
 
-.expedition-button.disabled {
-      background-color: #7f8c8d;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-}
-.expedition-button.disabled:hover {
-     box-shadow: none;
-    transform: none;
-}
+/* Инвентарь */
 .inventory-container {
   display: none; /* Скрываем по умолчанию */
-  position: absolute; /* Позиционируем абсолютно */
+  position: fixed; /* Позиционируем абсолютно */
   top: 0; /* Занимает весь экран по высоте и ширине*/
   left: 0;
   width: 100%;
   height: 100%;
   padding: 20px;
-  background-color: #1a2530;
+  background-color: rgba(0, 0, 0, 0.9);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
    z-index: 999;
+  overflow: auto;
+  text-align: left;
+    box-sizing: border-box;
 }
 
 .inventory-container.active {
   display: block;
-/* Адаптивность на мобильных устройствах */
-@media (max-width: 600px) {
-    .container {
-        width: 95%;
-    }
-      .upgrade-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .upgrade-item > p:last-of-type {
-        margin-bottom: 10px;
-    }
-    .game-button,
-    .menu-items li button {
-        padding: 10px 20px;
-    }
-    #menu-items {
-          top: 35px;
-    }
 }
-/* Адаптивность на больших экранах */
-@media (min-width: 1200px) {
-    .container {
-        max-width: 800px;
-    }
+.inventory-items h3{
+    margin-top: 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
+.inventory-items {
+     background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+     border-radius: 5px;
+}
+
+.chest-container {
+     display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+     z-index: 1001;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 5px;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+     text-align: left;
+    max-width: 80%;
+    max-height: 80vh;
+     overflow: auto;
+}
+ .chest-content {
+        max-height: 70vh;
+       overflow-y: auto;
+ }
+/* Глобальные сообщения */
+#global-message {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+     z-index: 1002;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    }
+    
