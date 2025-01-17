@@ -251,7 +251,7 @@ elements.prestigeButton.addEventListener('click', () => {
                        prestigeBonus *= ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus;
                   }
                 });
-                gameState.prestigeMultiplier = Math.round(gameState.prestigeMultiplier * prestigeBonus) ;
+                gameState.prestigeMultiplier = Math.round(gameState.prestigeMultiplier * prestigeBonus * 2) ;
                gameState.clickCount = 0;
               gameState.clickValue = 1;
               gameState.autoClickerValue = 0;
