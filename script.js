@@ -99,13 +99,13 @@
             'hard': 100,
         },
         expeditionRewards: {
-            'easy': [1, 5],
+            'easy': [1, 500],
             'medium': [10, 50],
             'hard': [100, 500],
         },
            prestigeCost: PRESTIGE_BASE_COST,
          expeditionDurations : {
-        'easy': 6000,
+        'easy': 60000,
         'medium': 300000,
         'hard': 600000,
     },
