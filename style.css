@@ -1,95 +1,100 @@
 /* Общие стили */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-    background-image: url('IMG_20250114_111552_356.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: white;
-    transition: background-color 0.3s ease;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-image: url('IMG_20250114_111552_356.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: white;
+  transition: background-color 0.3s ease;
 }
-
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: -1;
-}
-
 
 .container {
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 2rem;
-    border-radius: 1rem;
-    max-width: 600px;
-    width: 90%;
-    position: relative;
-    box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.2);
-    box-sizing: border-box;
-    transition: background-color 0.3s ease;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
 }
-
-.game-container {
-    padding-top: 2rem;
+.menu-bar {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
     display: flex;
-    flex-direction: column;
     align-items: center;
+}
+main.game-container {
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+@media screen and (min-width: 768px) {
+    main.game-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    #game-content {
+        grid-column: 2;
+        grid-row: 1 / 2;
+    }
+
+    .map-container {
+    grid-column: 1 / 3;
+    }
 }
 
 #game-title {
-    margin-bottom: 1.5rem;
-    font-size: 2.5rem;
-    text-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+    margin-bottom: 15px;
+    font-size: 2.5em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .counter {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
-    text-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+    font-size: 3em;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Общие стили для кнопок */
 .game-button,
 .menu-items li button,
 .expedition-button {
-    padding: 1.2rem 2.4rem;
-    font-size: 1rem;
+    padding: 12px 24px;
+    font-size: 1em;
     border: none;
     cursor: pointer;
-    margin-bottom: 1rem;
-    border-radius: 0.8rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-image 0.2s ease, color 0.2s ease;
-    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
-    background-image: linear-gradient(45deg, #4a69bd, #485461);
+    margin-bottom: 10px;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+     background-image: linear-gradient(to bottom, #3498db, #2980b9);
     color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .game-button:hover,
 .menu-items li button:hover,
 .expedition-button:hover {
-    transform: translateY(-0.2rem) scale(1.03);
-    box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.3);
-    background-image: linear-gradient(45deg, #5c7ac9, #5a6471);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .game-button:active,
 .menu-items li button:active,
 .expedition-button:active {
-    transform: translateY(0.1rem) scale(1);
-    box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.3);
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 #click-button {
@@ -97,15 +102,14 @@ body::before {
     color: white;
     text-transform: uppercase;
     font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
-
-#click-button:hover {
-    background-image: linear-gradient(to bottom right, #38d97d, #40a7e9);
+#click-button:active {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .upgrades {
-    margin-top: 1.5rem;
+    margin-top: 15px;
     text-align: left;
     width: 100%;
     box-sizing: border-box;
@@ -113,14 +117,14 @@ body::before {
 
 .upgrade-item {
     background-color: rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 0.8rem;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    text-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .upgrade-item p {
@@ -130,26 +134,25 @@ body::before {
 .buy-upgrade {
     background-color: #3498db;
     color: white;
-    padding: 0.8rem 1.5rem;
+    padding: 8px 15px;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+     transition: background-color 0.3s ease;
+    background-image: linear-gradient(to bottom, #2ecc71, #27ae60);
 }
 
 .buy-upgrade:hover {
-    background-color: #2980b9;
+  background-color: #2980b9;
+    background-image: linear-gradient(to bottom, #27ae60, #2ecc71);
 }
+
 
 #prestige-button {
     background-color: #f39c12;
     color: white;
     text-transform: uppercase;
     font-weight: bold;
-}
-
-#prestige-button:hover {
-    background-color: #e08d0a;
 }
 
 #reset-button {
@@ -159,38 +162,26 @@ body::before {
     font-weight: bold;
 }
 
-#reset-button:hover {
-    background-color: #d14032;
-}
-
 .message {
     text-align: center;
     color: #f1c40f;
-    margin-top: 1rem;
+    margin-top: 10px;
     font-weight: bold;
-    text-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Menu Styles */
-.menu-bar {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-}
 
 .menu-toggle {
-    font-size: 1.5rem;
+    font-size: 1.5em;
     background-color: transparent;
     border: none;
     color: white;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 5px;
     display: inline-block;
     transition: transform 0.3s ease;
-    margin-right: 1rem;
+    margin-right: 10px;
 }
 
 .menu-toggle.active {
@@ -202,20 +193,20 @@ body::before {
     padding: 0;
     margin: 0;
     background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 0.8rem;
+    border-radius: 8px;
     display: none;
     opacity: 0;
-    transform: translateY(-1rem);
+    transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
     position: absolute;
-    top: 4rem;
+    top: 40px;
     left: 0;
 }
 
 #menu-items li button {
     display: block;
     width: 100%;
-    padding: 1rem;
+    padding: 10px;
     border: none;
     border-radius: 0;
     cursor: pointer;
@@ -223,6 +214,10 @@ body::before {
     color: white;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#menu-items li button.active {
+    background-color: #2c3e50;
+     border-bottom: 2px solid #f1c40f;
 }
 
 #menu-items.active {
@@ -232,8 +227,8 @@ body::before {
 }
 
 .diamonds-menu {
-    margin-left: 1rem;
-    font-size: 1.2rem;
+    margin-left: 10px;
+    font-size: 1.2em;
 }
 
 /* Game content */
@@ -242,142 +237,114 @@ body::before {
 .map-container,
 .inventory-container {
     display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-#clicker-content.active,
-#game-content.active,
-.map-container.active,
-.inventory-container.active {
-    display: block;
-    opacity: 1;
 }
 
 #clicker-content,
 #game-content,
 .map-container {
-    padding: 1.5rem;
+    padding: 15px;
     background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 0.5rem;
-    margin-bottom: 2rem;
+    border-radius: 5px;
+    margin-bottom: 20px;
     width: 100%;
     box-sizing: border-box;
 }
 
 #clicker-content h1 {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 20px;
 }
 
 .prestige-level {
-    margin-top: 2rem;
+    margin-top: 20px;
 }
 
 /* Стили магазина */
 #game-content h2 {
-    margin-bottom: 2rem;
+  margin-bottom: 20px;
 }
 
 .chests {
-    margin-bottom: 2rem;
+    margin-bottom: 20px;
 }
 
 .chest-item {
     background-color: rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.chest-item button {
-    padding: 0.8rem 1.5rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    background-image: linear-gradient(45deg, #4a69bd, #485461);
-}
-
-.chest-item button:hover {
-    background-image: linear-gradient(45deg, #5c7ac9, #5a6471);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
 }
 
 /* Экспедиции */
 .expedition-button {
-    margin: 0.5rem 0;
+    margin: 5px 0;
     display: block;
     width: 100%;
     text-align: center;
 }
-
+.expedition-button.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .expedition-progress {
-    margin-top: 1rem;
+    margin-top: 10px;
     background-color: rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 /* Инвентарь */
 .inventory-container {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 2rem;
+    padding: 20px;
     background-color: rgba(0, 0, 0, 0.9);
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 999;
     overflow: auto;
     text-align: left;
     box-sizing: border-box;
-    display: none;
-    opacity: 0;
-     transition: opacity 0.3s ease;
 }
 
 .inventory-container.active {
-   display: block;
-    opacity: 1;
+    display: block;
 }
+
 .profile-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 15px;
 }
 
 .profile-header h2 {
     margin: 0;
-    text-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
-
 .diamond-display {
-    text-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .profile-content {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 20px;
 }
 
 .profile-section {
     background-color: rgba(255, 255, 255, 0.1);
-    padding: 1.5rem;
-    border-radius: 0.5rem;
+    padding: 15px;
+    border-radius: 5px;
 }
 
 .profile-section h3 {
     margin-top: 0;
-    text-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
-
 
 .chest-container {
     display: none;
@@ -386,10 +353,10 @@ body::before {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1001;
-    background-image: linear-gradient(to bottom right, #2c3e50, #142944);
-    padding: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     text-align: left;
     max-width: 80%;
     max-height: 80vh;
@@ -399,40 +366,20 @@ body::before {
 .chest-content {
     max-height: 70vh;
     overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-}
-
-.chest-content::-webkit-scrollbar {
-    width: 5px;
-}
-
-.chest-content::-webkit-scrollbar-track {
-    background-color: transparent;
-}
-
-.chest-content::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
-}
-
-.chest-items {
-    white-space: pre-line;
-    font-size: 1rem;
-    line-height: 1.6;
 }
 
 /* Глобальные сообщения */
 #global-message {
     position: fixed;
-    top: 1rem;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1002;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 1rem;
-    border-radius: 0.5rem;
+     background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 5px;
     color: white;
     text-align: center;
-    }
+    display: none;
+        }
     
