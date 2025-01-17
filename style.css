@@ -1,9 +1,10 @@
+/* Общие стили */
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-     background-image: url('IMG_20250114_111552_356.jpg');
-     background-size: cover;
+    background-image: url('IMG_20250114_111552_356.jpg');
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -24,9 +25,8 @@ body {
     width: 90%;
     position: relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    box-sizing: border-box; /* Чтобы padding не увеличивал ширину контейнера */
+    box-sizing: border-box;
 }
-
 
 .game-container {
     padding-top: 20px;
@@ -34,10 +34,11 @@ body {
     flex-direction: column;
     align-items: center;
 }
+
 #game-title {
     margin-bottom: 15px;
     font-size: 2.5em;
-     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .counter {
@@ -56,14 +57,14 @@ body {
     cursor: pointer;
     margin-bottom: 10px;
     border-radius: 8px;
-     transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .game-button:hover,
 .menu-items li button:hover,
 .expedition-button:hover {
-      transform: translateY(-2px);
+    transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -77,7 +78,7 @@ body {
 #click-button {
     background-image: linear-gradient(to bottom right, #2ecc71, #3498db);
     color: white;
-     text-transform: uppercase;
+    text-transform: uppercase;
     font-weight: bold;
 }
 
@@ -85,11 +86,11 @@ body {
     margin-top: 15px;
     text-align: left;
     width: 100%;
-     box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .upgrade-item {
-     background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 8px;
@@ -118,7 +119,7 @@ body {
 }
 
 #prestige-button {
-     background-color: #f39c12;
+    background-color: #f39c12;
     color: white;
     text-transform: uppercase;
     font-weight: bold;
@@ -136,7 +137,7 @@ body {
     color: #f1c40f;
     margin-top: 10px;
     font-weight: bold;
-     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Menu Styles */
@@ -144,10 +145,11 @@ body {
     position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 1000; /* Увеличиваем z-index */
-        display: flex;
-        align-items: center;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
 }
+
 .menu-toggle {
     font-size: 1.5em;
     background-color: transparent;
@@ -162,6 +164,7 @@ body {
 .menu-toggle.active {
     transform: rotate(90deg);
 }
+
 #menu-items {
     list-style: none;
     padding: 0;
@@ -172,10 +175,11 @@ body {
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
-     position: absolute;
+    position: absolute;
     top: 40px;
     left: 0;
 }
+
 #menu-items li button {
     display: block;
     width: 100%;
@@ -212,27 +216,29 @@ body {
 #game-content,
 .map-container {
     padding: 15px;
-     background-color: rgba(255, 255, 255, 0.1);
-     border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
     margin-bottom: 20px;
-     width: 100%;
+    width: 100%;
     box-sizing: border-box;
 }
 
-
 #clicker-content h1 {
     text-align: center;
-     margin-bottom: 20px;
+    margin-bottom: 20px;
 }
+
 .prestige-level {
-   margin-top: 20px;
+    margin-top: 20px;
 }
+
 /* Стили магазина */
 .chests {
     margin-bottom: 20px;
 }
+
 .chest-item {
-  background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
@@ -242,103 +248,100 @@ body {
 .expedition-button {
     margin: 5px 0;
     display: block;
-     width: 100%;
+    width: 100%;
     text-align: center;
 }
- .expedition-progress {
+
+.expedition-progress {
     margin-top: 10px;
-     background-color:  rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     border-radius: 5px;
 }
 
 /* Инвентарь */
 .inventory-container {
-  display: none; /* Скрываем по умолчанию */
-  position: fixed; /* Позиционируем абсолютно */
-  top: 0; /* Занимает весь экран по высоте и ширине*/
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.9);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-   z-index: 999;
-  overflow: auto;
-  text-align: left;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    overflow: auto;
+    text-align: left;
     box-sizing: border-box;
 }
 
 .inventory-container.active {
-  display: block;
-}
-.inventory-items h3{
-    margin-top: 15px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-.inventory-items {
-     background-color: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-     border-radius: 5px;
+    display: block;
 }
 
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.profile-header h2 {
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.profile-section {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.profile-section h3 {
+    margin-top: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+
 .chest-container {
-     display: none;
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-     z-index: 1001;
+    z-index: 1001;
     background-color: rgba(0, 0, 0, 0.9);
     padding: 20px;
     border-radius: 5px;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-     text-align: left;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: left;
     max-width: 80%;
     max-height: 80vh;
-     overflow: auto;
+    overflow: auto;
 }
- .chest-content {
-        max-height: 70vh;
-       overflow-y: auto;
- }
+
+.chest-content {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
 /* Глобальные сообщения */
 #global-message {
     position: fixed;
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
-     z-index: 1002;
-    background-color: #2c3e50;
+    z-index: 1002;
+    background-color: rgba(0, 0, 0, 0.8);
     padding: 10px;
     border-radius: 5px;
     color: white;
     text-align: center;
-}
-
-/* Адаптивность на мобильных устройствах */
-@media (max-width: 600px) {
-    .container {
-        width: 95%;
     }
-      .upgrade-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .upgrade-item > p:last-of-type {
-        margin-bottom: 10px;
-    }
-    .game-button,
-    .menu-items li button {
-        padding: 10px 20px;
-    }
-    #menu-items {
-          top: 35px;
-    }
-}
-/* Адаптивность на больших экранах */
-@media (min-width: 1200px) {
-    .container {
-        max-width: 800px;
-    }
-        }
