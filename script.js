@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'hard': 600000,
     };
     const EXPEDITION_TYPES = {
-        'easy': 'легкая',
-        'medium': 'средняя',
-        'hard': 'тяжелая',
+        'easy': 'Легкая',
+        'medium': 'Средняя',
+        'hard': 'Тяжелая',
     };
     const CHEST_RARITY_CHANCE = {
         'common': 0.7,
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'epic': 0.02,
     };
     const ARTIFACT_RARITY_CHANCE = {
-        'common': 0.7,
+         'common': 0.7,
         'uncommon': 0.2,
         'rare': 0.08,
         'epic': 0.02,
@@ -36,17 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
         'skin_uncommon_1': { clickValueBonus: 1.1 },
         'skin_rare_1': { clickValueBonus: 1.2 },
         'skin_epic_1': { clickValueBonus: 1.5 },
-        'skin_common_2': { autoClickerBonus: 1.05 },
+            'skin_common_2': { autoClickerBonus: 1.05 },
         'skin_uncommon_2': { autoClickerBonus: 1.1 },
         'skin_rare_2': { autoClickerBonus: 1.2 },
         'skin_epic_2': { autoClickerBonus: 1.5 },
     };
     const ARTIFACT_EFFECTS = {
-        'artifact_common_1': { prestigeMultiplierBonus: 1.1 },
+          'artifact_common_1': { prestigeMultiplierBonus: 1.1 },
         'artifact_uncommon_1': { prestigeMultiplierBonus: 1.2 },
         'artifact_rare_1': { prestigeMultiplierBonus: 1.3 },
         'artifact_epic_1': { prestigeMultiplierBonus: 1.5 },
-        'artifact_common_2': { diamondBonus: 1.05 },
+              'artifact_common_2': { diamondBonus: 1.05 },
         'artifact_uncommon_2': { diamondBonus: 1.1 },
         'artifact_rare_2': { diamondBonus: 1.2 },
         'artifact_epic_2': { diamondBonus: 1.5 },
@@ -56,22 +56,22 @@ document.addEventListener('DOMContentLoaded', () => {
         'skin_uncommon_1': 'Необычный скин (1)',
         'skin_rare_1': 'Редкий скин (1)',
         'skin_epic_1': 'Эпический скин (1)',
-        'skin_common_2': 'Обычный скин (2)',
+         'skin_common_2': 'Обычный скин (2)',
         'skin_uncommon_2': 'Необычный скин (2)',
         'skin_rare_2': 'Редкий скин (2)',
         'skin_epic_2': 'Эпический скин (2)',
     };
     const ARTIFACT_NAMES = {
-        'artifact_common_1': 'Обычный артефакт (1)',
+          'artifact_common_1': 'Обычный артефакт (1)',
         'artifact_uncommon_1': 'Необычный артефакт (1)',
         'artifact_rare_1': 'Редкий артефакт (1)',
         'artifact_epic_1': 'Эпический артефакт (1)',
-        'artifact_common_2': 'Обычный артефакт (2)',
+            'artifact_common_2': 'Обычный артефакт (2)',
         'artifact_uncommon_2': 'Необычный артефакт (2)',
         'artifact_rare_2': 'Редкий артефакт (2)',
         'artifact_epic_2': 'Эпический артефакт (2)',
     };
-    let gameState = {
+     let gameState = {
         clickCount: 0,
         clickValue: 1,
         autoClickerValue: 0,
@@ -92,14 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
         expeditionStartTime: null,
         expeditionDuration: 0,
         expeditionReward: 0,
-        keys: 0,
+         keys: 0,
         chests: {
             'common': 0,
             'rare': 0,
             'epic': 0
         },
-        skins: [],
-        artifacts: [],
+         skins: [],
+         artifacts: [],
         expeditionCosts: {
             'easy': 0,
             'medium': 10,
@@ -130,14 +130,14 @@ document.addEventListener('DOMContentLoaded', () => {
         resetButton: document.getElementById('reset-button'),
         menuButton: document.querySelector('.menu-toggle'),
         menu: document.getElementById('menu-items'),
-        clickerContent: document.getElementById('clicker-content'),
+         clickerContent: document.getElementById('clicker-content'),
         gameContent: document.getElementById('game-content'),
         menuItems: document.querySelectorAll('.menu-items li button'),
         mapContainer: document.getElementById('map-container'),
         expeditionProgressDisplay: document.getElementById('expedition-progress'),
         diamondDisplay: document.getElementById('diamonds-menu'),
         prestigeCostDisplay: document.getElementById('prestige-cost'),
-        keyDisplay: document.getElementById('key-display'),
+           keyDisplay: document.getElementById('key-display'),
         chestDisplay: {
             common: document.getElementById('common-chest-count'),
             rare: document.getElementById('rare-chest-count'),
@@ -149,13 +149,13 @@ document.addEventListener('DOMContentLoaded', () => {
         buyEpicChestButton: document.getElementById('buy-epic-chest-button'),
         inventoryButton: document.getElementById('inventory-button'),
         inventoryContainer: document.getElementById('inventory-container'),
-        openChestButton: document.getElementById('open-chest-button'),
-        chestItemsDisplay: document.getElementById('chest-items'),
-        closeChestButton: document.getElementById('close-chest-button'),
-        chestContainer: document.getElementById('chest-container'),
+         openChestButton: document.getElementById('open-chest-button'),
+         chestItemsDisplay: document.getElementById('chest-items'),
+         closeChestButton: document.getElementById('close-chest-button'),
+         chestContainer: document.getElementById('chest-container'),
         skinsDisplay: document.getElementById('skins-display'),
         artifactsDisplay: document.getElementById('artifacts-display'),
-        clickBonusDisplay: document.getElementById('click-bonus-display'),
+         clickBonusDisplay: document.getElementById('click-bonus-display'),
         autoClickerBonusDisplay: document.getElementById('auto-clicker-bonus-display'),
          prestigeBonusDisplay: document.getElementById('prestige-bonus-display'),
     };
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tWebApp) {
         tWebApp.ready();
     }
-      const calculateClickBonus = () => {
+    const calculateClickBonus = () => {
         let clickBonus = 1;
         gameState.skins.forEach(skin => {
             if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].clickValueBonus) {
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         return autoClickBonus;
     };
-    const calculateDiamondBonus = () => {
+      const calculateDiamondBonus = () => {
         let diamondBonus = 1;
         gameState.artifacts.forEach(artifact => {
             if (ARTIFACT_EFFECTS[artifact] && ARTIFACT_EFFECTS[artifact].diamondBonus) {
@@ -210,16 +210,16 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
         elements.diamondDisplay.textContent = `Алмазы: ${gameState.diamonds}`;
         elements.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
-        elements.keyDisplay.textContent = `Ключи: ${gameState.keys}`;
+         elements.keyDisplay.textContent = `Ключи: ${gameState.keys}`;
         elements.chestDisplay.common.textContent = `Обычные: ${gameState.chests.common}`;
         elements.chestDisplay.rare.textContent = `Редкие: ${gameState.chests.rare}`;
         elements.chestDisplay.epic.textContent = `Эпические: ${gameState.chests.epic}`;
         updateExpeditionProgress();
         updateExpeditionButtonInfo();
-        updateInventoryDisplay();
-        elements.clickBonusDisplay.textContent = `Множитель клика: x${calculateClickBonus().toFixed(2)}`;
+           updateInventoryDisplay();
+         elements.clickBonusDisplay.textContent = `Множитель клика: x${calculateClickBonus().toFixed(2)}`;
         elements.autoClickerBonusDisplay.textContent = `Множитель автокликера: x${calculateAutoClickerBonus().toFixed(2)}`;
-        elements.prestigeBonusDisplay.textContent = `Множитель престижа: x${calculatePrestigeBonus().toFixed(2)}`;
+          elements.prestigeBonusDisplay.textContent = `Множитель престижа: x${calculatePrestigeBonus().toFixed(2)}`;
 
     };
     const updateExpeditionProgress = () => {
@@ -236,24 +236,24 @@ document.addEventListener('DOMContentLoaded', () => {
             finishExpedition();
         }
     };
-    const displayMessage = (msg, color = 'white', fontSize = '1em') => {
+     const displayMessage = (msg, color = 'white', fontSize = '1em') => {
         elements.globalMessageDisplay.textContent = msg;
         elements.globalMessageDisplay.style.color = color;
         elements.globalMessageDisplay.style.fontSize = fontSize;
         setTimeout(() => {
             elements.globalMessageDisplay.textContent = '';
-            elements.globalMessageDisplay.style.fontSize = '1em';
+             elements.globalMessageDisplay.style.fontSize = '1em';
         }, MESSAGE_DURATION);
     };
-     const applyClick = () => {
+    const applyClick = () => {
         const clickBonus = calculateClickBonus();
-        gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * clickBonus) * gameState.prestigeMultiplier;
+         gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * clickBonus) * gameState.prestigeMultiplier;
         updateDisplay();
         checkAchievements();
     };
     const autoClick = () => {
-         const autoClickBonus = calculateAutoClickerBonus();
-        gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * autoClickBonus) * gameState.prestigeMultiplier;
+          const autoClickBonus = calculateAutoClickerBonus();
+         gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * autoClickBonus) * gameState.prestigeMultiplier;
         updateDisplay();
     };
     const startAutoClicker = () => {
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveData();
     };
     const resetGame = () => {
-        gameState = {
+         gameState = {
             clickCount: 0,
             clickValue: 1,
             autoClickerValue: 0,
@@ -304,14 +304,14 @@ document.addEventListener('DOMContentLoaded', () => {
             expeditionStartTime: null,
             expeditionDuration: 0,
             expeditionReward: 0,
-            keys: 0,
-            chests: {
-                'common': 0,
-                'rare': 0,
-                'epic': 0
-            },
-            skins: [],
-            artifacts: [],
+           keys: 0,
+        chests: {
+            'common': 0,
+            'rare': 0,
+            'epic': 0
+        },
+         skins: [],
+         artifacts: [],
             expeditionCosts: {
                 'easy': 0,
                 'medium': 10,
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
             prestigeCost: PRESTIGE_BASE_COST,
         };
         clearAllTimeouts();
-        startRandomEvent();
+         startRandomEvent();
         updateDisplay();
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(gameState.expeditionInterval);
             gameState.expeditionInterval = null;
         }
-        clearAutoSave();
+           clearAutoSave();
     };
     const clearSaveData = () => {
         if (tWebApp) {
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     const saveData = () => {
-        try {
+         try {
             const {
                 autoClickerInterval,
                 bonusTimeout,
@@ -357,51 +357,51 @@ document.addEventListener('DOMContentLoaded', () => {
             } = gameState;
             const dataString = JSON.stringify(dataToSave);
             if (tWebApp) {
-                tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
+                 tWebApp.CloudStorage.setItem(SAVE_KEY, dataString);
             } else {
-                localStorage.setItem(SAVE_KEY, dataString);
+               localStorage.setItem(SAVE_KEY, dataString);
             }
         } catch (e) {
-            console.error('Failed to save game', e);
+           console.error('Failed to save game', e);
         }
     };
     const loadGame = () => {
         const loadFromStorage = (storage) => {
-            const savedDataString = storage.getItem(SAVE_KEY);
+           const savedDataString = storage.getItem(SAVE_KEY);
             if (!savedDataString) {
                 gameState.clickValue = 1;
                 gameState.clickUpgradeLevel = 1;
-                updateDisplay();
+                 updateDisplay();
                 return;
             }
             try {
                 const savedData = JSON.parse(savedDataString);
                 gameState = { ...gameState, ...savedData };
-                if (savedData.clickValue == undefined) {
+                 if (savedData.clickValue == undefined) {
                     gameState.clickValue = 1;
                 }
-                if (savedData.clickUpgradeLevel == undefined) {
-                    gameState.clickUpgradeLevel = 1;
-                }
+                 if (savedData.clickUpgradeLevel == undefined) {
+                     gameState.clickUpgradeLevel = 1;
+                 }
                 startAutoClicker();
                 if (gameState.activeExpedition) {
                     startExpeditionTimer();
                 }
-                updateDisplay();
+                 updateDisplay();
             } catch (e) {
-                clearSaveData();
+               clearSaveData();
                 console.error('Failed to load game', e)
                 displayMessage('Не удалось загрузить игру', 'red');
             }
         };
-        if (tWebApp) {
+         if (tWebApp) {
             tWebApp.CloudStorage.getItem(SAVE_KEY, (err, value) => {
-                if (!value) {
-                    gameState.clickValue = 1;
+               if (!value) {
+                     gameState.clickValue = 1;
                     gameState.clickUpgradeLevel = 1;
                     updateDisplay();
-                    return;
-                }
+                     return;
+               }
                 loadFromStorage({ getItem: () => value });
             });
         } else {
@@ -411,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const switchTab = (tabId) => {
         elements.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
         elements.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
-        elements.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
+         elements.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
         elements.inventoryContainer.style.display = tabId === 'profile' ? 'block' : 'none';
         elements.menuItems.forEach(item => {
             item.classList.remove('active');
@@ -425,8 +425,8 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage('Уже есть активная экспедиция', 'red');
             return;
         }
-        const cost = gameState.expeditionCosts[type];
-        if (cost > 0 && gameState.diamonds < cost) {
+         const cost = gameState.expeditionCosts[type];
+          if (cost > 0 && gameState.diamonds < cost) {
             const needed = cost - gameState.diamonds;
             displayMessage(`Не хватает ${needed} алмазов для этой экспедиции`, 'red');
             return;
@@ -441,8 +441,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
         displayMessage(`Экспедиция "${EXPEDITION_TYPES[type]}" началась!`, 'green');
     };
-    const updateExpeditionButtonInfo = () => {
-        elements.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
+     const updateExpeditionButtonInfo = () => {
+         elements.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
             const type = button.dataset.type;
             const cost = gameState.expeditionCosts[type];
             const [minReward, maxReward] = gameState.expeditionRewards[type];
@@ -459,34 +459,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const startExpeditionTimer = () => {
         gameState.expeditionInterval = setInterval(updateExpeditionProgress, 1000);
     };
-    const finishExpedition = () => {
-        clearInterval(gameState.expeditionInterval);
+     const finishExpedition = () => {
+          clearInterval(gameState.expeditionInterval);
         gameState.expeditionInterval = null;
-        const reward = gameState.expeditionReward;
-          const diamondBonus = calculateDiamondBonus();
+         const reward = gameState.expeditionReward;
+           const diamondBonus = calculateDiamondBonus();
         gameState.diamonds += Math.round(reward * diamondBonus);
         const expeditionType = gameState.activeExpedition;
         gameState.activeExpedition = null;
-        gameState.expeditionStartTime = null;
+         gameState.expeditionStartTime = null;
         gameState.expeditionDuration = 0;
         gameState.expeditionReward = 0;
         displayMessage(`Экспедиция "${EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${Math.round(reward * diamondBonus)} алмазов`, 'gold', '1.2em');
         updateDisplay();
         saveData();
     };
-    const buyKey = () => {
-        if (gameState.diamonds >= 10) {
-            gameState.diamonds -= 10;
-            gameState.keys++;
-            updateDisplay();
-            displayMessage('Куплен ключ!', 'green');
-        } else {
-            displayMessage('Недостаточно алмазов!', 'red');
-        }
-    };
+     const buyKey = () => {
+         if(gameState.diamonds >= 10) {
+             gameState.diamonds -= 10;
+             gameState.keys++;
+             updateDisplay();
+             displayMessage('Куплен ключ!', 'green');
+         } else {
+             displayMessage('Недостаточно алмазов!', 'red');
+         }
+     };
     const buyChest = (type) => {
-        if (gameState.diamonds >= 5) {
-            gameState.diamonds -= 5;
+        if(gameState.diamonds >= 5) {
+             gameState.diamonds -= 5;
             gameState.chests[type]++;
             updateDisplay();
             displayMessage(`Куплен ${type} сундук!`, 'green');
@@ -495,111 +495,111 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     const openChest = () => {
-        elements.chestItemsDisplay.innerHTML = '';
-        let chestType = null;
-        if (gameState.chests.epic > 0) {
-            chestType = 'epic';
-        } else if (gameState.chests.rare > 0) {
-            chestType = 'rare';
-        } else if (gameState.chests.common > 0) {
-            chestType = 'common';
-        }
-        if (!chestType) {
+         elements.chestItemsDisplay.innerHTML = '';
+            let chestType = null;
+             if (gameState.chests.epic > 0) {
+                chestType = 'epic';
+            } else if (gameState.chests.rare > 0) {
+                chestType = 'rare';
+            } else if (gameState.chests.common > 0) {
+                 chestType = 'common';
+             }
+         if (!chestType){
             displayMessage('Нет сундуков для открытия', 'red');
-            return;
+              return;
         }
-        if (gameState.keys > 0) {
-            gameState.keys--;
-            gameState.chests[chestType]--;
-            const items = openChestLogic(chestType);
-            items.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.textContent = item;
-                elements.chestItemsDisplay.appendChild(itemElement);
-            });
-            elements.chestContainer.style.display = 'block';
-            updateDisplay();
-            saveData();
-        } else {
-            displayMessage('Нет ключей для открытия', 'red');
-        }
+            if(gameState.keys > 0) {
+                 gameState.keys--;
+                gameState.chests[chestType]--;
+                 const items = openChestLogic(chestType);
+                  items.forEach(item => {
+                    const itemElement = document.createElement('div');
+                     itemElement.textContent = item;
+                      elements.chestItemsDisplay.appendChild(itemElement);
+                });
+                 elements.chestContainer.style.display = 'block';
+                 updateDisplay();
+                 saveData();
+            } else {
+                 displayMessage('Нет ключей для открытия', 'red');
+            }
     };
-    const closeChest = () => {
-        elements.chestContainer.style.display = 'none';
-    };
-    const openChestLogic = (chestType) => {
-        let items = [];
-        const roll = Math.random();
-        if (chestType === 'epic') {
-            if (roll <= SKIN_RARITY_CHANCE.epic) {
-                items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('epic')), SKIN_NAMES, 'skins'));
-            } else if (roll <= SKIN_RARITY_CHANCE.rare + SKIN_RARITY_CHANCE.epic) {
-                items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('rare')), SKIN_NAMES, 'skins'));
-            } else if (roll <= SKIN_RARITY_CHANCE.uncommon + SKIN_RARITY_CHANCE.rare + SKIN_RARITY_CHANCE.epic) {
-                items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('uncommon')), SKIN_NAMES, 'skins'));
-            } else {
-                items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('common')), SKIN_NAMES, 'skins'));
+      const closeChest = () => {
+           elements.chestContainer.style.display = 'none';
+      };
+      const openChestLogic = (chestType) => {
+          let items = [];
+           const roll = Math.random();
+          if (chestType === 'epic'){
+             if (roll <= SKIN_RARITY_CHANCE.epic) {
+                    items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('epic')), SKIN_NAMES, 'skins'));
+                } else if (roll <= SKIN_RARITY_CHANCE.rare + SKIN_RARITY_CHANCE.epic) {
+                   items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('rare')), SKIN_NAMES, 'skins'));
+                } else if (roll <= SKIN_RARITY_CHANCE.uncommon + SKIN_RARITY_CHANCE.rare + SKIN_RARITY_CHANCE.epic){
+                     items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('uncommon')), SKIN_NAMES, 'skins'));
+                  } else {
+                    items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('common')), SKIN_NAMES, 'skins'));
+                }
+              if(roll <= ARTIFACT_RARITY_CHANCE.epic){
+                    items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('epic')), ARTIFACT_NAMES, 'artifacts'));
+              } else if (roll <= ARTIFACT_RARITY_CHANCE.rare + ARTIFACT_RARITY_CHANCE.epic){
+                    items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('rare')), ARTIFACT_NAMES, 'artifacts'));
+              }else if (roll <= ARTIFACT_RARITY_CHANCE.uncommon + ARTIFACT_RARITY_CHANCE.rare + ARTIFACT_RARITY_CHANCE.epic){
+                  items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('uncommon')), ARTIFACT_NAMES, 'artifacts'));
+              }else {
+                 items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('common')), ARTIFACT_NAMES, 'artifacts'));
+              }
+         } else if (chestType === 'rare'){
+                 if (roll <= SKIN_RARITY_CHANCE.rare) {
+                    items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('rare')), SKIN_NAMES, 'skins'));
+                } else if (roll <= SKIN_RARITY_CHANCE.uncommon + SKIN_RARITY_CHANCE.rare ) {
+                     items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('uncommon')), SKIN_NAMES, 'skins'));
+                } else {
+                    items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('common')), SKIN_NAMES, 'skins'));
+                }
+               if (roll <= ARTIFACT_RARITY_CHANCE.rare) {
+                    items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('rare')), ARTIFACT_NAMES, 'artifacts'));
+                } else if (roll <= ARTIFACT_RARITY_CHANCE.uncommon + ARTIFACT_RARITY_CHANCE.rare ) {
+                     items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('uncommon')), ARTIFACT_NAMES, 'artifacts'));
+                }  else {
+                    items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('common')), ARTIFACT_NAMES, 'artifacts'));
+                }
+          }  else if (chestType === 'common'){
+                if (roll <= SKIN_RARITY_CHANCE.uncommon) {
+                     items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('uncommon')), SKIN_NAMES, 'skins'));
+                } else {
+                     items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('common')), SKIN_NAMES, 'skins'));
+                 }
+                if (roll <= ARTIFACT_RARITY_CHANCE.uncommon) {
+                     items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('uncommon')), ARTIFACT_NAMES, 'artifacts'));
+                } else {
+                      items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('common')), ARTIFACT_NAMES, 'artifacts'));
+                }
             }
-            if (roll <= ARTIFACT_RARITY_CHANCE.epic) {
-                items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('epic')), ARTIFACT_NAMES, 'artifacts'));
-            } else if (roll <= ARTIFACT_RARITY_CHANCE.rare + ARTIFACT_RARITY_CHANCE.epic) {
-                items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('rare')), ARTIFACT_NAMES, 'artifacts'));
-            } else if (roll <= ARTIFACT_RARITY_CHANCE.uncommon + ARTIFACT_RARITY_CHANCE.rare + ARTIFACT_RARITY_CHANCE.epic) {
-                items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('uncommon')), ARTIFACT_NAMES, 'artifacts'));
-            } else {
-                items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('common')), ARTIFACT_NAMES, 'artifacts'));
-            }
-        } else if (chestType === 'rare') {
-            if (roll <= SKIN_RARITY_CHANCE.rare) {
-                items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('rare')), SKIN_NAMES, 'skins'));
-            } else if (roll <= SKIN_RARITY_CHANCE.uncommon + SKIN_RARITY_CHANCE.rare) {
-                items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('uncommon')), SKIN_NAMES, 'skins'));
-            } else {
-                items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('common')), SKIN_NAMES, 'skins'));
-            }
-            if (roll <= ARTIFACT_RARITY_CHANCE.rare) {
-                items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('rare')), ARTIFACT_NAMES, 'artifacts'));
-            } else if (roll <= ARTIFACT_RARITY_CHANCE.uncommon + ARTIFACT_RARITY_CHANCE.rare) {
-                items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('uncommon')), ARTIFACT_NAMES, 'artifacts'));
-            } else {
-                items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('common')), ARTIFACT_NAMES, 'artifacts'));
-            }
-        } else if (chestType === 'common') {
-            if (roll <= SKIN_RARITY_CHANCE.uncommon) {
-                items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('uncommon')), SKIN_NAMES, 'skins'));
-            } else {
-                items.push(getRandomItem(Object.keys(SKIN_NAMES).filter(key => key.includes('common')), SKIN_NAMES, 'skins'));
-            }
-            if (roll <= ARTIFACT_RARITY_CHANCE.uncommon) {
-                items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('uncommon')), ARTIFACT_NAMES, 'artifacts'));
-            } else {
-                items.push(getRandomItem(Object.keys(ARTIFACT_NAMES).filter(key => key.includes('common')), ARTIFACT_NAMES, 'artifacts'));
-            }
-        }
-        return items;
-    }
-    function getRandomItem(itemsArray, names, type) {
-        const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
-        if (type === 'skins') {
-            gameState.skins.push(item);
-        } else if (type === 'artifacts') {
-            gameState.artifacts.push(item);
-        }
-        return names[item];
+         return items;
+      }
+      function getRandomItem(itemsArray, names, type) {
+          const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
+          if (type === 'skins'){
+              gameState.skins.push(item);
+          } else if (type === 'artifacts'){
+               gameState.artifacts.push(item);
+          }
+          return names[item];
     }
     const updateInventoryDisplay = () => {
-        elements.skinsDisplay.innerHTML = '';
-        gameState.skins.forEach(skin => {
-            const skinElement = document.createElement('div');
-            skinElement.textContent = SKIN_NAMES[skin] || skin;
-            elements.skinsDisplay.appendChild(skinElement);
-        });
-        elements.artifactsDisplay.innerHTML = '';
-        gameState.artifacts.forEach(artifact => {
-            const artifactElement = document.createElement('div');
-            artifactElement.textContent = ARTIFACT_NAMES[artifact] || artifact;
-            elements.artifactsDisplay.appendChild(artifactElement);
-        });
+            elements.skinsDisplay.innerHTML = '';
+            gameState.skins.forEach(skin => {
+                 const skinElement = document.createElement('div');
+                skinElement.textContent = SKIN_NAMES[skin] || skin;
+               elements.skinsDisplay.appendChild(skinElement);
+            });
+             elements.artifactsDisplay.innerHTML = '';
+            gameState.artifacts.forEach(artifact => {
+                 const artifactElement = document.createElement('div');
+                artifactElement.textContent = ARTIFACT_NAMES[artifact] || artifact;
+               elements.artifactsDisplay.appendChild(artifactElement);
+            });
     };
     elements.clickButton.addEventListener('click', applyClick);
     elements.upgradeClickLevelButton.addEventListener('click', () => {
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameState.clickCount -= gameState.clickUpgradeCost;
             gameState.clickValue++;
             gameState.clickUpgradeCost = Math.round(gameState.clickUpgradeCost * 1.8);
-            updateDisplay();
+             updateDisplay();
             displayMessage('Улучшение клика приобретено!');
         } else {
             displayMessage('Недостаточно кликов!', 'red');
@@ -636,27 +636,28 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage('Недостаточно кликов!', 'red');
         }
     });
-    elements.prestigeButton.addEventListener('click', () => {
-        if (gameState.clickCount >= gameState.prestigeCost) {
-            gameState.prestigeLevel++;
-            gameState.prestigeMultiplier = calculatePrestigeBonus();
-            gameState.clickCount = 0;
-            gameState.clickValue = 1;
-            gameState.autoClickerValue = 0;
-            gameState.clickUpgradeCost = 10;
-            gameState.autoUpgradeCost = 50;
-            gameState.clickUpgradeLevel = 1;
-            gameState.clickUpgradeLevelCost = 100;
-            gameState.prestigeCost = Math.round(PRESTIGE_BASE_COST * Math.pow(2, gameState.prestigeLevel));
-            clearAllTimeouts();
-            updateDisplay();
-            displayMessage('Перерождение!');
+     elements.prestigeButton.addEventListener('click', () => {
+          if (gameState.clickCount >= gameState.prestigeCost) {
+              gameState.prestigeLevel++;
+                  const prestigeBonus = calculatePrestigeBonus();
+              gameState.prestigeMultiplier = prestigeBonus;
+              gameState.clickCount = 0;
+              gameState.clickValue = 1;
+              gameState.autoClickerValue = 0;
+              gameState.clickUpgradeCost = 10;
+              gameState.autoUpgradeCost = 50;
+               gameState.clickUpgradeLevel = 1;
+              gameState.clickUpgradeLevelCost = 100;
+               gameState.prestigeCost = Math.round(PRESTIGE_BASE_COST * Math.pow(2, gameState.prestigeLevel));
+               clearAllTimeouts();
+              updateDisplay();
+              displayMessage('Перерождение!');
         } else {
             displayMessage(`Недостаточно кликов! (нужно ${gameState.prestigeCost})`, 'red');
         }
     });
-    elements.buyKeyButton.addEventListener('click', buyKey);
-    elements.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
+     elements.buyKeyButton.addEventListener('click', buyKey);
+     elements.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
     elements.buyRareChestButton.addEventListener('click', () => buyChest('rare'));
     elements.buyEpicChestButton.addEventListener('click', () => buyChest('epic'));
     elements.openChestButton.addEventListener('click', openChest);
@@ -666,10 +667,10 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.menu.classList.toggle('active');
         elements.menuButton.classList.toggle('active');
     });
-    elements.menuItems.forEach(item => {
+   elements.menuItems.forEach(item => {
         item.addEventListener('click', () => {
             switchTab(item.dataset.tab);
-            elements.menu.classList.remove('active');
+             elements.menu.classList.remove('active');
             elements.menuButton.classList.remove('active');
         });
     });
@@ -680,42 +681,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const AUTO_SAVE_INTERVAL = 30000;
     const autoSave = () => {
-        saveData();
+     saveData();
     };
     let autoSaveInterval = setInterval(autoSave, AUTO_SAVE_INTERVAL);
     const clearAutoSave = () => {
         if(autoSaveInterval){
-            clearInterval(autoSaveInterval);
-            autoSaveInterval = null;
+              clearInterval(autoSaveInterval);
+               autoSaveInterval = null;
         }
     }
-    window.addEventListener('beforeunload', () => {
-        clearAutoSave()
+     window.addEventListener('beforeunload', () => {
+         clearAutoSave()
         saveData();
     });
     loadGame();
-    if (autoSaveInterval == null){
-        autoSaveInterval = setInterval(autoSave, AUTO_SAVE_INTERVAL);
-    }
+     if (autoSaveInterval == null){
+          autoSaveInterval = setInterval(autoSave, AUTO_SAVE_INTERVAL);
+        }
     startRandomEvent();
     checkAchievements();
     switchTab('clicker');
     updateExpeditionButtonInfo();
     if (gameState.activeExpedition) {
         startExpeditionTimer();
-                          }
-    const globalMessageContainer = document.createElement('    div');
+                    }
+    const globalMessageContainer = document.createElement('div');
     globalMessageContainer.id = 'global-message';
     globalMessageContainer.style.position = 'fixed';
-    globalMessageContainer.style.top = '20px';
+    globalMessageContainer.style.top = '10px';
     globalMessageContainer.style.left = '50%';
     globalMessageContainer.style.transform = 'translateX(-50%)';
-    globalMessageContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    globalMessageContainer.style.color = 'white';
+    globalMessageContainer.style.zIndex = '1000';
+    globalMessageContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
     globalMessageContainer.style.padding = '10px';
     globalMessageContainer.style.borderRadius = '5px';
-    globalMessageContainer.style.zIndex = '1000';
-    globalMessageContainer.style.textAlign = 'center';
+    globalMessageContainer.style.color = 'white';
     document.body.appendChild(globalMessageContainer);
     elements.globalMessageDisplay = globalMessageContainer;
 });
