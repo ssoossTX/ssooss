@@ -316,7 +316,7 @@ main.game-container {
 
 .profile-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     margin-bottom: 15px;
 }
@@ -324,12 +324,8 @@ main.game-container {
 .profile-header h2 {
     margin: 0;
     text-align: center;
-     flex: 1; /* Заголовок занимает все доступное пространство */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-.diamond-display {
-      text-align: right;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+     flex: 1;
 }
 
 .profile-content {
@@ -351,9 +347,9 @@ main.game-container {
 
 .skins-display,
 .artifacts-display {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .skins-display div,
@@ -361,7 +357,7 @@ main.game-container {
     background-color: rgba(0, 0, 0, 0.2);
     padding: 8px;
     border-radius: 5px;
-     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .chest-container {
@@ -399,5 +395,5 @@ main.game-container {
     color: white;
     text-align: center;
     display: none;
-      }
+  }
   
