@@ -113,71 +113,71 @@ document.addEventListener('DOMContentLoaded', () => {
         prestigeCost: PRESTIGE_BASE_COST,
     };
     const elements = {
-        clickCountDisplay: document.getElementById('click-count'),
-        clickButton: document.getElementById('click-button'),
-        upgradeClickButton: document.querySelector('#upgrade-click .buy-upgrade'),
-        upgradeAutoButton: document.querySelector('#upgrade-auto .buy-upgrade'),
-        upgradeClickLevelButton: document.querySelector('#upgrade-click-level .buy-upgrade'),
-        clickUpgradeCostDisplay: document.getElementById('click-upgrade-cost'),
-        autoUpgradeCostDisplay: document.getElementById('auto-upgrade-cost'),
-        clickUpgradeLevelDisplay: document.getElementById('click-upgrade-level-display'),
-        clickUpgradeLevelCostDisplay: document.getElementById('click-upgrade-level-cost'),
-        messageDisplay: document.getElementById('message'),
-        globalMessageDisplay: document.getElementById('global-message'),
-        prestigeButton: document.getElementById('prestige-button'),
-        prestigeLevelDisplay: document.getElementById('prestige-level'),
-        achievementsDisplay: document.getElementById('achievements'),
-        resetButton: document.getElementById('reset-button'),
-        menuButton: document.querySelector('.menu-toggle'),
-        menu: document.getElementById('menu-items'),
-         clickerContent: document.getElementById('clicker-content'),
-        gameContent: document.getElementById('game-content'),
-        menuItems: document.querySelectorAll('.menu-items li button'),
-        mapContainer: document.getElementById('map-container'),
-        expeditionProgressDisplay: document.getElementById('expedition-progress'),
-        diamondDisplay: document.getElementById('diamonds-menu'),
-        prestigeCostDisplay: document.getElementById('prestige-cost'),
-           keyDisplay: document.getElementById('key-display'),
-        chestDisplay: {
-            common: document.getElementById('common-chest-count'),
-            rare: document.getElementById('rare-chest-count'),
-            epic: document.getElementById('epic-chest-count'),
-        },
-        buyKeyButton: document.getElementById('buy-key-button'),
-        buyCommonChestButton: document.getElementById('buy-common-chest-button'),
-        buyRareChestButton: document.getElementById('buy-rare-chest-button'),
-        buyEpicChestButton: document.getElementById('buy-epic-chest-button'),
-        inventoryButton: document.getElementById('inventory-button'),
-        inventoryContainer: document.getElementById('inventory-container'),
-         openChestButton: document.getElementById('open-chest-button'),
-         chestItemsDisplay: document.getElementById('chest-items'),
-         closeChestButton: document.getElementById('close-chest-button'),
-         chestContainer: document.getElementById('chest-container'),
-        skinsDisplay: document.getElementById('skins-display'),
-        artifactsDisplay: document.getElementById('artifacts-display'),
-    };
+    clickCountDisplay: document.getElementById('click-count'),
+    clickButton: document.getElementById('click-button'),
+    upgradeClickButton: document.querySelector('#upgrade-click .buy-upgrade'),
+    upgradeAutoButton: document.querySelector('#upgrade-auto .buy-upgrade'),
+    upgradeClickLevelButton: document.querySelector('#upgrade-click-level .buy-upgrade'),
+    clickUpgradeCostDisplay: document.getElementById('click-upgrade-cost'),
+    autoUpgradeCostDisplay: document.getElementById('auto-upgrade-cost'),
+    clickUpgradeLevelDisplay: document.getElementById('click-upgrade-level-display'),
+    clickUpgradeLevelCostDisplay: document.getElementById('click-upgrade-level-cost'),
+    messageDisplay: document.getElementById('message'),
+    globalMessageDisplay: document.getElementById('global-message'),
+    prestigeButton: document.getElementById('prestige-button'),
+    prestigeLevelDisplay: document.getElementById('prestige-level'),
+    achievementsDisplay: document.getElementById('achievements'),
+    resetButton: document.getElementById('reset-button'),
+    menuButton: document.querySelector('.menu-toggle'),
+    menu: document.getElementById('menu-items'),
+     clickerContent: document.getElementById('clicker-content'),
+    gameContent: document.getElementById('game-content'),
+    menuItems: document.querySelectorAll('.menu-items li button'),
+    mapContainer: document.getElementById('map-container'),
+    expeditionProgressDisplay: document.getElementById('expedition-progress'),
+      diamondDisplayProfile: document.getElementById('diamonds-menu-profile'),
+    prestigeCostDisplay: document.getElementById('prestige-cost'),
+       keyDisplay: document.getElementById('key-display'),
+    chestDisplay: {
+        common: document.getElementById('common-chest-count'),
+        rare: document.getElementById('rare-chest-count'),
+        epic: document.getElementById('epic-chest-count'),
+    },
+    buyKeyButton: document.getElementById('buy-key-button'),
+    buyCommonChestButton: document.getElementById('buy-common-chest-button'),
+    buyRareChestButton: document.getElementById('buy-rare-chest-button'),
+    buyEpicChestButton: document.getElementById('buy-epic-chest-button'),
+    inventoryButton: document.getElementById('inventory-button'),
+    inventoryContainer: document.getElementById('inventory-container'),
+     openChestButton: document.getElementById('open-chest-button'),
+     chestItemsDisplay: document.getElementById('chest-items'),
+     closeChestButton: document.getElementById('close-chest-button'),
+     chestContainer: document.getElementById('chest-container'),
+    skinsDisplay: document.getElementById('skins-display'),
+    artifactsDisplay: document.getElementById('artifacts-display'),
+};
     const tWebApp = window.Telegram && window.Telegram.WebApp;
     if (tWebApp) {
         tWebApp.ready();
     }
     const updateDisplay = () => {
-        elements.clickCountDisplay.textContent = Math.round(gameState.clickCount);
-        elements.clickUpgradeCostDisplay.textContent = gameState.clickUpgradeCost;
-        elements.autoUpgradeCostDisplay.textContent = gameState.autoUpgradeCost;
-        elements.clickUpgradeLevelDisplay.textContent = gameState.clickUpgradeLevel;
-        elements.clickUpgradeLevelCostDisplay.textContent = gameState.clickUpgradeLevelCost;
-        elements.prestigeLevelDisplay.textContent = gameState.prestigeLevel;
-        elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
-        elements.diamondDisplay.textContent = `Алмазы: ${gameState.diamonds}`;
-        elements.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
-         elements.keyDisplay.textContent = `Ключи: ${gameState.keys}`;
-        elements.chestDisplay.common.textContent = `Обычные: ${gameState.chests.common}`;
-        elements.chestDisplay.rare.textContent = `Редкие: ${gameState.chests.rare}`;
-        elements.chestDisplay.epic.textContent = `Эпические: ${gameState.chests.epic}`;
-        updateExpeditionProgress();
-        updateExpeditionButtonInfo();
-           updateInventoryDisplay();
-    };
+      elements.clickCountDisplay.textContent = Math.round(gameState.clickCount);
+      elements.clickUpgradeCostDisplay.textContent = gameState.clickUpgradeCost;
+      elements.autoUpgradeCostDisplay.textContent = gameState.autoUpgradeCost;
+      elements.clickUpgradeLevelDisplay.textContent = gameState.clickUpgradeLevel;
+      elements.clickUpgradeLevelCostDisplay.textContent = gameState.clickUpgradeLevelCost;
+      elements.prestigeLevelDisplay.textContent = gameState.prestigeLevel;
+      elements.achievementsDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
+       elements.diamondDisplayProfile.textContent = `Алмазы: ${gameState.diamonds}`;
+      elements.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
+       elements.keyDisplay.textContent = `Ключи: ${gameState.keys}`;
+      elements.chestDisplay.common.textContent = `Обычные: ${gameState.chests.common}`;
+      elements.chestDisplay.rare.textContent = `Редкие: ${gameState.chests.rare}`;
+      elements.chestDisplay.epic.textContent = `Эпические: ${gameState.chests.epic}`;
+      updateExpeditionProgress();
+      updateExpeditionButtonInfo();
+        updateInventoryDisplay();
+  };
     const updateExpeditionProgress = () => {
         if (!gameState.activeExpedition) {
             elements.expeditionProgressDisplay.textContent = '';
