@@ -607,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage('Недостаточно кликов!', 'red');
         }
     });
-         elements.prestigeButton.addEventListener('click', () => {
+    elements.prestigeButton.addEventListener('click', () => {
           if (gameState.clickCount >= gameState.prestigeCost) {
               gameState.prestigeLevel++;
                   let prestigeBonus = 1;
