@@ -36,7 +36,6 @@ const elements = {
       skinsDisplay: document.getElementById('skins-display'),
        artifactsDisplay: document.getElementById('artifacts-display'),
     message: document.getElementById('message'),
-    prestigeCostDisplay: document.getElementById('prestige-cost')
 };
 
 const PRESTIGE_BASE_COST = 10000;
@@ -108,7 +107,6 @@ const updateDisplay = () => {
    elements.clickUpgradeLevelDisplay.textContent = gameState.clickUpgradeLevel;
    elements.clickUpgradeLevelCost.textContent = gameState.clickUpgradeLevelCost;
      elements.diamondsMenuProfile.textContent = `Алмазы: ${gameState.diamonds}`;
-    elements.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
 
     // Обновление профиля
     updateSkinsDisplay();
@@ -160,27 +158,27 @@ const loadGame = () => {
 
 // Функция применения клика
 const applyClick = () => {
-    let clickBonus = 1;
-    gameState.skins.forEach(skin => {
-        if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].clickValueBonus) {
-            clickBonus *= SKIN_EFFECTS[skin].clickValueBonus;
-        }
-    });
-    gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * clickBonus) * gameState.prestigeMultiplier;
-    updateDisplay();
-    checkAchievements();
-};
+          let clickBonus = 1;
+           gameState.skins.forEach(skin => {
+            if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].clickValueBonus) {
+                clickBonus *= SKIN_EFFECTS[skin].clickValueBonus;
+            }
+         });
+           gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * clickBonus) * gameState.prestigeMultiplier;
+        updateDisplay();
+        checkAchievements();
+    };
 
 // Функция автоматического клика
 const autoClick = () => {
     let autoClickBonus = 1;
-    gameState.skins.forEach(skin => {
-        if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].autoClickerBonus) {
-            autoClickBonus *= SKIN_EFFECTS[skin].autoClickerBonus;
-        }
-    });
-     gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * autoClickBonus) * gameState.prestigeMultiplier;
-    updateDisplay();
+        gameState.skins.forEach(skin => {
+            if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].autoClickerBonus) {
+                autoClickBonus *= SKIN_EFFECTS[skin].autoClickerBonus;
+            }
+        });
+           gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * autoClickBonus) * gameState.prestigeMultiplier;
+        updateDisplay();
 };
 const checkAchievements = () => {
         let newAchievements = 0;
@@ -494,4 +492,4 @@ const startExpedition = (type) => {
 // Загрузка и сохранение игры
 loadGame();
 window.addEventListener('beforeunload', saveGame);
-                                               
+    
