@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'hard': 600000,
     };
     const EXPEDITION_TYPES = {
-        'easy': 'легкая',
-        'medium': 'средняя',
-        'hard': 'тяжелая',
+        'easy': 'Легкая',
+        'medium': 'Средняя',
+        'hard': 'Тяжелая',
     };
     const CHEST_RARITY_CHANCE = {
         'common': 0.7,
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let gameState = {
         clickCount: 0,
-        clickValue: 1,
+        clickValue: 10000,
         autoClickerValue: 0,
         clickUpgradeCost: 10,
         autoUpgradeCost: 50,
