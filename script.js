@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'hard': 600000,
     };
     const EXPEDITION_TYPES = {
-        'easy': 'легкая',
-        'medium': 'средняя',
-        'hard': 'тяжелая',
+        'easy': 'Легкая',
+        'medium': 'Средняя',
+        'hard': 'Тяжелая',
     };
     const CHEST_RARITY_CHANCE = {
         'common': 0.7,
