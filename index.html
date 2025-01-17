@@ -13,6 +13,7 @@
             <ul class="menu-items" id="menu-items">
                 <li><button class="active" data-tab="shop">Магазин</button></li>
                 <li><button data-tab="map">Карта</button></li>
+                 <li><button data-tab="inventory">Инвентарь</button></li>
             </ul>
         </div>
          <main class="game-container">
@@ -44,7 +45,7 @@
             </section>
              <button id="prestige-button" class="game-button">
     Перерождение <br>
-    <span id="prestige-cost">Стоимость: 10000</span>
+        <span id="prestige-cost">Стоимость: 10000</span>
              </button>
             <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
             <div id="achievements">Достижения: 0</div>
@@ -57,8 +58,45 @@
                 <button class="expedition-button" data-type="hard">Сложная (10 мин)</button>
                  <div id="expedition-progress" class="expedition-progress"></div>
             </div>
+             <section class="chests">
+            <h2>Ящики</h2>
+            <div class="chest-item" >
+                <p>Ключи: <span id="key-display">0</span></p>
+                <button id="buy-key-button" class="game-button">Купить ключ (10💎)</button>
+            </div>
+            <div class="chest-item" >
+                <p>Обычные сундуки: <span id="common-chest-count">0</span></p>
+                <button id="buy-common-chest-button" class="game-button">Купить обычный сундук (5💎)</button>
+            </div>
+            <div class="chest-item">
+                <p>Редкие сундуки: <span id="rare-chest-count">0</span></p>
+                <button id="buy-rare-chest-button" class="game-button">Купить редкий сундук (5💎)</button>
+            </div>
+              <div class="chest-item">
+                <p>Эпические сундуки: <span id="epic-chest-count">0</span></p>
+                <button id="buy-epic-chest-button" class="game-button">Купить эпический сундук (5💎)</button>
+            </div>
+              <button id="open-chest-button" class="game-button">Открыть сундук</button>
+        </section>
            </main>
+    </div>
+      <div class="inventory-container" id="inventory-container">
+            <h2>Инвентарь</h2>
+            <button id="inventory-button" class="game-button">Инвентарь</button>
+             <div class="inventory-items">
+                  <h3>Скины</h3>
+                <div class="skins-display" id="skins-display"></div>
+                  <h3>Артефакты</h3>
+                <div class="artifacts-display" id="artifacts-display"></div>
+            </div>
+      </div>
+      <div class="chest-container" id="chest-container">
+            <div class="chest-content">
+                <h2>Выпавшие предметы:</h2>
+                <div id="chest-items" class="chest-items"></div>
+                 <button id="close-chest-button" class="game-button">Закрыть</button>
+            </div>
     </div>
     <script src="script.js"></script>
 </body>
-    </html>
+                    </html>
