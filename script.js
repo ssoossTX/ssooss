@@ -5,9 +5,9 @@
     const AUTO_CLICK_INTERVAL = 1000;
     const PRESTIGE_BASE_COST = 10000;
       const EXPEDITION_TYPES = {
-        'easy': 'легкая',
-        'medium': 'средняя',
-        'hard': 'тяжелая',
+        'easy': 'Легкая',
+        'medium': 'Средняя',
+        'hard': 'Тяжелая',
     };
     const CHEST_RARITY_CHANCE = {
         'common': 0.7,
@@ -105,7 +105,7 @@
         },
            prestigeCost: PRESTIGE_BASE_COST,
          expeditionDurations : {
-        'easy': 60000,
+        'easy': 6000,
         'medium': 300000,
         'hard': 600000,
     },
