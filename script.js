@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'hard': 600000,
     };
     const EXPEDITION_TYPES = {
-        'easy': 'Легкая',
-        'medium': 'Средняя',
-        'hard': 'Тяжелая',
+        'easy': 'легкая',
+        'medium': 'средняя',
+        'hard': 'тяжелая',
     };
     const CHEST_RARITY_CHANCE = {
         'common': 0.7,
@@ -155,51 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
          chestContainer: document.getElementById('chest-container'),
         skinsDisplay: document.getElementById('skins-display'),
         artifactsDisplay: document.getElementById('artifacts-display'),
-         clickBonusDisplay: document.getElementById('click-bonus-display'),
-        autoClickerBonusDisplay: document.getElementById('auto-clicker-bonus-display'),
-         prestigeBonusDisplay: document.getElementById('prestige-bonus-display'),
     };
     const tWebApp = window.Telegram && window.Telegram.WebApp;
     if (tWebApp) {
         tWebApp.ready();
     }
-    const calculateClickBonus = () => {
-        let clickBonus = 1;
-        gameState.skins.forEach(skin => {
-            if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].clickValueBonus) {
-                clickBonus *= SKIN_EFFECTS[skin].clickValueBonus;
-            }
-        });
-        return clickBonus;
-    };
-
-    const calculateAutoClickerBonus = () => {
-        let autoClickBonus = 1;
-        gameState.skins.forEach(skin => {
-            if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].autoClickerBonus) {
-                autoClickBonus *= SKIN_EFFECTS[skin].autoClickerBonus;
-            }
-        });
-        return autoClickBonus;
-    };
-      const calculateDiamondBonus = () => {
-        let diamondBonus = 1;
-        gameState.artifacts.forEach(artifact => {
-            if (ARTIFACT_EFFECTS[artifact] && ARTIFACT_EFFECTS[artifact].diamondBonus) {
-                diamondBonus *= ARTIFACT_EFFECTS[artifact].diamondBonus;
-            }
-        });
-        return diamondBonus;
-    };
-    const calculatePrestigeBonus = () => {
-        let prestigeBonus = 1;
-        gameState.artifacts.forEach(artifact => {
-           if (ARTIFACT_EFFECTS[artifact] && ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus) {
-                prestigeBonus *= ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus;
-            }
-        });
-        return prestigeBonus;
-    };
     const updateDisplay = () => {
         elements.clickCountDisplay.textContent = Math.round(gameState.clickCount);
         elements.clickUpgradeCostDisplay.textContent = gameState.clickUpgradeCost;
@@ -217,10 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateExpeditionProgress();
         updateExpeditionButtonInfo();
            updateInventoryDisplay();
-         elements.clickBonusDisplay.textContent = `Множитель клика: x${calculateClickBonus().toFixed(2)}`;
-        elements.autoClickerBonusDisplay.textContent = `Множитель автокликера: x${calculateAutoClickerBonus().toFixed(2)}`;
-          elements.prestigeBonusDisplay.textContent = `Множитель престижа: x${calculatePrestigeBonus().toFixed(2)}`;
-
     };
     const updateExpeditionProgress = () => {
         if (!gameState.activeExpedition) {
@@ -246,13 +202,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }, MESSAGE_DURATION);
     };
     const applyClick = () => {
-        const clickBonus = calculateClickBonus();
+        let clickBonus = 1;
+       gameState.skins.forEach(skin => {
+            if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].clickValueBonus) {
+                clickBonus *= SKIN_EFFECTS[skin].clickValueBonus;
+            }
+        });
          gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * clickBonus) * gameState.prestigeMultiplier;
         updateDisplay();
         checkAchievements();
     };
     const autoClick = () => {
-          const autoClickBonus = calculateAutoClickerBonus();
+          let autoClickBonus = 1;
+       gameState.skins.forEach(skin => {
+            if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].autoClickerBonus) {
+                autoClickBonus *= SKIN_EFFECTS[skin].autoClickerBonus;
+            }
+        });
          gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * autoClickBonus) * gameState.prestigeMultiplier;
         updateDisplay();
     };
@@ -463,7 +429,12 @@ document.addEventListener('DOMContentLoaded', () => {
           clearInterval(gameState.expeditionInterval);
         gameState.expeditionInterval = null;
          const reward = gameState.expeditionReward;
-           const diamondBonus = calculateDiamondBonus();
+           let diamondBonus = 1;
+        gameState.artifacts.forEach(artifact => {
+           if (ARTIFACT_EFFECTS[artifact] && ARTIFACT_EFFECTS[artifact].diamondBonus) {
+                diamondBonus *= ARTIFACT_EFFECTS[artifact].diamondBonus;
+            }
+         });
         gameState.diamonds += Math.round(reward * diamondBonus);
         const expeditionType = gameState.activeExpedition;
         gameState.activeExpedition = null;
@@ -639,8 +610,13 @@ document.addEventListener('DOMContentLoaded', () => {
      elements.prestigeButton.addEventListener('click', () => {
           if (gameState.clickCount >= gameState.prestigeCost) {
               gameState.prestigeLevel++;
-                  const prestigeBonus = calculatePrestigeBonus();
-              gameState.prestigeMultiplier = prestigeBonus;
+                  let prestigeBonus = 1;
+                gameState.artifacts.forEach(artifact => {
+                  if (ARTIFACT_EFFECTS[artifact] && ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus) {
+                       prestigeBonus *= ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus;
+                  }
+                });
+              gameState.prestigeMultiplier = Math.round(gameState.prestigeMultiplier * prestigeBonus) ;
               gameState.clickCount = 0;
               gameState.clickValue = 1;
               gameState.autoClickerValue = 0;
@@ -648,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
               gameState.autoUpgradeCost = 50;
                gameState.clickUpgradeLevel = 1;
               gameState.clickUpgradeLevelCost = 100;
-               gameState.prestigeCost = Math.round(PRESTIGE_BASE_COST * Math.pow(2, gameState.prestigeLevel));
+               gameState.prestigeCost = Math.round(PRESTIGE_BASE_COST * Math.pow(10, gameState.prestigeLevel));
                clearAllTimeouts();
               updateDisplay();
               displayMessage('Перерождение!');
@@ -704,7 +680,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateExpeditionButtonInfo();
     if (gameState.activeExpedition) {
         startExpeditionTimer();
-                    }
+    }
     const globalMessageContainer = document.createElement('div');
     globalMessageContainer.id = 'global-message';
     globalMessageContainer.style.position = 'fixed';
