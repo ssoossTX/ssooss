@@ -257,6 +257,21 @@ body {
      box-shadow: none;
     transform: none;
 }
+.inventory-container {
+  display: none; /* Скрываем по умолчанию */
+  position: absolute; /* Позиционируем абсолютно */
+  top: 0; /* Занимает весь экран по высоте и ширине*/
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background-color: #1a2530;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+   z-index: 999;
+}
+
+.inventory-container.active {
+  display: block;
 /* Адаптивность на мобильных устройствах */
 @media (max-width: 600px) {
     .container {
