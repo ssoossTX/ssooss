@@ -200,10 +200,6 @@ body {
     transform: translateY(0);
 }
 
-.diamonds-menu {
-    margin-left: 10px;
-    font-size: 1.2em;
-}
 
 /* Game content */
 #clicker-content,
@@ -352,4 +348,4 @@ body {
     border-radius: 5px;
     color: white;
     text-align: center;
-                                  }
+    }
