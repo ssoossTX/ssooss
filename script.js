@@ -5,9 +5,9 @@
     const AUTO_CLICK_INTERVAL = 1000;
     const PRESTIGE_BASE_COST = 10000;
       const EXPEDITION_TYPES = {
-        'easy': 'легкая',
-        'medium': 'средняя',
-        'hard': 'тяжелая',
+        'easy': 'Легкая',
+        'medium': 'Средняя',
+        'hard': 'Тяжелая',
     };
     const CHEST_RARITY_CHANCE = {
         'common': 0.7,
@@ -158,7 +158,7 @@
     if (tWebApp) {
         tWebApp.ready();
     }
-   const updateDisplay = () => {
+    const updateDisplay = () => {
         elements.clickCountDisplay.textContent = Math.round(gameState.clickCount);
         elements.clickUpgradeCostDisplay.textContent = gameState.clickUpgradeCost;
         elements.autoUpgradeCostDisplay.textContent = gameState.autoUpgradeCost;
@@ -588,7 +588,7 @@
                        prestigeBonus *= ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus;
                   }
                 });
-                gameState.prestigeMultiplier = Math.round(gameState.prestigeMultiplier * prestigeBonus * 2) ;
+                gameState.prestigeMultiplier = Math.round(gameState.prestigeMultiplier * prestigeBonus) ;
                gameState.clickCount = 0;
               gameState.clickValue = 1;
               gameState.autoClickerValue = 0;
