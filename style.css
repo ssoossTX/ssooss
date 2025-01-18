@@ -35,6 +35,7 @@ body {
     display: flex;
     align-items: center;
     width: calc(100% - 20px);
+    z-index: 1001; /* Увеличенный z-index для меню */
 }
 main.game-container {
     padding-top: 20px;
@@ -202,6 +203,7 @@ main.game-container {
     position: absolute;
     top: 40px;
     left: 0;
+    z-index: 1002; /* Увеличенный z-index для выпадающего меню */
 }
 
 #menu-items li button {
@@ -230,6 +232,10 @@ main.game-container {
 .diamonds-menu {
     margin-left: 10px;
     font-size: 1.2em;
+      position: absolute;
+    top: 10px;
+   left: 80px;
+     z-index: 1001;
 }
 
 /* Game content */
@@ -396,3 +402,4 @@ main.game-container {
     text-align: center;
     display: none;
   }
+                                      
