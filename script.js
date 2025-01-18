@@ -627,7 +627,7 @@
              startExpedition(button.dataset.type);
         });
     });
-        const AUTO_SAVE_INTERVAL = 30000;
+        const AUTO_SAVE_INTERVAL = 10000;
     const autoSave = () => {
        saveData();
     };
