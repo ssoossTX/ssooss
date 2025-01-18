@@ -370,39 +370,42 @@ main.game-container {
 }
 
 .profile-section {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 15px;
+    /* background-color: rgba(255, 255, 255, 0.1); */
+      padding: 0 15px;
+    margin: 5px 0;
     border-radius: 5px;
-        transition:  background-color 0.2s ease;
+    /* transition:  background-color 0.2s ease; */
 }
-.profile-section:hover {
+/*.profile-section:hover {
     background-color: rgba(255, 255, 255, 0.2);
-}
+}*/
 
 .profile-section h3 {
     margin-top: 0;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
 }
 
 .skins-display,
 .artifacts-display {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
 }
 
 .skins-display div,
 .artifacts-display div {
-    background-color: rgba(0, 0, 0, 0.2);
+    /* background-color: rgba(0, 0, 0, 0.2); */
     padding: 8px;
     border-radius: 5px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-         transition:  background-color 0.2s ease;
+    /* transition:  background-color 0.2s ease; */
+       margin-bottom: 5px;
 }
-.skins-display div:hover,
+/*.skins-display div:hover,
 .artifacts-display div:hover {
       background-color: rgba(0, 0, 0, 0.3);
-}
+}*/
 
 .chest-container {
     display: none;
@@ -442,3 +445,4 @@ main.game-container {
     display: none;
         animation: fadeIn 0.3s ease;
   }
+  
