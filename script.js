@@ -1,10 +1,10 @@
 
- document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const SAVE_KEY = 'clickerData';
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
     const PRESTIGE_BASE_COST = 10000;
-      const EXPEDITION_TYPES = {
+    const EXPEDITION_TYPES = {
         'easy': 'Легкая',
         'medium': 'Средняя',
         'hard': 'Тяжелая',
@@ -115,8 +115,8 @@
             'rare': 0,
             'epic': 0
         },
-        skins: [],
-        artifacts: [],
+        skins: {}, // Изменили на объект
+        artifacts: {}, // Изменили на объект
         expeditionCosts: {
             'easy': 0,
             'medium': 10,
@@ -226,22 +226,22 @@
     };
      const applyClick = () => {
           let clickBonus = 1;
-           gameState.skins.forEach(skin => {
-            if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].clickValueBonus) {
-                clickBonus *= SKIN_EFFECTS[skin].clickValueBonus;
+           for (const skin in gameState.skins) {
+                if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].clickValueBonus) {
+                clickBonus *= SKIN_EFFECTS[skin].clickValueBonus * gameState.skins[skin];
             }
-         });
+            }
            gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * clickBonus) * gameState.prestigeMultiplier;
         updateDisplay();
         checkAchievements();
     };
     const autoClick = () => {
         let autoClickBonus = 1;
-        gameState.skins.forEach(skin => {
+        for (const skin in gameState.skins) {
             if (SKIN_EFFECTS[skin] && SKIN_EFFECTS[skin].autoClickerBonus) {
-                autoClickBonus *= SKIN_EFFECTS[skin].autoClickerBonus;
+                autoClickBonus *= SKIN_EFFECTS[skin].autoClickerBonus * gameState.skins[skin];
             }
-        });
+        }
            gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * autoClickBonus) * gameState.prestigeMultiplier;
         updateDisplay();
     };
@@ -295,8 +295,8 @@
                 'rare': 0,
                 'epic': 0
             },
-             skins: [],
-            artifacts: [],
+            skins: {},
+            artifacts: {},
             expeditionCosts: {
                  'easy': 0,
                 'medium': 10,
@@ -451,11 +451,11 @@
         gameState.expeditionInterval = null;
          const reward = gameState.expeditionReward;
          let diamondBonus = 1;
-         gameState.artifacts.forEach(artifact => {
+           for (const artifact in gameState.artifacts) {
             if (ARTIFACT_EFFECTS[artifact] && ARTIFACT_EFFECTS[artifact].diamondBonus) {
-               diamondBonus *= ARTIFACT_EFFECTS[artifact].diamondBonus;
+               diamondBonus *= ARTIFACT_EFFECTS[artifact].diamondBonus * gameState.artifacts[artifact];
            }
-         });
+         }
         gameState.diamonds += Math.round(reward * diamondBonus);
         const expeditionType = gameState.activeExpedition;
        gameState.activeExpedition = null;
@@ -556,25 +556,25 @@
     function getRandomItem(itemsArray, names, type) {
          const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
          if (type === 'skins') {
-              gameState.skins.push(item);
+             gameState.skins[item] = (gameState.skins[item] || 0) + 1;
         } else if (type === 'artifacts') {
-             gameState.artifacts.push(item);
+             gameState.artifacts[item] = (gameState.artifacts[item] || 0) + 1;
         }
          return names[item];
    }
     const updateInventoryDisplay = () => {
            elements.skinsDisplay.innerHTML = '';
-            gameState.skins.forEach(skin => {
-              const skinElement = document.createElement('div');
-              skinElement.textContent = SKIN_NAMES[skin] || skin;
+        for (const skin in gameState.skins) {
+               const skinElement = document.createElement('div');
+               skinElement.textContent = `${SKIN_NAMES[skin] || skin} x${gameState.skins[skin]}`;
               elements.skinsDisplay.appendChild(skinElement);
-           });
+         }
             elements.artifactsDisplay.innerHTML = '';
-           gameState.artifacts.forEach(artifact => {
-              const artifactElement = document.createElement('div');
-                artifactElement.textContent = ARTIFACT_NAMES[artifact] || artifact;
-                elements.artifactsDisplay.appendChild(artifactElement);
-            });
+          for (const artifact in gameState.artifacts) {
+             const artifactElement = document.createElement('div');
+               artifactElement.textContent = `${ARTIFACT_NAMES[artifact] || artifact} x${gameState.artifacts[artifact]}`;
+               elements.artifactsDisplay.appendChild(artifactElement);
+           }
     };
    elements.clickButton.addEventListener('click', applyClick);
     elements.upgradeClickLevelButton.addEventListener('click', () => {
@@ -615,11 +615,11 @@
            if (gameState.clickCount >= gameState.prestigeCost) {
                gameState.prestigeLevel++;
                let prestigeBonus = 1;
-                gameState.artifacts.forEach(artifact => {
+                for (const artifact in gameState.artifacts) {
                     if (ARTIFACT_EFFECTS[artifact] && ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus) {
-                       prestigeBonus *= ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus;
+                       prestigeBonus *= ARTIFACT_EFFECTS[artifact].prestigeMultiplierBonus * gameState.artifacts[artifact];
                   }
-                });
+                }
                 gameState.prestigeMultiplier = Math.round(gameState.prestigeMultiplier * prestigeBonus) ;
                gameState.clickCount = 0;
               gameState.clickValue = 1;
