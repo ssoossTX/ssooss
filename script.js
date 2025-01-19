@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'rare': 0,
             'epic': 0
         },
-        skins: {}, // Изменили на объект
-        artifacts: {}, // Изменили на объект
+        skins: {},
+        artifacts: {},
         expeditionCosts: {
             'easy': 0,
             'medium': 10,
@@ -553,28 +553,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
        return items;
     };
-    function getRandomItem(itemsArray, names, type) {
-         const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
-         if (type === 'skins') {
-             gameState.skins[item] = (gameState.skins[item] || 0) + 1;
+     function getRandomItem(itemsArray, names, type) {
+        const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
+        if (type === 'skins') {
+            gameState.skins[item] = (gameState.skins[item] || 0) + 1;
         } else if (type === 'artifacts') {
-             gameState.artifacts[item] = (gameState.artifacts[item] || 0) + 1;
+            gameState.artifacts[item] = (gameState.artifacts[item] || 0) + 1;
         }
          return names[item];
-   }
+    }
     const updateInventoryDisplay = () => {
-           elements.skinsDisplay.innerHTML = '';
+        elements.skinsDisplay.innerHTML = '';
+    
+        const skins = {};
         for (const skin in gameState.skins) {
-               const skinElement = document.createElement('div');
-               skinElement.textContent = `${SKIN_NAMES[skin] || skin} x${gameState.skins[skin]}`;
-              elements.skinsDisplay.appendChild(skinElement);
-         }
-            elements.artifactsDisplay.innerHTML = '';
-          for (const artifact in gameState.artifacts) {
-             const artifactElement = document.createElement('div');
-               artifactElement.textContent = `${ARTIFACT_NAMES[artifact] || artifact} x${gameState.artifacts[artifact]}`;
-               elements.artifactsDisplay.appendChild(artifactElement);
-           }
+            if (gameState.skins.hasOwnProperty(skin) && gameState.skins[skin] > 0) {
+                skins[skin] = gameState.skins[skin];
+            }
+        }
+        for (const skin in skins) {
+            const skinElement = document.createElement('div');
+            skinElement.textContent = `${SKIN_NAMES[skin] || skin} x${skins[skin]}`;
+             elements.skinsDisplay.appendChild(skinElement);
+            
+        }
+    
+        elements.artifactsDisplay.innerHTML = '';
+          const artifacts = {};
+           for (const artifact in gameState.artifacts) {
+            if (gameState.artifacts.hasOwnProperty(artifact) && gameState.artifacts[artifact] > 0) {
+                artifacts[artifact] = gameState.artifacts[artifact];
+            }
+        }
+        for (const artifact in artifacts) {
+            const artifactElement = document.createElement('div');
+            artifactElement.textContent = `${ARTIFACT_NAMES[artifact] || artifact} x${artifacts[artifact]}`;
+            elements.artifactsDisplay.appendChild(artifactElement);
+        }
     };
    elements.clickButton.addEventListener('click', applyClick);
     elements.upgradeClickLevelButton.addEventListener('click', () => {
@@ -689,7 +704,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gameState.activeExpedition) {
          startExpeditionTimer();
     }
-   const globalMessageContainer = document.createElement('div');
+     const globalMessageContainer = document.createElement('div');
    globalMessageContainer.id = 'global-message';
     globalMessageContainer.style.position = 'fixed';
    globalMessageContainer.style.top = '10px';
@@ -701,5 +716,5 @@ document.addEventListener('DOMContentLoaded', () => {
     globalMessageContainer.style.borderRadius = '5px';
    globalMessageContainer.style.color = 'white';
    document.body.appendChild(globalMessageContainer);
-   elements.globalMessageDisplay = globalMessageContainer;
+   elements.globalMessageDisplay = globalMessageContainer
 });
