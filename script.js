@@ -1,5 +1,5 @@
 
- document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const SAVE_KEY = 'clickerData';
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
@@ -562,7 +562,7 @@
         }
          return names[item];
    }
-     const updateInventoryDisplay = () => {
+    const updateInventoryDisplay = () => {
            elements.skinsDisplay.innerHTML = '';
         elements.artifactsDisplay.innerHTML = '';
 
@@ -581,7 +581,7 @@
            } else {
              groupedArtifacts[artifact] = 1;
             }
-     });
+        });
 
         for (const skin in groupedSkins) {
                const skinElement = document.createElement('div');
@@ -605,7 +605,7 @@
                 artifactElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
            elements.artifactsDisplay.appendChild(artifactElement);
        }
-   };
+};
    elements.clickButton.addEventListener('click', applyClick);
     elements.upgradeClickLevelButton.addEventListener('click', () => {
        if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
@@ -716,3 +716,4 @@
         */
      }
    loadGame();
+});
