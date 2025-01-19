@@ -562,33 +562,50 @@
         }
          return names[item];
    }
-    const updateInventoryDisplay = () => {
+     const updateInventoryDisplay = () => {
            elements.skinsDisplay.innerHTML = '';
-           gameState.skins.forEach(skin => {
-              const skinElement = document.createElement('div');
-                skinElement.textContent = SKIN_NAMES[skin] || skin;
-             skinElement.style.whiteSpace = 'nowrap';
-             skinElement.style.overflow = 'hidden';
-            skinElement.style.textOverflow = 'ellipsis';
-             skinElement.style.padding = '5px';
+        elements.artifactsDisplay.innerHTML = '';
+
+       const groupedSkins = {};
+       gameState.skins.forEach(skin => {
+            if (groupedSkins[skin]) {
+                groupedSkins[skin]++;
+            } else {
+               groupedSkins[skin] = 1;
+            }
+        });
+         const groupedArtifacts = {};
+        gameState.artifacts.forEach(artifact => {
+           if (groupedArtifacts[artifact]) {
+                groupedArtifacts[artifact]++;
+           } else {
+             groupedArtifacts[artifact] = 1;
+            }
+        });
+
+        for (const skin in groupedSkins) {
+               const skinElement = document.createElement('div');
+            skinElement.textContent = `${SKIN_NAMES[skin] || skin} (${groupedSkins[skin]})`;
+                 skinElement.style.whiteSpace = 'nowrap';
+                 skinElement.style.overflow = 'hidden';
+                    skinElement.style.textOverflow = 'ellipsis';
+                skinElement.style.padding = '5px';
                 skinElement.style.margin = '2px';
                 skinElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
-
-              elements.skinsDisplay.appendChild(skinElement);
-           });
-            elements.artifactsDisplay.innerHTML = '';
-           gameState.artifacts.forEach(artifact => {
-              const artifactElement = document.createElement('div');
-                artifactElement.textContent = ARTIFACT_NAMES[artifact] || artifact;
-                artifactElement.style.whiteSpace = 'nowrap';
+             elements.skinsDisplay.appendChild(skinElement);
+        }
+        for (const artifact in groupedArtifacts) {
+             const artifactElement = document.createElement('div');
+             artifactElement.textContent = `${ARTIFACT_NAMES[artifact] || artifact} (${groupedArtifacts[artifact]})`;
+                  artifactElement.style.whiteSpace = 'nowrap';
                  artifactElement.style.overflow = 'hidden';
                   artifactElement.style.textOverflow = 'ellipsis';
-                   artifactElement.style.padding = '5px';
-                   artifactElement.style.margin = '2px';
-                 artifactElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
-                elements.artifactsDisplay.appendChild(artifactElement);
-            });
-    };
+                  artifactElement.style.padding = '5px';
+                    artifactElement.style.margin = '2px';
+                artifactElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+           elements.artifactsDisplay.appendChild(artifactElement);
+       }
+   };
    elements.clickButton.addEventListener('click', applyClick);
     elements.upgradeClickLevelButton.addEventListener('click', () => {
        if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
