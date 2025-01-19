@@ -28,13 +28,17 @@
     };
     const SKIN_EFFECTS = {
         'skin_common_1': { clickValueBonus: 1.05 },
+         'skin_common_2': { autoClickerBonus: 1.05 },
         'skin_uncommon_1': { clickValueBonus: 1.1 },
-        'skin_rare_1': { clickValueBonus: 1.2 },
-        'skin_epic_1': { clickValueBonus: 1.5 },
-            'skin_common_2': { autoClickerBonus: 1.05 },
         'skin_uncommon_2': { autoClickerBonus: 1.1 },
-        'skin_rare_2': { autoClickerBonus: 1.2 },
-        'skin_epic_2': { autoClickerBonus: 1.5 },
+        'skin_rare_1': { clickValueBonus: 1.2 },
+          'skin_rare_2': { autoClickerBonus: 1.2 },
+        'skin_epic_1': { clickValueBonus: 1.5 },
+          'skin_epic_2': { autoClickerBonus: 1.5 },
+          'skin_common_3': { clickValueBonus: 1.03 },
+            'skin_uncommon_3': { clickValueBonus: 1.08 },
+          'skin_rare_3': { clickValueBonus: 1.15 },
+           'skin_epic_3': { clickValueBonus: 1.35 },
     };
     const ARTIFACT_EFFECTS = {
           'artifact_common_1': { prestigeMultiplierBonus: 1.1 },
@@ -45,26 +49,46 @@
         'artifact_uncommon_2': { diamondBonus: 1.1 },
         'artifact_rare_2': { diamondBonus: 1.2 },
         'artifact_epic_2': { diamondBonus: 1.5 },
+         'artifact_common_3': { clickValueBonus: 1.05 },
+        'artifact_uncommon_3': { clickValueBonus: 1.1 },
+        'artifact_rare_3': { clickValueBonus: 1.2 },
+        'artifact_epic_3': { clickValueBonus: 1.5 },
+           'artifact_common_4': { autoClickerBonus: 1.05 },
+        'artifact_uncommon_4': { autoClickerBonus: 1.1 },
+        'artifact_rare_4': { autoClickerBonus: 1.2 },
+        'artifact_epic_4': { autoClickerBonus: 1.5 },
     };
     const SKIN_NAMES = {
-        'skin_common_1': 'Обычный скин (1)',
-        'skin_uncommon_1': 'Необычный скин (1)',
-        'skin_rare_1': 'Редкий скин (1)',
-        'skin_epic_1': 'Эпический скин (1)',
-         'skin_common_2': 'Обычный скин (2)',
-        'skin_uncommon_2': 'Необычный скин (2)',
-        'skin_rare_2': 'Редкий скин (2)',
-        'skin_epic_2': 'Эпический скин (2)',
+        'skin_common_1': 'Простой Наборчик',
+        'skin_uncommon_1': 'Потрепанный Костюм',
+        'skin_rare_1': 'Элитный Наряд',
+        'skin_epic_1': 'Легендарное Облачение',
+         'skin_common_2': 'Усиленные Перчатки',
+        'skin_uncommon_2': 'Автоматизированные Руки',
+        'skin_rare_2': 'Механические Конечности',
+        'skin_epic_2': 'Драконьи Лапы',
+          'skin_common_3': 'Древняя Маска',
+        'skin_uncommon_3': 'Оркская Маска',
+         'skin_rare_3': 'Скифский Шлем',
+        'skin_epic_3': 'Гномский Шлем',
     };
     const ARTIFACT_NAMES = {
-          'artifact_common_1': 'Обычный артефакт (1)',
-        'artifact_uncommon_1': 'Необычный артефакт (1)',
-        'artifact_rare_1': 'Редкий артефакт (1)',
-        'artifact_epic_1': 'Эпический артефакт (1)',
-            'artifact_common_2': 'Обычный артефакт (2)',
-        'artifact_uncommon_2': 'Необычный артефакт (2)',
-        'artifact_rare_2': 'Редкий артефакт (2)',
-        'artifact_epic_2': 'Эпический артефакт (2)',
+          'artifact_common_1': 'Бронзовый Амулет',
+        'artifact_uncommon_1': 'Серебряный Талисман',
+        'artifact_rare_1': 'Золотой Кулон',
+        'artifact_epic_1': 'Платиновый Оберег',
+            'artifact_common_2': 'Алмазная Монета',
+        'artifact_uncommon_2': 'Рубиновое Кольцо',
+        'artifact_rare_2': 'Сапфировая Тиара',
+        'artifact_epic_2': 'Изумрудный Скипетр',
+         'artifact_common_3': 'Древний Камень',
+        'artifact_uncommon_3': 'Волшебная Пыль',
+        'artifact_rare_3': 'Кристальный Шар',
+        'artifact_epic_3': 'Посох Мага',
+           'artifact_common_4': 'Простой Моторчик',
+        'artifact_uncommon_4': 'Шестерёнчатый Механизм',
+        'artifact_rare_4': 'Паровой Двигатель',
+        'artifact_epic_4': 'Реактивный Движок',
     };
 
     let gameState = {
@@ -453,8 +477,16 @@
        }
     };
     const buyChest = (type) => {
-          if (gameState.diamonds >= 5) {
-            gameState.diamonds -= 5;
+         let cost = 0;
+          if (type === 'common') {
+                cost = 5;
+             } else if (type === 'rare') {
+               cost = 10;
+            } else if (type === 'epic') {
+              cost = 20;
+           }
+          if (gameState.diamonds >= cost) {
+            gameState.diamonds -= cost;
             gameState.chests[type]++;
             updateDisplay();
            displayMessage(`Куплен ${type} сундук!`, 'green');
@@ -642,6 +674,11 @@
         clearAutoSave()
         saveData();
     });
+     if (tWebApp) {
+           tWebApp.onEvent('mainButtonClicked', () => {
+                saveData();
+            });
+     }
    loadGame();
     if (autoSaveInterval == null) {
           autoSaveInterval = setInterval(autoSave, AUTO_SAVE_INTERVAL);
