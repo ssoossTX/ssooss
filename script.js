@@ -1,5 +1,5 @@
 
-document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
     const SAVE_KEY = 'clickerData';
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
@@ -563,49 +563,48 @@ document.addEventListener('DOMContentLoaded', () => {
          return names[item];
    }
     const updateInventoryDisplay = () => {
-           elements.skinsDisplay.innerHTML = '';
-        elements.artifactsDisplay.innerHTML = '';
+    const skinCounts = {};
+    gameState.skins.forEach(skin => {
+        skinCounts[skin] = (skinCounts[skin] || 0) + 1;
+    });
 
-       const groupedSkins = {};
-       gameState.skins.forEach(skin => {
-            if (groupedSkins[skin]) {
-                groupedSkins[skin]++;
-            } else {
-               groupedSkins[skin] = 1;
-            }
-        });
-         const groupedArtifacts = {};
-        gameState.artifacts.forEach(artifact => {
-           if (groupedArtifacts[artifact]) {
-                groupedArtifacts[artifact]++;
-           } else {
-             groupedArtifacts[artifact] = 1;
-            }
-        });
+    elements.skinsDisplay.innerHTML = '';
+    for (const skin in skinCounts) {
+        const skinElement = document.createElement('div');
+        const skinName = SKIN_NAMES[skin] || skin;
+        const count = skinCounts[skin];
+        skinElement.textContent = `${skinName} x${count}`;
+        skinElement.style.whiteSpace = 'nowrap';
+        skinElement.style.overflow = 'hidden';
+        skinElement.style.textOverflow = 'ellipsis';
+        skinElement.style.padding = '5px';
+        skinElement.style.margin = '2px';
+        skinElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        elements.skinsDisplay.appendChild(skinElement);
+    }
 
-        for (const skin in groupedSkins) {
-               const skinElement = document.createElement('div');
-            skinElement.textContent = `${SKIN_NAMES[skin] || skin} (${groupedSkins[skin]})`;
-                 skinElement.style.whiteSpace = 'nowrap';
-                 skinElement.style.overflow = 'hidden';
-                    skinElement.style.textOverflow = 'ellipsis';
-                skinElement.style.padding = '5px';
-                skinElement.style.margin = '2px';
-                skinElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
-             elements.skinsDisplay.appendChild(skinElement);
-        }
-        for (const artifact in groupedArtifacts) {
-             const artifactElement = document.createElement('div');
-             artifactElement.textContent = `${ARTIFACT_NAMES[artifact] || artifact} (${groupedArtifacts[artifact]})`;
-                  artifactElement.style.whiteSpace = 'nowrap';
-                 artifactElement.style.overflow = 'hidden';
-                  artifactElement.style.textOverflow = 'ellipsis';
-                  artifactElement.style.padding = '5px';
-                    artifactElement.style.margin = '2px';
-                artifactElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
-           elements.artifactsDisplay.appendChild(artifactElement);
-       }
+    const artifactCounts = {};
+    gameState.artifacts.forEach(artifact => {
+        artifactCounts[artifact] = (artifactCounts[artifact] || 0) + 1;
+    });
+
+    elements.artifactsDisplay.innerHTML = '';
+    for (const artifact in artifactCounts) {
+        const artifactElement = document.createElement('div');
+        const artifactName = ARTIFACT_NAMES[artifact] || artifact;
+        const count = artifactCounts[artifact];
+        artifactElement.textContent = `${artifactName} x${count}`;
+        artifactElement.style.whiteSpace = 'nowrap';
+        artifactElement.style.overflow = 'hidden';
+        artifactElement.style.textOverflow = 'ellipsis';
+        artifactElement.style.padding = '5px';
+        artifactElement.style.margin = '2px';
+        artifactElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        elements.artifactsDisplay.appendChild(artifactElement);
+    }
 };
+
+
    elements.clickButton.addEventListener('click', applyClick);
     elements.upgradeClickLevelButton.addEventListener('click', () => {
        if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
@@ -716,4 +715,4 @@ document.addEventListener('DOMContentLoaded', () => {
         */
      }
    loadGame();
-});
+    });
