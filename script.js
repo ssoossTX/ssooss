@@ -4,7 +4,7 @@
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
     const PRESTIGE_BASE_COST = 10000;
-    const EXPEDITION_TYPES = {
+      const EXPEDITION_TYPES = {
         'easy': 'Легкая',
         'medium': 'Средняя',
         'hard': 'Тяжелая',
@@ -210,8 +210,8 @@
         const progress = Math.min(100, Math.round((elapsed / gameState.expeditionDuration) * 100));
         const remainingSeconds = Math.ceil(remaining / 1000);
         elements.expeditionProgressDisplay.textContent = `Экспедиция ${EXPEDITION_TYPES[gameState.activeExpedition]}: ${progress}%  (${remainingSeconds} сек. осталось)`;
-         if (progress >= 100) {
-           finishExpedition();
+        if (remaining <= 0) {
+            finishExpedition();
         }
     };
         const displayMessage = (msg, color = 'white', fontSize = '1em') => {
@@ -309,7 +309,7 @@
             },
              prestigeCost: PRESTIGE_BASE_COST,
             expeditionDurations : {
-                'easy': 60000,
+                'easy': 6000,
                 'medium': 300000,
                 'hard': 600000,
             },
@@ -364,15 +364,15 @@
              try {
                 const savedData = JSON.parse(savedDataString);
                 gameState = { ...gameState, ...savedData };
-                 if (savedData.clickValue == undefined) {
-                    gameState.clickValue = 1;
-                  }
+                if (savedData.clickValue == undefined) {
+                     gameState.clickValue = 1;
+                 }
                 if (savedData.clickUpgradeLevel == undefined) {
-                    gameState.clickUpgradeLevel = 1;
-                  }
+                     gameState.clickUpgradeLevel = 1;
+                 }
                 startAutoClicker();
                 if (gameState.activeExpedition) {
-                   startExpeditionTimer();
+                    startExpeditionTimer();
                 }
                   updateDisplay();
             } catch (e) {
@@ -446,13 +446,10 @@
       const startExpeditionTimer = () => {
           gameState.expeditionInterval = setInterval(updateExpeditionProgress, 1000);
     };
-     const finishExpedition = () => {
-           if (!gameState.activeExpedition) {
-            return;
-        }
-          clearInterval(gameState.expeditionInterval);
-            gameState.expeditionInterval = null;
-             const reward = gameState.expeditionReward;
+    const finishExpedition = () => {
+           clearInterval(gameState.expeditionInterval);
+        gameState.expeditionInterval = null;
+         const reward = gameState.expeditionReward;
          let diamondBonus = 1;
          gameState.artifacts.forEach(artifact => {
             if (ARTIFACT_EFFECTS[artifact] && ARTIFACT_EFFECTS[artifact].diamondBonus) {
@@ -469,7 +466,7 @@
         updateDisplay();
         saveData();
     };
- const buyKey = () => {
+     const buyKey = () => {
           if (gameState.diamonds >= 10) {
              gameState.diamonds -= 10;
              gameState.keys++;
@@ -556,7 +553,7 @@
         }
        return items;
     };
-     function getRandomItem(itemsArray, names, type) {
+    function getRandomItem(itemsArray, names, type) {
          const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
          if (type === 'skins') {
               gameState.skins.push(item);
@@ -565,49 +562,20 @@
         }
          return names[item];
    }
-   const updateInventoryDisplay = () => {
-    const skinCounts = {};
-    gameState.skins.forEach(skin => {
-        skinCounts[skin] = (skinCounts[skin] || 0) + 1;
-    });
-
-    elements.skinsDisplay.innerHTML = '';
-    for (const skin in skinCounts) {
-        const skinElement = document.createElement('div');
-        const skinName = SKIN_NAMES[skin] || skin;
-        const count = skinCounts[skin];
-        skinElement.textContent = `${skinName} x${count}`;
-        skinElement.style.whiteSpace = 'nowrap';
-        skinElement.style.overflow = 'hidden';
-        skinElement.style.textOverflow = 'ellipsis';
-        skinElement.style.padding = '5px';
-        skinElement.style.margin = '2px';
-        skinElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-        elements.skinsDisplay.appendChild(skinElement);
-    }
-
-    const artifactCounts = {};
-    gameState.artifacts.forEach(artifact => {
-        artifactCounts[artifact] = (artifactCounts[artifact] || 0) + 1;
-    });
-
-    elements.artifactsDisplay.innerHTML = '';
-    for (const artifact in artifactCounts) {
-        const artifactElement = document.createElement('div');
-        const artifactName = ARTIFACT_NAMES[artifact] || artifact;
-        const count = artifactCounts[artifact];
-        artifactElement.textContent = `${artifactName} x${count}`;
-        artifactElement.style.whiteSpace = 'nowrap';
-        artifactElement.style.overflow = 'hidden';
-        artifactElement.style.textOverflow = 'ellipsis';
-        artifactElement.style.padding = '5px';
-        artifactElement.style.margin = '2px';
-        artifactElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-        elements.artifactsDisplay.appendChild(artifactElement);
-    }
-};
-
-
+    const updateInventoryDisplay = () => {
+           elements.skinsDisplay.innerHTML = '';
+            gameState.skins.forEach(skin => {
+              const skinElement = document.createElement('div');
+              skinElement.textContent = SKIN_NAMES[skin] || skin;
+              elements.skinsDisplay.appendChild(skinElement);
+           });
+            elements.artifactsDisplay.innerHTML = '';
+           gameState.artifacts.forEach(artifact => {
+              const artifactElement = document.createElement('div');
+                artifactElement.textContent = ARTIFACT_NAMES[artifact] || artifact;
+                elements.artifactsDisplay.appendChild(artifactElement);
+            });
+    };
    elements.clickButton.addEventListener('click', applyClick);
     elements.upgradeClickLevelButton.addEventListener('click', () => {
        if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
@@ -702,20 +670,36 @@
                autoSaveInterval = null;
        }
     };
-      window.addEventListener('visibilitychange', () => {
-         if (document.visibilityState === 'hidden') {
-             saveData();
-        }
-    });
    window.addEventListener('beforeunload', () => {
         clearAutoSave()
         saveData();
     });
      if (tWebApp) {
-       /*    tWebApp.onEvent('mainButtonClicked', () => {
+           tWebApp.onEvent('mainButtonClicked', () => {
                 saveData();
             });
-        */
      }
    loadGame();
+    if (autoSaveInterval == null) {
+          autoSaveInterval = setInterval(autoSave, AUTO_SAVE_INTERVAL);
+        }
+   checkAchievements();
+    switchTab('clicker');
+   updateExpeditionButtonInfo();
+    if (gameState.activeExpedition) {
+         startExpeditionTimer();
+    }
+   const globalMessageContainer = document.createElement('div');
+   globalMessageContainer.id = 'global-message';
+    globalMessageContainer.style.position = 'fixed';
+   globalMessageContainer.style.top = '10px';
+    globalMessageContainer.style.left = '50%';
+   globalMessageContainer.style.transform = 'translateX(-50%)';
+  globalMessageContainer.style.zIndex = '1000';
+   globalMessageContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    globalMessageContainer.style.padding = '10px';
+    globalMessageContainer.style.borderRadius = '5px';
+   globalMessageContainer.style.color = 'white';
+   document.body.appendChild(globalMessageContainer);
+   elements.globalMessageDisplay = globalMessageContainer;
 });
