@@ -564,15 +564,28 @@
    }
     const updateInventoryDisplay = () => {
            elements.skinsDisplay.innerHTML = '';
-            gameState.skins.forEach(skin => {
+           gameState.skins.forEach(skin => {
               const skinElement = document.createElement('div');
-              skinElement.textContent = SKIN_NAMES[skin] || skin;
+                skinElement.textContent = SKIN_NAMES[skin] || skin;
+             skinElement.style.whiteSpace = 'nowrap';
+             skinElement.style.overflow = 'hidden';
+            skinElement.style.textOverflow = 'ellipsis';
+             skinElement.style.padding = '5px';
+                skinElement.style.margin = '2px';
+                skinElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+
               elements.skinsDisplay.appendChild(skinElement);
            });
             elements.artifactsDisplay.innerHTML = '';
            gameState.artifacts.forEach(artifact => {
               const artifactElement = document.createElement('div');
                 artifactElement.textContent = ARTIFACT_NAMES[artifact] || artifact;
+                artifactElement.style.whiteSpace = 'nowrap';
+                 artifactElement.style.overflow = 'hidden';
+                  artifactElement.style.textOverflow = 'ellipsis';
+                   artifactElement.style.padding = '5px';
+                   artifactElement.style.margin = '2px';
+                 artifactElement.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
                 elements.artifactsDisplay.appendChild(artifactElement);
             });
     };
@@ -670,36 +683,19 @@
                autoSaveInterval = null;
        }
     };
+      window.addEventListener('visibilitychange', () => {
+         if (document.visibilityState === 'hidden') {
+             saveData();
+        }
+    });
    window.addEventListener('beforeunload', () => {
         clearAutoSave()
         saveData();
     });
      if (tWebApp) {
-           tWebApp.onEvent('mainButtonClicked', () => {
+       /*    tWebApp.onEvent('mainButtonClicked', () => {
                 saveData();
             });
+        */
      }
    loadGame();
-    if (autoSaveInterval == null) {
-          autoSaveInterval = setInterval(autoSave, AUTO_SAVE_INTERVAL);
-        }
-   checkAchievements();
-    switchTab('clicker');
-   updateExpeditionButtonInfo();
-    if (gameState.activeExpedition) {
-         startExpeditionTimer();
-    }
-   const globalMessageContainer = document.createElement('div');
-   globalMessageContainer.id = 'global-message';
-    globalMessageContainer.style.position = 'fixed';
-   globalMessageContainer.style.top = '10px';
-    globalMessageContainer.style.left = '50%';
-   globalMessageContainer.style.transform = 'translateX(-50%)';
-  globalMessageContainer.style.zIndex = '1000';
-   globalMessageContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-    globalMessageContainer.style.padding = '10px';
-    globalMessageContainer.style.borderRadius = '5px';
-   globalMessageContainer.style.color = 'white';
-   document.body.appendChild(globalMessageContainer);
-   elements.globalMessageDisplay = globalMessageContainer;
-});
