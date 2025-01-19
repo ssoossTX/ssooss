@@ -90,7 +90,38 @@ document.addEventListener('DOMContentLoaded', () => {
         'artifact_rare_4': 'Паровой Двигатель',
         'artifact_epic_4': 'Реактивный Движок',
     };
-
+    const SKIN_RARITY = {
+        'skin_common_1': 'common',
+         'skin_common_2': 'common',
+        'skin_uncommon_1': 'uncommon',
+        'skin_uncommon_2': 'uncommon',
+        'skin_rare_1': 'rare',
+          'skin_rare_2': 'rare',
+        'skin_epic_1': 'epic',
+          'skin_epic_2': 'epic',
+          'skin_common_3': 'common',
+            'skin_uncommon_3': 'uncommon',
+          'skin_rare_3': 'rare',
+           'skin_epic_3': 'epic',
+    };
+    const ARTIFACT_RARITY = {
+           'artifact_common_1': 'common',
+        'artifact_uncommon_1': 'uncommon',
+        'artifact_rare_1': 'rare',
+        'artifact_epic_1': 'epic',
+              'artifact_common_2': 'common',
+        'artifact_uncommon_2': 'uncommon',
+        'artifact_rare_2': 'rare',
+        'artifact_epic_2': 'epic',
+         'artifact_common_3': 'common',
+        'artifact_uncommon_3': 'uncommon',
+        'artifact_rare_3': 'rare',
+        'artifact_epic_3': 'epic',
+           'artifact_common_4': 'common',
+        'artifact_uncommon_4': 'uncommon',
+        'artifact_rare_4': 'rare',
+        'artifact_epic_4': 'epic',
+    };
     let gameState = {
         clickCount: 0,
         clickValue: 1,
@@ -562,35 +593,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
          return names[item];
     }
-    const updateInventoryDisplay = () => {
-        elements.skinsDisplay.innerHTML = '';
+   const updateInventoryDisplay = () => {
+    elements.skinsDisplay.innerHTML = '';
     
-        const skins = {};
-        for (const skin in gameState.skins) {
-            if (gameState.skins.hasOwnProperty(skin) && gameState.skins[skin] > 0) {
-                skins[skin] = gameState.skins[skin];
+    const skins = {};
+    for (const skin in gameState.skins) {
+        if (gameState.skins.hasOwnProperty(skin) && gameState.skins[skin] > 0) {
+            skins[skin] = gameState.skins[skin];
+        }
+    }
+    for (const skin in skins) {
+        const skinElement = document.createElement('div');
+        skinElement.textContent = `${SKIN_NAMES[skin] || skin} x${skins[skin]}`;
+         skinElement.addEventListener('click', () => {
+             const rarity = SKIN_RARITY[skin];
+            let bonuses = '';
+            if(SKIN_EFFECTS[skin]){
+             for (const effect in SKIN_EFFECTS[skin]) {
+                 bonuses += `${effect}: ${SKIN_EFFECTS[skin][effect]} \n`;
             }
-        }
-        for (const skin in skins) {
-            const skinElement = document.createElement('div');
-            skinElement.textContent = `${SKIN_NAMES[skin] || skin} x${skins[skin]}`;
-             elements.skinsDisplay.appendChild(skinElement);
-            
-        }
-    
-        elements.artifactsDisplay.innerHTML = '';
-          const artifacts = {};
-           for (const artifact in gameState.artifacts) {
-            if (gameState.artifacts.hasOwnProperty(artifact) && gameState.artifacts[artifact] > 0) {
-                artifacts[artifact] = gameState.artifacts[artifact];
             }
+            displayMessage(`${SKIN_NAMES[skin] || skin} \n Редкость: ${rarity || 'Неизвестно'} \n Бонусы:\n${bonuses}`,'white','1em');
+         });
+        elements.skinsDisplay.appendChild(skinElement);
+    }
+
+    elements.artifactsDisplay.innerHTML = '';
+    const artifacts = {};
+    for (const artifact in gameState.artifacts) {
+        if (gameState.artifacts.hasOwnProperty(artifact) && gameState.artifacts[artifact] > 0) {
+            artifacts[artifact] = gameState.artifacts[artifact];
         }
-        for (const artifact in artifacts) {
-            const artifactElement = document.createElement('div');
-            artifactElement.textContent = `${ARTIFACT_NAMES[artifact] || artifact} x${artifacts[artifact]}`;
-            elements.artifactsDisplay.appendChild(artifactElement);
-        }
-    };
+    }
+    for (const artifact in artifacts) {
+        const artifactElement = document.createElement('div');
+        artifactElement.textContent = `${ARTIFACT_NAMES[artifact] || artifact} x${artifacts[artifact]}`;
+        artifactElement.addEventListener('click', () => {
+           const rarity = ARTIFACT_RARITY[artifact];
+           let bonuses = '';
+              if (ARTIFACT_EFFECTS[artifact]) {
+             for (const effect in ARTIFACT_EFFECTS[artifact]) {
+                 bonuses += `${effect}: ${ARTIFACT_EFFECTS[artifact][effect]} \n`;
+            }
+            }
+            displayMessage(`${ARTIFACT_NAMES[artifact] || artifact} \nРедкость: ${rarity || 'Неизвестно'} \n Бонусы:\n ${bonuses}`, 'white', '1em');
+         });
+        elements.artifactsDisplay.appendChild(artifactElement);
+    }
+};
    elements.clickButton.addEventListener('click', applyClick);
     elements.upgradeClickLevelButton.addEventListener('click', () => {
        if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
@@ -704,7 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gameState.activeExpedition) {
          startExpeditionTimer();
     }
-     const globalMessageContainer = document.createElement('div');
+   const globalMessageContainer = document.createElement('div');
    globalMessageContainer.id = 'global-message';
     globalMessageContainer.style.position = 'fixed';
    globalMessageContainer.style.top = '10px';
