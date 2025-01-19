@@ -4,7 +4,7 @@
     const MESSAGE_DURATION = 3000;
     const AUTO_CLICK_INTERVAL = 1000;
     const PRESTIGE_BASE_COST = 10000;
-      const EXPEDITION_TYPES = {
+    const EXPEDITION_TYPES = {
         'easy': 'Легкая',
         'medium': 'Средняя',
         'hard': 'Тяжелая',
@@ -210,8 +210,8 @@
         const progress = Math.min(100, Math.round((elapsed / gameState.expeditionDuration) * 100));
         const remainingSeconds = Math.ceil(remaining / 1000);
         elements.expeditionProgressDisplay.textContent = `Экспедиция ${EXPEDITION_TYPES[gameState.activeExpedition]}: ${progress}%  (${remainingSeconds} сек. осталось)`;
-        if (remaining <= 0) {
-            finishExpedition();
+         if (progress >= 100) {
+           finishExpedition();
         }
     };
         const displayMessage = (msg, color = 'white', fontSize = '1em') => {
@@ -309,7 +309,7 @@
             },
              prestigeCost: PRESTIGE_BASE_COST,
             expeditionDurations : {
-                'easy': 6000,
+                'easy': 60000,
                 'medium': 300000,
                 'hard': 600000,
             },
@@ -364,15 +364,15 @@
              try {
                 const savedData = JSON.parse(savedDataString);
                 gameState = { ...gameState, ...savedData };
-                if (savedData.clickValue == undefined) {
-                     gameState.clickValue = 1;
-                 }
+                 if (savedData.clickValue == undefined) {
+                    gameState.clickValue = 1;
+                  }
                 if (savedData.clickUpgradeLevel == undefined) {
-                     gameState.clickUpgradeLevel = 1;
-                 }
+                    gameState.clickUpgradeLevel = 1;
+                  }
                 startAutoClicker();
                 if (gameState.activeExpedition) {
-                    startExpeditionTimer();
+                   startExpeditionTimer();
                 }
                   updateDisplay();
             } catch (e) {
@@ -446,10 +446,13 @@
       const startExpeditionTimer = () => {
           gameState.expeditionInterval = setInterval(updateExpeditionProgress, 1000);
     };
-    const finishExpedition = () => {
-           clearInterval(gameState.expeditionInterval);
-        gameState.expeditionInterval = null;
-         const reward = gameState.expeditionReward;
+     const finishExpedition = () => {
+           if (!gameState.activeExpedition) {
+            return;
+        }
+          clearInterval(gameState.expeditionInterval);
+            gameState.expeditionInterval = null;
+             const reward = gameState.expeditionReward;
          let diamondBonus = 1;
          gameState.artifacts.forEach(artifact => {
             if (ARTIFACT_EFFECTS[artifact] && ARTIFACT_EFFECTS[artifact].diamondBonus) {
@@ -466,7 +469,7 @@
         updateDisplay();
         saveData();
     };
-     const buyKey = () => {
+ const buyKey = () => {
           if (gameState.diamonds >= 10) {
              gameState.diamonds -= 10;
              gameState.keys++;
@@ -553,7 +556,7 @@
         }
        return items;
     };
-    function getRandomItem(itemsArray, names, type) {
+     function getRandomItem(itemsArray, names, type) {
          const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
          if (type === 'skins') {
               gameState.skins.push(item);
@@ -562,7 +565,7 @@
         }
          return names[item];
    }
-    const updateInventoryDisplay = () => {
+   const updateInventoryDisplay = () => {
     const skinCounts = {};
     gameState.skins.forEach(skin => {
         skinCounts[skin] = (skinCounts[skin] || 0) + 1;
@@ -715,4 +718,4 @@
         */
      }
    loadGame();
-    });
+});
