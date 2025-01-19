@@ -581,7 +581,7 @@
            } else {
              groupedArtifacts[artifact] = 1;
             }
-        });
+     });
 
         for (const skin in groupedSkins) {
                const skinElement = document.createElement('div');
