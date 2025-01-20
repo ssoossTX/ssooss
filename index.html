@@ -7,20 +7,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
- <div class="container">
-      <div class="menu-bar">
+    <div class="container">
+        <div class="menu-bar">
             <button class="menu-toggle" aria-label="Открыть меню" aria-controls="menu-items" aria-expanded="false">☰</button>
             <ul class="menu-items" id="menu-items">
                 <li><button class="active" data-tab="clicker">Кликер</button></li>
                 <li><button data-tab="shop">Магазин</button></li>
-                 <li><button data-tab="profile">Профиль</button></li>
-                 <li><button data-tab="map">Карта</button></li>
+                <li><button data-tab="profile">Профиль</button></li>
+                <li><button data-tab="map">Карта</button></li>
+                <li><button data-tab="leaderboard" id="leaderboard-button">Рейтинг</button></li> <!-- Добавлена кнопка "Рейтинг" -->
             </ul>
-           <div class="diamonds-menu" id="diamonds-menu">Алмазы: 0</div>
+            <div class="diamonds-menu" id="diamonds-menu">Алмазы: 0</div>
         </div>
-         <main class="game-container">
-          <div id="clicker-content" role="region" aria-label="Кликер">
-               <h1 id="game-title">Кликер</h1>
+        <main class="game-container">
+            <div id="clicker-content" role="region" aria-label="Кликер">
+                <h1 id="game-title">Кликер</h1>
                 <div class="counter">
                     <p id="click-count">0</p>
                 </div>
@@ -35,81 +36,80 @@
                     <div class="upgrade-item" id="upgrade-auto">
                         <p>Автокликер</p>
                         <p>Цена: <span id="auto-upgrade-cost">50</span></p>
-                         <button class="buy-upgrade game-button" aria-label="Купить автокликер">Купить</button>
+                        <button class="buy-upgrade game-button" aria-label="Купить автокликер">Купить</button>
                     </div>
-                     <div class="upgrade-item" id="upgrade-click-level">
+                    <div class="upgrade-item" id="upgrade-click-level">
                         <p>Уровень улучшения базового клика: <span id="click-upgrade-level-display">1</span></p>
                         <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
-                         <button class="buy-upgrade game-button" aria-label="Купить уровень улучшения клика">Купить уровень</button>
-                     </div>
-                                                                                      <div class="message" id="message" aria-live="polite"></div>
+                                                <button class="buy-upgrade game-button" aria-label="Купить уровень улучшения клика">Купить уровень</button>
+                    </div>
+                    <div class="message" id="message" aria-live="polite"></div>
                 </section>
-                 <button id="prestige-button" class="game-button">
-        Перерождение <br>
-        <span id="prestige-cost">Стоимость: 10000</span>
-                 </button>
+                <button id="prestige-button" class="game-button">
+                    Перерождение <br>
+                    <span id="prestige-cost">Стоимость: 10000</span>
+                </button>
                 <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
                 <div id="achievements">Достижения: 0</div>
-              <input type="text" id="playerNick" placeholder="Введите ник">
+                <input type="text" id="playerNick" placeholder="Введите ник">
                 <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
-               </div>
-               <div id="game-content" role="region" aria-label="Магазин">
-                   <h2>Магазин</h2>
-                  <section class="chests">
-                    <h2>Ящики</h2>
-                        <div class="chest-item" >
-                            <p>Ключи: <span id="key-display">0</span></p>
-                            <button id="buy-key-button" class="game-button">Купить ключ (10💎)</button>
-                        </div>
-                        <div class="chest-item" >
-                            <p>Обычные сундуки: <span id="common-chest-count">0</span></p>
-                            <button id="buy-common-chest-button" class="game-button">Купить обычный сундук (5💎)</button>
-                        </div>
-                        <div class="chest-item">
-                            <p>Редкие сундуки: <span id="rare-chest-count">0</span></p>
-                            <button id="buy-rare-chest-button" class="game-button">Купить редкий сундук (10💎)</button>
-                        </div>
-                        <div class="chest-item">
-                            <p>Эпические сундуки: <span id="epic-chest-count">0</span></p>
-                            <button id="buy-epic-chest-button" class="game-button">Купить эпический сундук (20💎)</button>
-                        </div>
-                        <button id="open-chest-button" class="game-button">Открыть сундук</button>
-                 </section>
-                 <div class="chest-container" id="chest-container">
-                    <div class="chest-content">
-                        <h2>Выпавшие предметы:</h2>
-                        <div id="chest-items" class="chest-items"></div>
-                        <button id="close-chest-button" class="game-button">Закрыть</button>
-                    </div>
-                </div>
-               </div>
-             <div class="map-container" id="map-container">
-                <h2>Экспедиции</h2>
-                <button class="expedition-button" data-type="easy">Лёгкая (1 мин)</button>
-                <button class="expedition-button" data-type="medium">Средняя (5 мин)</button>
-                <button class="expedition-button" data-type="hard">Сложная (10 мин)</button>
-                 <div id="expedition-progress" class="expedition-progress"></div>
             </div>
-              <div class="inventory-container" id="inventory-container">
-                  <div class="profile-header">
-                      <h2>Инвентарь</h2>
-                  </div>
-                   
-                     <div class="profile-content">
-                          <div class="profile-section">
-                             <h3>Скины</h3>
-                            <div class="skins-display" id="skins-display"></div>
-                         </div>
-                          <div class="profile-section">
-                             <h3>Артефакты</h3>
-                            <div class="artifacts-display" id="artifacts-display"></div>
-                         </div>
-                     </div>
+            <div id="game-content" role="region" aria-label="Магазин">
+                <h2>Магазин</h2>
+                <section class="chests">
+                    <h2>Ящики</h2>
+                    <div class="chest-item" >
+                        <p>Ключи: <span id="key-display">0</span></p>
+                        <button id="buy-key-button" class="game-button">Купить ключ (10💎)</button>
+                    </div>
+                    <div class="chest-item" >
+                        <p>Обычные сундуки: <span id="common-chest-count">0</span></p>
+                         <button id="buy-common-chest-button" class="game-button">Купить обычный сундук (5💎)</button>
+                    </div>
+                    <div class="chest-item" >
+                        <p>Редкие сундуки: <span id="rare-chest-count">0</span></p>
+                         <button id="buy-rare-chest-button" class="game-button">Купить редкий сундук (10💎)</button>
+                    </div>
+                   <div class="chest-item" >
+                        <p>Эпические сундуки: <span id="epic-chest-count">0</span></p>
+                         <button id="buy-epic-chest-button" class="game-button">Купить эпический сундук (20💎)</button>
+                   </div>
+                     <div class="chest-item" >
+                       <button id="open-chest-button" class="game-button">Открыть сундук</button>
+                   </div>
+                </section>
+                  <div id="chest-container" style="display: none;">
+                    <div id="chest-items">
+                    </div>
+                   <button id="close-chest-button" class="game-button">Закрыть</button>
                 </div>
-           </main>
+            </div>
+                <div id="map-container"  role="region" aria-label="Карта" style="display: none;">
+                   <h2>Карта</h2>
+                   <div class="expedition-buttons">
+                        <button class="expedition-button" data-type="easy">Легкая</button>
+                       <button class="expedition-button" data-type="medium">Средняя</button>
+                        <button class="expedition-button" data-type="hard">Тяжелая</button>
+                   </div>
+                     <div id="expedition-progress"></div>
+                   </div>
+             <div id="inventory-container"  role="region" aria-label="Профиль" style="display: none;">
+                    <h2>Профиль</h2>
+                 <div class="inventory-items">
+                     <h3>Скины</h3>
+                    <div id="skins-display"></div>
+                     <h3>Артефакты</h3>
+                     <div id="artifacts-display"></div>
+                 </div>
+             </div>
+          <div id="leaderboard-display" style="display: none;"  role="region" aria-label="Рейтинг">
+             <h2>Рейтинг</h2>
+         </div>
+            <div id="global-message" style="display: none;"></div>
+        </main>
     </div>
-            <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-database-compat.js"></script>
-    <script src="script.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+   <script src="script.js"></script>
 </body>
-</html>
+                        </html>
