@@ -15,7 +15,7 @@
                 <li><button data-tab="shop">Магазин</button></li>
                 <li><button data-tab="profile">Профиль</button></li>
                 <li><button data-tab="map">Карта</button></li>
-                <li><button data-tab="leaderboard" id="leaderboard-button">Рейтинг</button></li> <!-- Добавлена кнопка "Рейтинг" -->
+                <li><button data-tab="leaderboard" id="leaderboard-button">Рейтинг</button></li>
             </ul>
             <div class="diamonds-menu" id="diamonds-menu">Алмазы: 0</div>
         </div>
@@ -52,9 +52,10 @@
                 <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
                 <div id="achievements">Достижения: 0</div>
                 <input type="text" id="playerNick" placeholder="Введите ник">
+                <button id="saveNickButton" class="game-button" aria-label="Сохранить введенный ник">Сохранить ник</button>
                 <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
             </div>
-            <div id="game-content" role="region" aria-label="Магазин">
+            <div id="game-content" role="region" aria-label="Магазин" style="display: none;">
                 <h2>Магазин</h2>
                 <section class="chests">
                     <h2>Ящики</h2>
@@ -74,7 +75,7 @@
                         <p>Эпические сундуки: <span id="epic-chest-count">0</span></p>
                          <button id="buy-epic-chest-button" class="game-button">Купить эпический сундук (20💎)</button>
                    </div>
-                     <div class="chest-item" >
+                                        <div class="chest-item" >
                        <button id="open-chest-button" class="game-button">Открыть сундук</button>
                    </div>
                 </section>
@@ -84,7 +85,7 @@
                    <button id="close-chest-button" class="game-button">Закрыть</button>
                 </div>
             </div>
-                <div id="map-container"  role="region" aria-label="Карта" style="display: none;">
+             <div id="map-container"  role="region" aria-label="Карта" style="display: none;">
                    <h2>Карта</h2>
                    <div class="expedition-buttons">
                         <button class="expedition-button" data-type="easy">Легкая</button>
@@ -92,7 +93,7 @@
                         <button class="expedition-button" data-type="hard">Тяжелая</button>
                    </div>
                      <div id="expedition-progress"></div>
-                   </div>
+                </div>
              <div id="inventory-container"  role="region" aria-label="Профиль" style="display: none;">
                     <h2>Профиль</h2>
                  <div class="inventory-items">
@@ -102,9 +103,9 @@
                      <div id="artifacts-display"></div>
                  </div>
              </div>
-          <div id="leaderboard-display" style="display: none;"  role="region" aria-label="Рейтинг">
-             <h2>Рейтинг</h2>
-         </div>
+            <div id="leaderboard-display" style="display: none;"  role="region" aria-label="Рейтинг">
+                <h2>Рейтинг</h2>
+            </div>
             <div id="global-message" style="display: none;"></div>
         </main>
     </div>
@@ -112,4 +113,4 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
    <script src="script.js"></script>
 </body>
-                        </html>
+</html>
