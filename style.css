@@ -268,7 +268,7 @@ main.game-container {
 }
 
 .diamonds-menu {
-    margin-left: 10px;
+  margin-left: 10px;
     font-size: 1.2em;
     position: absolute;
     top: 10px;
@@ -370,11 +370,10 @@ main.game-container {
     padding: 20px;
     border-radius: 8px;
     animation: slideIn 0.3s ease;
-    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+        background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
         background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
 }
 
 .inventory-container.active {
@@ -386,9 +385,9 @@ main.game-container {
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 15px;
-        background-color: rgba(0, 0, 0, 0.5);
+       background-color: rgba(0, 0, 0, 0.5);
        padding: 10px;
-    border-radius: 5px;
+       border-radius: 5px;
 }
 
 .profile-header h2 {
@@ -407,7 +406,6 @@ main.game-container {
 .profile-section {
     padding: 0;
     margin-bottom: 15px;
-
 }
 
 .profile-section h3 {
@@ -435,14 +433,12 @@ main.game-container {
     padding: 10px;
     border-radius: 5px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    /* transition:  background-color 0.2s ease; */
         width: calc(33.333% - 10px);
           background-color: rgba(255, 255, 255, 0.1);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       animation: cardFadeIn 0.3s ease;
-      box-sizing: border-box;
-      min-width: 90px;
-
+       box-sizing: border-box;
+       min-width: 90px;
 }
 @keyframes cardFadeIn {
     from { opacity: 0; transform: translateY(-20px); }
@@ -485,5 +481,4 @@ main.game-container {
     text-align: center;
     display: none;
     animation: fadeIn 0.3s ease;
-        }
-    
+    }
