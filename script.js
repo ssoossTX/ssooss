@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     // 1. gameConfig (все константы и настройки)
     const gameConfig = {
@@ -130,9 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'hard': 100,
         },
         EXPEDITION_REWARDS: {
-            'easy': [1, 5],
+            'easy': [1, 500],
             'medium': [10, 50],
-            'hard': [100, 500],
+            'hard': [100, 50],
         },
         EXPEDITION_DURATIONS: {
             'easy': 60000,
@@ -185,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clickUpgradeLevelCostDisplay: document.getElementById('click-upgrade-level-cost'),
         },
         shop: {
-            diamondDisplay: document.getElementById('diamonds-menu'),
+            diamondDisplay: document.querySelector('.diamonds-menu'),
             prestigeCostDisplay: document.getElementById('prestige-cost'),
             prestigeButton: document.getElementById('prestige-button'),
             prestigeLevelDisplay: document.getElementById('prestige-level'),
@@ -205,13 +204,13 @@ document.addEventListener('DOMContentLoaded', () => {
             chestContainer: document.getElementById('chest-container'),
         },
         map: {
-            mapContainer: document.getElementById('map-container'),
+            mapContainer: document.querySelector('.map-container'),
             expeditionProgressDisplay: document.getElementById('expedition-progress'),
         },
         inventory: {
-            inventoryContainer: document.getElementById('inventory-container'),
-            skinsDisplay: document.getElementById('skins-display'),
-            artifactsDisplay: document.getElementById('artifacts-display'),
+            inventoryContainer: document.querySelector('.inventory-container'),
+            skinsDisplay: document.querySelector('.skins-display'),
+            artifactsDisplay: document.querySelector('.artifacts-display'),
         },
         global: {
             messageDisplay: document.getElementById('message'),
@@ -220,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menu: {
             menuButton: document.querySelector('.menu-toggle'),
             menu: document.getElementById('menu-items'),
-            menuItems: document.querySelectorAll('.menu-items li button'),
+            menuItems: document.querySelectorAll('#menu-items li button'),
             clickerContent: document.getElementById('clicker-content'),
             gameContent: document.getElementById('game-content'),
             resetButton: document.getElementById('reset-button'),
@@ -296,14 +295,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // 5. Сообщения
-    const displayMessage = (msg, color = 'white', fontSize = '1em') => {
+     const displayMessage = (msg, color = 'white', fontSize = '1em') => {
+          console.log("Display message:", elements.global.globalMessageDisplay);
         elements.global.globalMessageDisplay.textContent = msg;
         elements.global.globalMessageDisplay.style.color = color;
         elements.global.globalMessageDisplay.style.fontSize = fontSize;
         elements.global.globalMessageDisplay.style.display = 'block';
-        setTimeout(() => {
+       setTimeout(() => {
             elements.global.globalMessageDisplay.style.display = 'none';
-            elements.global.globalMessageDisplay.style.fontSize = '1em';
+             elements.global.globalMessageDisplay.style.fontSize = '1em';
         }, gameConfig.MESSAGE_DURATION);
     };
 
