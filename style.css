@@ -428,7 +428,9 @@ main.game-container {
 }
 
 .skins-display div,
-.artifacts-display div {
+.artifacts-display div,
+.skins-display div.expanded,
+.artifacts-display div.expanded {
     /* background-color: rgba(0, 0, 0, 0.2); */
     padding: 10px;
     border-radius: 5px;
@@ -483,4 +485,5 @@ main.game-container {
     text-align: center;
     display: none;
     animation: fadeIn 0.3s ease;
-}
+        }
+    
