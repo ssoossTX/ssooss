@@ -129,12 +129,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'hard': 100,
         },
         EXPEDITION_REWARDS: {
-            'easy': [1, 500],
+            'easy': [1, 5],
             'medium': [10, 50],
             'hard': [100, 500],
         },
         EXPEDITION_DURATIONS: {
-            'easy': 6000,
+            'easy': 60000,
             'medium': 300000,
             'hard': 600000,
         },
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.shop.chestDisplay.epic.textContent = `Эпические: ${gameState.chests.epic}`;
     };
 
-    const updateExpeditionProgressBar = () => {
+     const updateExpeditionProgressBar = () => {
         if (!gameState.activeExpedition) {
             elements.map.expeditionProgressDisplay.textContent = '';
             return;
@@ -296,13 +296,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // 5. Сообщения
-    const displayMessage = (msg, color = 'white', fontSize = '1em') => {
-          console.log("Display message:", elements.global.globalMessageDisplay);
+     const displayMessage = (msg, color = 'white', fontSize = '1em') => {
         elements.global.globalMessageDisplay.textContent = msg;
         elements.global.globalMessageDisplay.style.color = color;
         elements.global.globalMessageDisplay.style.fontSize = fontSize;
-        elements.global.globalMessageDisplay.style.display = 'block';
-         setTimeout(() => {
+         elements.global.globalMessageDisplay.style.display = 'block';
+        setTimeout(() => {
             elements.global.globalMessageDisplay.style.display = 'none';
              elements.global.globalMessageDisplay.style.fontSize = '1em';
         }, gameConfig.MESSAGE_DURATION);
@@ -482,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const savedData = JSON.parse(savedDataString);
                 gameState = { ...gameState, ...savedData };
-                if (savedData.clickValue == undefined) {
+                  if (savedData.clickValue == undefined) {
                     gameState.clickValue = 1;
                 }
                 if (savedData.clickUpgradeLevel == undefined) {
@@ -515,8 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadFromStorage(localStorage);
         }
     };
-
-
+    
    const switchTab = (tabId) => {
         elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
         elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
@@ -715,7 +713,7 @@ document.addEventListener('DOMContentLoaded', () => {
          return names[item];
     }
 
-    const updateInventoryDisplay = () => {
+   const updateInventoryDisplay = () => {
          elements.inventory.skinsDisplay.innerHTML = '';
         const skins = {};
         for (const skin in gameState.skins) {
