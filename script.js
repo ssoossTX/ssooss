@@ -924,41 +924,23 @@ elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button 
     const profileButton = document.querySelector('[data-tab="profile"]');
     const profileModal = document.getElementById('profile-modal');
     const closeModalButton = profileModal.querySelector('.close-button');
-    const profileInfoDiv = document.getElementById('profile-info');
-    const inventoryInfoDiv = document.getElementById('inventory-info');
-    const menuItems = elements.menu.menuItems;
+
+  profileButton.addEventListener('click', () => {
+      updateProfile();
+        updateInventoryDisplay();
+       profileModal.style.display = 'block';
+});
     
-    
-     menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-        switchTab(item.dataset.tab);
-        elements.menu.menu.classList.remove('active');
-        elements.menu.menuButton.classList.remove('active');
-      if (item.dataset.tab === 'profile') {
-       updateProfile();
-         updateInventoryDisplay();
-         profileModal.style.display = 'block';
-            profileInfoDiv.style.display = 'block';
-          inventoryInfoDiv.style.display = 'none';
-        } else {
-          profileModal.style.display = 'none';
+    closeModalButton.addEventListener('click', () => {
+        profileModal.style.display = 'none';
+    });
+
+        // Обработчик для закрытия окна по клику вне его
+    window.addEventListener('click', (event) => {
+        if (event.target === profileModal) {
+            profileModal.style.display = 'none';
         }
     });
-});
-
-    const switchTab = (tabId) => {
-        elements.gameTabs.forEach(tab => {
-            tab.style.display = tab.id === `${tabId}-content` ? 'block' : 'none';
-        });
-          if (tabId === 'profile') {
-              profileModal.style.display = 'block';
-              profileInfoDiv.style.display = 'block';
-              inventoryInfoDiv.style.display = 'none';
-          } else {
-              profileModal.style.display = 'none';
-          }
-        
-    };
     
 const AUTO_SAVE_INTERVAL = 10000;
 const autoSave = () => {
