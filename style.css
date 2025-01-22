@@ -358,21 +358,28 @@ main.game-container {
 
 /* Инвентарь */
 .inventory-container {
-     margin: 0;
-    max-width: 100%;
-    background-color: transparent;
-    box-shadow: none;
+    display: none;
+    margin: 20px auto;
+    max-width: 90%;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 999;
     overflow: auto;
     text-align: left;
     box-sizing: border-box;
-    padding: 0;
-    animation: none;
-        background-image: none;
+    padding: 20px;
+    border-radius: 8px;
+    animation: slideIn 0.3s ease;
+    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
-
-.inventory-container.active {
+    
+    .inventory-container.active {
     display: block;
 }
+
 
 .profile-header {
     display: flex;
@@ -563,15 +570,15 @@ main.game-container {
 
 .modal-content {
     background-color: rgba(0, 0, 0, 0.9);
-    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
-    background-size: cover;
+        background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+        background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-height: 90vh;
+        max-height: 90vh;
     overflow-y: auto;
     border-radius: 10px;
     position: relative;
