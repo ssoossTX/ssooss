@@ -622,12 +622,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameState.keys > 0) {
             gameState.keys--;
             gameState.chests[chestType]--;
+             console.log('Открываем сундук:', chestType);
             const item = openChestLogic(chestType);
            if (item) {
                 const itemElement = document.createElement('div');
                 itemElement.textContent = `Выпал предмет: ${item}`;
+                 console.log('Выпал предмет:', item);
                 elements.shop.chestItemsDisplay.appendChild(itemElement);
                 displayMessage(`Выпал предмет: ${item}`, 'green', '1.2em');
+            } else {
+                 console.log('Предмет не выпал.');
             }
             elements.shop.chestContainer.style.display = 'block';
             updateDisplay();
@@ -642,53 +646,36 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.shop.chestContainer.style.display = 'none';
     };
 
- const openChestLogic = (chestType) => {
-     const roll = Math.random();
-    let item = null;
-        const itemTypeRoll = Math.random();
-        const skinChance = 0.45;
-       
-     if (itemTypeRoll <= skinChance) {
-            switch (chestType) {
-                case 'epic':
-                     item = applyRarity(gameConfig.SKIN_RARITY_CHANCE, gameConfig.SKIN_NAMES, 'skins', roll);
-                     break;
-                 case 'rare':
-                      item = applyRarity({ rare: gameConfig.SKIN_RARITY_CHANCE.rare, uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
-                      break;
-                case 'common':
-                      item = applyRarity({ uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
-                      break;
-            }
-     } else {
-            switch (chestType) {
-                case 'epic':
-                     item = applyRarity(gameConfig.ARTIFACT_RARITY_CHANCE, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
-                     break;
-                case 'rare':
-                    item = applyRarity({ rare: gameConfig.ARTIFACT_RARITY_CHANCE.rare, uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
-                     break;
-               case 'common':
-                   item =  applyRarity({ uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
-                      break;
-                }
-          }
-       return item;
-    };
 
-   const applyRarity = (rarityChances, names, type, roll) => {
-        let totalChance = 0;
-        for (const rarity in rarityChances) {
-            totalChance += rarityChances[rarity];
-             if (roll <= totalChance) {
-                 const filteredItems = Object.keys(names).filter(key => gameConfig[type.toUpperCase() + '_RARITY'][key] === rarity);
-                return getRandomItem(filteredItems, names, type);
-            }
-        }
-       // Если ничего не подошло, возвращаем первый элемент (для гарантии)
-     const filteredItems = Object.keys(names).filter(key => gameConfig[type.toUpperCase() + '_RARITY'][key] === 'common');
-     return getRandomItem(filteredItems, names, type)
+    const openChestLogic = (chestType) => {
+        const allSkins = Object.keys(gameConfig.SKIN_NAMES);
+        const allArtifacts = Object.keys(gameConfig.ARTIFACT_NAMES);
+
+        const itemTypeRoll = Math.random();
+        const skinChance = 0.5; // 50% шанс выпадения скина
+           let item = null;
+          if (itemTypeRoll <= skinChance) {
+             console.log('Пытаемся получить скин.');
+              item = applyRarity(null,gameConfig.SKIN_NAMES, 'skins');
+        } else {
+              console.log('Пытаемся получить артефакт.');
+             item = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
+         }
+          console.log('Полученный предмет из openChestLogic:', item);
+          return item;
     };
+     
+   const applyRarity = (rarityChances, names, type) => {
+        const allItems = Object.keys(names);
+         console.log('allItems:', allItems);
+            if (allItems.length === 0) {
+                  console.log('Нет элементов для выбора.');
+                    return null;
+            }
+         const item = getRandomItem(allItems, names, type);
+        console.log('Полученный предмет из applyRarity:', item);
+            return item;
+ };
     
      function getRandomItem(itemsArray, names, type) {
            const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
@@ -697,6 +684,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (type === 'artifacts') {
             gameState.artifacts[item] = (gameState.artifacts[item] || 0) + 1;
         }
+          console.log('Выбран случайный предмет из getRandomItem:', names[item]);
         return names[item];
      }
 
