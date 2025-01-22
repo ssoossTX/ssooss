@@ -766,7 +766,6 @@ const updateInventoryDisplay = () => {
         elements.inventory.artifactsDisplay.appendChild(artifactElement);
     }
 };
-
 // 8. Обработчики событий
 elements.clicker.clickButton.addEventListener('click', applyClick);
 
