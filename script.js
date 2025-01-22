@@ -926,35 +926,39 @@ elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button 
     const closeModalButton = profileModal.querySelector('.close-button');
     const profileInfoDiv = document.getElementById('profile-info');
     const inventoryInfoDiv = document.getElementById('inventory-info');
-    const tabButtons = document.querySelectorAll('.tab-button');
-
-  profileButton.addEventListener('click', () => {
-       updateProfile();
-      updateInventoryDisplay();
-       profileModal.style.display = 'block';
-      profileInfoDiv.style.display = 'block';
-      inventoryInfoDiv.style.display = 'none';
-      tabButtons[0].classList.add('active');
-      tabButtons[1].classList.remove('active');
-});
+    const menuItems = elements.menu.menuItems;
     
-    const switchProfileTab = (tabId) => {
-    profileInfoDiv.style.display = tabId === 'profile-info' ? 'block' : 'none';
-    inventoryInfoDiv.style.display = tabId === 'inventory-info' ? 'block' : 'none';
-
-    tabButtons.forEach(button => {
-        button.classList.remove('active');
-        if (button.dataset.tab === tabId) {
-            button.classList.add('active');
+    
+     menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+        switchTab(item.dataset.tab);
+        elements.menu.menu.classList.remove('active');
+        elements.menu.menuButton.classList.remove('active');
+      if (item.dataset.tab === 'profile') {
+       updateProfile();
+         updateInventoryDisplay();
+         profileModal.style.display = 'block';
+            profileInfoDiv.style.display = 'block';
+          inventoryInfoDiv.style.display = 'none';
+        } else {
+          profileModal.style.display = 'none';
         }
     });
-};
+});
 
-    tabButtons.forEach(button => {
-         button.addEventListener('click', () => {
-             switchProfileTab(button.dataset.tab);
-         });
-    });
+    const switchTab = (tabId) => {
+        elements.gameTabs.forEach(tab => {
+            tab.style.display = tab.id === `${tabId}-content` ? 'block' : 'none';
+        });
+          if (tabId === 'profile') {
+              profileModal.style.display = 'block';
+              profileInfoDiv.style.display = 'block';
+              inventoryInfoDiv.style.display = 'none';
+          } else {
+              profileModal.style.display = 'none';
+          }
+        
+    };
     
 const AUTO_SAVE_INTERVAL = 10000;
 const autoSave = () => {
