@@ -89,7 +89,19 @@
                 <button class="expedition-button" data-type="hard">Сложная (10 мин)</button>
                  <div id="expedition-progress" class="expedition-progress"></div>
             </div>
-                      <div class="inventory-container" id="inventory-container">
+                          <div id="profile-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Профиль игрока</h2>
+                  <div class="profile-tabs">
+                    <button class="tab-button active" data-tab="profile-info">Профиль</button>
+                    <button class="tab-button" data-tab="inventory-info">Инвентарь</button>
+                </div>
+                 <div id="profile-info" style="display:block;">
+                   <!-- Тут будет отображаться информация -->
+                </div>
+                <div id="inventory-info" style="display:none;">
+                        <div class="inventory-container">
                   <div class="profile-header">
                       <h2>Инвентарь</h2>
                   </div>
@@ -104,12 +116,6 @@
                          </div>
                      </div>
                 </div>
-     <div id="profile-modal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                <h2>Профиль игрока</h2>
-                <div id="profile-info">
-                   <!-- Тут будет отображаться информация -->
                 </div>
             </div>
         </div>
