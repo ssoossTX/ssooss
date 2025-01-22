@@ -507,13 +507,20 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
         elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
         elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
-        elements.inventory.inventoryContainer.style.display = tabId === 'profile' ? 'block' : 'none';
+        // Добавляем здесь скрытие инвентаря, чтобы избежать одновременного отображения инвентаря и модального окна.
+        elements.inventory.inventoryContainer.style.display = 'none';
+         // Если открыта вкладка профиля, то показываем инвентарь
+       if (tabId === 'profile') {
+          elements.inventory.inventoryContainer.style.display = 'block';
+       }
         elements.menu.menuItems.forEach(item => {
             item.classList.remove('active');
             if (item.dataset.tab === tabId) {
                 item.classList.add('active');
             }
         });
+          // Скрываем модальное окно профиля при переключении вкладок
+           document.getElementById('profile-modal').style.display = 'none';
     };
 
     const startExpedition = (type) => {
@@ -920,6 +927,7 @@ elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button 
 
   profileButton.addEventListener('click', () => {
       updateProfile();
+        updateInventoryDisplay();
        profileModal.style.display = 'block';
 });
     
