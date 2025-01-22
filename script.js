@@ -866,11 +866,15 @@ const clearAutoSave = () => {
     }
 };
 
-window.addEventListener('beforeunload', () => {
-    clearAutoSave();
-    saveData();
-});
-
+const handleVisibilityChange = () => {
+        if (document.visibilityState === 'hidden') {
+          clearAutoSave();
+          saveData();
+        }
+    };
+    
+document.addEventListener('visibilitychange', handleVisibilityChange);
+    
 if (tWebApp) {
     tWebApp.onEvent('mainButtonClicked', () => {
         saveData();
