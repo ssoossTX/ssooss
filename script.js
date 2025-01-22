@@ -622,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameState.keys > 0) {
             gameState.keys--;
             gameState.chests[chestType]--;
-            const item = openChestLogic(chestType); // Теперь возвращает один предмет или null
+            const item = openChestLogic(chestType);
            if (item) {
              const itemElement = document.createElement('div');
                 itemElement.textContent = item;
@@ -646,113 +646,116 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const openChestLogic = (chestType) => {
-        const roll = Math.random();
-          let item = null;
-             // Выбираем, будет ли предмет скином или артефактом (или вообще ничего)
-          const itemTypeRoll = Math.random();
-             // Шанс получить скин или артефакт (или ничего)
-            const skinChance = 0.45; // 45% шанс выпадения скина
-            const artifactChance = 0.45; // 45% шанс выпадения артефакта
+         const roll = Math.random();
+         let item = null;
+            // Выбираем, будет ли предмет скином или артефактом (или вообще ничего)
+         const itemTypeRoll = Math.random();
+           // Шанс получить скин или артефакт (или ничего)
+         const skinChance = 0.45; // 45% шанс выпадения скина
+         const artifactChance = 0.45; // 45% шанс выпадения артефакта
 
-        if (itemTypeRoll <= skinChance){
-               switch (chestType) {
-                     case 'epic':
-                         item = applyRarity(gameConfig.SKIN_RARITY_CHANCE, gameConfig.SKIN_NAMES, 'skins', roll);
-                        break;
-                     case 'rare':
-                         item = applyRarity({ rare: gameConfig.SKIN_RARITY_CHANCE.rare, uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
-                         break;
-                     case 'common':
-                       item = applyRarity({ uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
-                         break;
-                 }
-        }  else if (itemTypeRoll <= skinChance + artifactChance) {
-                 switch (chestType) {
-                     case 'epic':
-                         item = applyRarity(gameConfig.ARTIFACT_RARITY_CHANCE, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
-                        break;
-                     case 'rare':
-                        item =  applyRarity({ rare: gameConfig.ARTIFACT_RARITY_CHANCE.rare, uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
-                         break;
-                     case 'common':
-                        item = applyRarity({ uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
-                        break;
-                 }
+      if (itemTypeRoll <= skinChance) {
+            switch (chestType) {
+                case 'epic':
+                     item = applyRarity(gameConfig.SKIN_RARITY_CHANCE, gameConfig.SKIN_NAMES, 'skins', roll);
+                    break;
+                case 'rare':
+                  item =   applyRarity({ rare: gameConfig.SKIN_RARITY_CHANCE.rare, uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
+                     break;
+                case 'common':
+                 item =  applyRarity({ uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
+                    break;
             }
-        return item;
+         }  else if (itemTypeRoll <= skinChance + artifactChance) {
+                switch (chestType) {
+                    case 'epic':
+                        item = applyRarity(gameConfig.ARTIFACT_RARITY_CHANCE, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
+                         break;
+                    case 'rare':
+                     item =   applyRarity({ rare: gameConfig.ARTIFACT_RARITY_CHANCE.rare, uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
+                        break;
+                    case 'common':
+                       item = applyRarity({ uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
+                       break;
+                }
+            }
+          return item;
     };
 
    const applyRarity = (rarityChances, names, type, roll) => {
-         let totalChance = 0;
-         for (const rarity in rarityChances) {
-             totalChance += rarityChances[rarity];
-             if (roll <= totalChance) {
-                const filteredItems = Object.keys(names).filter(key => gameConfig[type.toUpperCase()+'_RARITY'][key] === rarity);
-                if(filteredItems.length > 0){
-                  return getRandomItem(filteredItems, names, type);
+      let totalChance = 0;
+       for (const rarity in rarityChances) {
+          totalChance += rarityChances[rarity];
+           if (roll <= totalChance) {
+               const filteredItems = Object.keys(names).filter(key => gameConfig[type.toUpperCase() + '_RARITY'][key] === rarity);
+                if (filteredItems.length > 0) {
+                     return getRandomItem(filteredItems, names, type);
                 } else {
-                 return null;
-               }
-            }
-        }
-     return null;
+                     return null;
+                }
+             }
+         }
+         return null;
  };
- 
-  function getRandomItem(itemsArray, names, type) {
-      const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
-      if (type === 'skins') {
+
+ function getRandomItem(itemsArray, names, type) {
+       const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
+        if (!item) {
+            return null; // если item не найден
+        }
+        if (type === 'skins') {
             gameState.skins[item] = (gameState.skins[item] || 0) + 1;
-      } else if (type === 'artifacts') {
-          gameState.artifacts[item] = (gameState.artifacts[item] || 0) + 1;
-      }
+        } else if (type === 'artifacts') {
+             gameState.artifacts[item] = (gameState.artifacts[item] || 0) + 1;
+        }
          return names[item];
     }
 
   const updateInventoryDisplay = () => {
         elements.inventory.skinsDisplay.innerHTML = '';
-        const skins = {};
+         const skins = {};
         for (const skin in gameState.skins) {
             if (gameState.skins.hasOwnProperty(skin) && gameState.skins[skin] > 0) {
                 skins[skin] = gameState.skins[skin];
             }
         }
-        for (const skin in skins) {
-            const skinElement = document.createElement('div');
+       for (const skin in skins) {
+           const skinElement = document.createElement('div');
             skinElement.textContent = `${gameConfig.SKIN_NAMES[skin] || skin} x${skins[skin]}`;
-            skinElement.addEventListener('click', () => {
-               const rarity = gameConfig.SKIN_RARITY[skin];
-                let bonuses = '';
+           skinElement.addEventListener('click', () => {
+              const rarity = gameConfig.SKIN_RARITY[skin];
+               let bonuses = '';
             if(gameConfig.SKIN_EFFECTS[skin]){
-             for (const effect in gameConfig.SKIN_EFFECTS[skin]) {
+               for (const effect in gameConfig.SKIN_EFFECTS[skin]) {
                  bonuses += `${effect}: ${gameConfig.SKIN_EFFECTS[skin][effect]} \n`;
+                }
             }
-            }
-                displayMessage(`${gameConfig.SKIN_NAMES[skin] || skin} \n Редкость: ${rarity || 'Неизвестно'} \n Бонусы:\n${bonuses}`,'white','1em');
-            });
+               displayMessage(`${gameConfig.SKIN_NAMES[skin] || skin} \n Редкость: ${rarity || 'Неизвестно'} \n Бонусы:\n${bonuses}`,'white','1em');
+             });
             elements.inventory.skinsDisplay.appendChild(skinElement);
         }
 
-        elements.inventory.artifactsDisplay.innerHTML = '';
-         const artifacts = {};
+       elements.inventory.artifactsDisplay.innerHTML = '';
+        const artifacts = {};
         for (const artifact in gameState.artifacts) {
-            if (gameState.artifacts.hasOwnProperty(artifact) && gameState.artifacts[artifact] > 0) {
-                artifacts[artifact] = gameState.artifacts[artifact];
+             if (gameState.artifacts.hasOwnProperty(artifact) && gameState.artifacts[artifact] > 0) {
+                 artifacts[artifact] = gameState.artifacts[artifact];
             }
         }
-        for (const artifact in artifacts) {
-           const artifactElement = document.createElement('div');
-            artifactElement.textContent = `${gameConfig.ARTIFACT_NAMES[artifact] || artifact} x${artifacts[artifact]}`;
-            artifactElement.addEventListener('click', () => {
-                  const rarity = gameConfig.ARTIFACT_RARITY[artifact];
-                let bonuses = '';
-              if (gameConfig.ARTIFACT_EFFECTS[artifact]) {
-             for (const effect in gameConfig.ARTIFACT_EFFECTS[artifact]) {
-                 bonuses += `${effect}: ${gameConfig.ARTIFACT_EFFECTS[artifact][effect]} \n`;
-            }
-            }
-                displayMessage(`${gameConfig.ARTIFACT_NAMES[artifact] || artifact} \nРедкость: ${rarity || 'Неизвестно'} \n Бонусы:\n ${bonuses}`, 'white', '1em');
-            });
-           elements.inventory.artifactsDisplay.appendChild(artifactElement);
+       for (const artifact in artifacts) {
+            const artifactElement = document.createElement('div');
+           artifactElement.textContent = `${gameConfig.ARTIFACT_NAMES[artifact] || artifact} x${artifacts[artifact]}`;
+           artifactElement.addEventListener('click', () => {
+                const rarity = gameConfig.ARTIFACT_RARITY[artifact];
+               let bonuses = '';
+               if (gameConfig.ARTIFACT_EFFECTS[artifact]) {
+                 for (const effect in gameConfig.ARTIFACT_EFFECTS[artifact]) {
+                    bonuses += `${effect}: ${gameConfig.ARTIFACT_EFFECTS[artifact][effect]} \n`;
+                   }
+              }
+              displayMessage(`${gameConfig.ARTIFACT_NAMES[artifact] || artifact} \nРедкость: ${rarity || 'Неизвестно'} \n Бонусы:\n ${bonuses}`, 'white', '1em');
+           });
+          elements.inventory.artifactsDisplay.appendChild(artifactElement);
         }
     };
 
