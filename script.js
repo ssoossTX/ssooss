@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
         MESSAGE_DURATION: 3000,
         AUTO_CLICK_INTERVAL: 1000,
         PRESTIGE_BASE_COST: 10000,
-        LEVEL_UP_EXP: 100, // Базовое количество опыта для повышения уровня
         EXPEDITION_TYPES: {
             'easy': 'Легкая',
             'medium': 'Средняя',
@@ -69,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'skin_uncommon_2': 'Автоматизированные Руки',
             'skin_rare_2': 'Механические Конечности',
             'skin_epic_2': 'Драконьи Лапы',
-            'skin_common_3': 'Древняя Маска',
+             'skin_common_3': 'Древняя Маска',
             'skin_uncommon_3': 'Оркская Маска',
             'skin_rare_3': 'Скифский Шлем',
             'skin_epic_3': 'Гномский Шлем',
@@ -87,12 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'artifact_uncommon_3': 'Волшебная Пыль',
             'artifact_rare_3': 'Кристальный Шар',
             'artifact_epic_3': 'Посох Мага',
-            'artifact_common_4': 'Простой Моторчик',
+             'artifact_common_4': 'Простой Моторчик',
             'artifact_uncommon_4': 'Шестерёнчатый Механизм',
             'artifact_rare_4': 'Паровой Двигатель',
             'artifact_epic_4': 'Реактивный Движок',
         },
-        SKIN_RARITY: {
+         SKIN_RARITY: {
             'skin_common_1': 'common',
             'skin_common_2': 'common',
             'skin_uncommon_1': 'uncommon',
@@ -130,9 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'hard': 100,
         },
         EXPEDITION_REWARDS: {
-             'easy': [1, 500, 50], // [minDiamonds, maxDiamonds, experience]
-            'medium': [10, 50, 100],
-            'hard': [100, 500, 250],
+            'easy': [1, 500],
+            'medium': [10, 50],
+            'hard': [100, 500],
         },
         EXPEDITION_DURATIONS: {
             'easy': 6000,
@@ -169,8 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
         skins: {},
         artifacts: {},
         prestigeCost: gameConfig.PRESTIGE_BASE_COST,
-        level: 1, // Новый уровень игрока
-        experience: 0, // Текущий опыт игрока
     };
 
     // 3. Объекты DOM элементов
@@ -209,8 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
         map: {
             mapContainer: document.getElementById('map-container'),
             expeditionProgressDisplay: document.getElementById('expedition-progress'),
-             levelDisplay: document.getElementById('level-display'), // Добавлено отображение уровня
-            experienceDisplay: document.getElementById('experience-display'), // Добавлено отображение опыта
         },
         inventory: {
             inventoryContainer: document.getElementById('inventory-container'),
@@ -221,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             messageDisplay: document.getElementById('message'),
             globalMessageDisplay: document.getElementById('global-message'),
         },
-         menu: {
+        menu: {
             menuButton: document.querySelector('.menu-toggle'),
             menu: document.getElementById('menu-items'),
             menuItems: document.querySelectorAll('.menu-items li button'),
@@ -251,12 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const updatePrestigeDisplay = () => {
         elements.shop.prestigeLevelDisplay.textContent = gameState.prestigeLevel;
         elements.shop.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
-    };
-
-     // Новая функция для обновления отображения уровня и опыта
-      const updateLevelExperienceDisplay = () => {
-        elements.map.levelDisplay.textContent = `Уровень: ${gameState.level}`;
-        elements.map.experienceDisplay.textContent = `Опыт: ${gameState.experience}/${calculateExpToNextLevel()}`;
     };
 
     const updateAchievementsDisplay = () => {
@@ -296,7 +285,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateClickCountDisplay();
         updateUpgradeCostDisplay();
         updatePrestigeDisplay();
-         updateLevelExperienceDisplay()
         updateAchievementsDisplay();
         updateDiamondDisplay();
         updateKeyDisplay();
@@ -317,16 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.global.globalMessageDisplay.style.fontSize = '1em';
         }, gameConfig.MESSAGE_DURATION);
     };
-       const displayLevelUpMessage = (msg, color = 'gold', fontSize = '1.2em') => {
-        elements.global.globalMessageDisplay.textContent = msg;
-        elements.global.globalMessageDisplay.style.color = color;
-        elements.global.globalMessageDisplay.style.fontSize = fontSize;
-        elements.global.globalMessageDisplay.style.display = 'block';
-        setTimeout(() => {
-            elements.global.globalMessageDisplay.style.display = 'none';
-            elements.global.globalMessageDisplay.style.fontSize = '1em';
-        }, gameConfig.MESSAGE_DURATION*3);
-    };
+
     // 6. Функции для расчета бонусов
     const calculateClickBonus = (skins) => {
         let clickBonus = 1;
@@ -367,21 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return diamondBonus;
     };
-    
-     // Функция для расчета необходимого опыта до следующего уровня
-    const calculateExpToNextLevel = () => {
-        return Math.round(gameConfig.LEVEL_UP_EXP * Math.pow(1.2, gameState.level - 1));
-    };
-     // Функция для проверки повышения уровня
-    const checkLevelUp = () => {
-         const expToNextLevel = calculateExpToNextLevel();
-        if (gameState.experience >= expToNextLevel) {
-             gameState.level++;
-            gameState.experience -= expToNextLevel;
-           displayLevelUpMessage(`Уровень повышен до ${gameState.level}!`);
-            checkLevelUp();
-         }
-    };
 
     // 7. Игровые механики
     const applyClick = () => {
@@ -415,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     };
-
+    
     const addAchievement = (achievement) => {
         gameState.achievements.push(achievement);
         gameState.achievementCount++;
@@ -424,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(`Достижение: "${achievement}" получено`, 'gold', '1.2em');
     };
 
-      const resetGame = () => {
+    const resetGame = () => {
         gameState = {
             clickCount: 0,
             clickValue: 1,
@@ -452,15 +416,14 @@ document.addEventListener('DOMContentLoaded', () => {
             skins: {},
             artifacts: {},
             prestigeCost: gameConfig.PRESTIGE_BASE_COST,
-            level: 1,
-            experience: 0,
         };
         clearAllTimeouts();
         updateDisplay();
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
     };
-const clearAllTimeouts = () => {
+
+    const clearAllTimeouts = () => {
         clearInterval(gameState.autoClickerInterval);
         gameState.autoClickerInterval = null;
         if (gameState.expeditionInterval) {
@@ -491,7 +454,7 @@ const clearAllTimeouts = () => {
             } else {
                 localStorage.setItem(gameConfig.SAVE_KEY, dataString);
             }
-        } catch (e) {
+} catch (e) {
             console.error('Failed to save game', e);
         }
     };
@@ -545,7 +508,7 @@ const clearAllTimeouts = () => {
         elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
         elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
         elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
-         elements.inventory.inventoryContainer.style.display = tabId === 'profile' ? 'block' : 'none';
+        elements.inventory.inventoryContainer.style.display = tabId === 'profile' ? 'block' : 'none';
         elements.menu.menuItems.forEach(item => {
             item.classList.remove('active');
             if (item.dataset.tab === tabId) {
@@ -569,12 +532,9 @@ const clearAllTimeouts = () => {
         gameState.activeExpedition = type;
         gameState.expeditionStartTime = Date.now();
         gameState.expeditionDuration = gameConfig.EXPEDITION_DURATIONS[type];
-        const [minReward, maxReward, experienceReward] = gameConfig.EXPEDITION_REWARDS[type];
-        gameState.expeditionReward = {
-            diamonds: Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward,
-            experience: experienceReward
-        };
-         startExpeditionTimer();
+        const [minReward, maxReward] = gameConfig.EXPEDITION_REWARDS[type];
+        gameState.expeditionReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
+        startExpeditionTimer();
         updateDisplay();
         displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[type]}" началась!`, 'green');
     };
@@ -583,9 +543,9 @@ const clearAllTimeouts = () => {
         elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
             const type = button.dataset.type;
             const cost = gameConfig.EXPEDITION_COSTS[type];
-            const [minReward, maxReward, experienceReward] = gameConfig.EXPEDITION_REWARDS[type];
-            button.textContent = `${gameConfig.EXPEDITION_TYPES[type]} (Стоимость: ${cost}💎, Награда: ${minReward}-${maxReward}💎, ${experienceReward} опыта)`;
-              if (cost > 0 && gameState.diamonds < cost) {
+            const [minReward, maxReward] = gameConfig.EXPEDITION_REWARDS[type];
+            button.textContent = `${gameConfig.EXPEDITION_TYPES[type]} (Стоимость: ${cost}💎, Награда: ${minReward}-${maxReward}💎)`;
+             if (cost > 0 && gameState.diamonds < cost) {
                 button.classList.add('disabled');
                 button.disabled = true
             } else {
@@ -599,24 +559,21 @@ const clearAllTimeouts = () => {
         gameState.expeditionInterval = setInterval(updateExpeditionProgressBar, 1000);
     };
 
-     const finishExpedition = () => {
+    const finishExpedition = () => {
         clearInterval(gameState.expeditionInterval);
         gameState.expeditionInterval = null;
-         const reward = gameState.expeditionReward.diamonds;
-        const experience = gameState.expeditionReward.experience;
-         gameState.diamonds += Math.round(reward * calculateDiamondBonus(gameState.artifacts));
-         gameState.experience += experience; // Добавляем опыт
-         checkLevelUp(); // Проверяем повышение уровня после получения опыта
-         const expeditionType = gameState.activeExpedition;
+        const reward = gameState.expeditionReward;
+        gameState.diamonds += Math.round(reward * calculateDiamondBonus(gameState.artifacts));
+        const expeditionType = gameState.activeExpedition;
         gameState.activeExpedition = null;
         gameState.expeditionStartTime = null;
         gameState.expeditionDuration = 0;
         gameState.expeditionReward = 0;
-         displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${Math.round(reward * calculateDiamondBonus(gameState.artifacts))} алмазов и ${experience} опыта`, 'gold', '1.2em');
+        displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${Math.round(reward * calculateDiamondBonus(gameState.artifacts))} алмазов`, 'gold', '1.2em');
         updateDisplay();
         saveData();
     };
-    
+
     const buyKey = () => {
         if (gameState.diamonds >= 10) {
             gameState.diamonds -= 10;
