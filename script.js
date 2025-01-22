@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. gameConfig (все константы и настройки)
     const gameConfig = {
@@ -454,11 +455,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 localStorage.setItem(gameConfig.SAVE_KEY, dataString);
             }
-} catch (e) {
+        } catch (e) {
             console.error('Failed to save game', e);
         }
     };
-
     const loadGame = () => {
         const loadFromStorage = (storage) => {
             const savedDataString = storage.getItem(gameConfig.SAVE_KEY);
