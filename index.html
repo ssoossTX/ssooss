@@ -10,20 +10,12 @@
  <div class="container">
       <div class="menu-bar">
             <button class="menu-toggle" aria-label="Открыть меню" aria-controls="menu-items" aria-expanded="false">☰</button>
-            <ul id="menu-items" class="menu-items">
-                <li >
-                    <button data-tab="clicker">Кликер</button>
-                </li>
-                <li>
-                    <button data-tab="shop">Магазин</button>
-                </li>
-                  <li>
-                    <button data-tab="map">Карта</button>
-                </li>
-                <li>
-                    <button data-tab="profile">Профиль</button>
-                </li>
-              </ul>
+            <ul class="menu-items" id="menu-items">
+                <li><button class="active" data-tab="clicker">Кликер</button></li>
+                <li><button data-tab="shop">Магазин</button></li>
+                 <li><button data-tab="profile">Профиль</button></li>
+                 <li><button data-tab="map">Карта</button></li>
+            </ul>
            <div class="diamonds-menu" id="diamonds-menu">Алмазы: 0</div>
         </div>
          <main class="game-container">
@@ -97,14 +89,7 @@
                 <button class="expedition-button" data-type="hard">Сложная (10 мин)</button>
                  <div id="expedition-progress" class="expedition-progress"></div>
             </div>
-                            <div id="profile-modal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <h2>Профиль игрока</h2>
-                  <div id="profile-info" style="display:block;">
-                   <!-- Тут будет отображаться информация -->
-                </div>
-                <div id="inventory-info" style="display:none;">
-                        <div class="inventory-container">
+                      <div class="inventory-container" id="inventory-container">
                   <div class="profile-header">
                       <h2>Инвентарь</h2>
                   </div>
@@ -119,10 +104,16 @@
                          </div>
                      </div>
                 </div>
+     <div id="profile-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Профиль игрока</h2>
+                <div id="profile-info">
+                   <!-- Тут будет отображаться информация -->
                 </div>
             </div>
         </div>
-    
+
            </main>
     </div>
     <script src="script.js"></script>
