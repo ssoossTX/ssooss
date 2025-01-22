@@ -130,12 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'hard': 100,
         },
         EXPEDITION_REWARDS: {
-            'easy': [1, 5],
+            'easy': [1, 500],
             'medium': [10, 50],
             'hard': [100, 500],
         },
         EXPEDITION_DURATIONS: {
-            'easy': 60000,
+            'easy': 6000,
             'medium': 300000,
             'hard': 600000,
         },
