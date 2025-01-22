@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. gameConfig (все константы и настройки)
     const gameConfig = {
@@ -129,12 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'hard': 100,
         },
         EXPEDITION_REWARDS: {
-            'easy': [1, 500],
+            'easy': [1, 5],
             'medium': [10, 50],
             'hard': [100, 500],
         },
         EXPEDITION_DURATIONS: {
-            'easy': 6000,
+            'easy': 60000,
             'medium': 300000,
             'hard': 600000,
         },
@@ -603,7 +604,6 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage('Недостаточно алмазов!', 'red');
         }
     };
-    
     const openChest = () => {
         elements.shop.chestItemsDisplay.innerHTML = '';
         let chestType = null;
@@ -646,7 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const openChestLogic = (chestType) => {
-            const roll = Math.random();
+        const roll = Math.random();
           let item = null;
              // Выбираем, будет ли предмет скином или артефактом (или вообще ничего)
           const itemTypeRoll = Math.random();
@@ -657,54 +657,54 @@ document.addEventListener('DOMContentLoaded', () => {
         if (itemTypeRoll <= skinChance){
                switch (chestType) {
                      case 'epic':
-                        item = applyRarity(gameConfig.SKIN_RARITY_CHANCE, gameConfig.SKIN_NAMES, 'skins', roll);
+                         item = applyRarity(gameConfig.SKIN_RARITY_CHANCE, gameConfig.SKIN_NAMES, 'skins', roll);
                         break;
                      case 'rare':
-                        item = applyRarity({ rare: gameConfig.SKIN_RARITY_CHANCE.rare, uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
+                         item = applyRarity({ rare: gameConfig.SKIN_RARITY_CHANCE.rare, uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
                          break;
                      case 'common':
-                       item =  applyRarity({ uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
+                       item = applyRarity({ uncommon: gameConfig.SKIN_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.SKIN_NAMES, 'skins', roll);
                          break;
                  }
         }  else if (itemTypeRoll <= skinChance + artifactChance) {
                  switch (chestType) {
                      case 'epic':
-                        item = applyRarity(gameConfig.ARTIFACT_RARITY_CHANCE, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
+                         item = applyRarity(gameConfig.ARTIFACT_RARITY_CHANCE, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
                         break;
                      case 'rare':
-                         item = applyRarity({ rare: gameConfig.ARTIFACT_RARITY_CHANCE.rare, uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
-                        break;
+                        item =  applyRarity({ rare: gameConfig.ARTIFACT_RARITY_CHANCE.rare, uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
+                         break;
                      case 'common':
-                         item = applyRarity({ uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
+                        item = applyRarity({ uncommon: gameConfig.ARTIFACT_RARITY_CHANCE.uncommon, common: 1 }, gameConfig.ARTIFACT_NAMES, 'artifacts', roll);
                         break;
                  }
             }
         return item;
     };
-    // Функция изменена, чтобы возвращался один элемент
-    const applyRarity = (rarityChances, names, type, roll) => {
-        let totalChance = 0;
-        for (const rarity in rarityChances) {
-            totalChance += rarityChances[rarity];
-            if (roll <= totalChance) {
+
+   const applyRarity = (rarityChances, names, type, roll) => {
+         let totalChance = 0;
+         for (const rarity in rarityChances) {
+             totalChance += rarityChances[rarity];
+             if (roll <= totalChance) {
                 const filteredItems = Object.keys(names).filter(key => gameConfig[type.toUpperCase()+'_RARITY'][key] === rarity);
-                if (filteredItems.length > 0) {
-                 return getRandomItem(filteredItems, names, type);
-                 } else {
-                   return null;
-                  }
+                if(filteredItems.length > 0){
+                  return getRandomItem(filteredItems, names, type);
+                } else {
+                 return null;
+               }
             }
         }
-        return null;
-    };
-
-    function getRandomItem(itemsArray, names, type) {
-        const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
-        if (type === 'skins') {
+     return null;
+ };
+ 
+  function getRandomItem(itemsArray, names, type) {
+      const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
+      if (type === 'skins') {
             gameState.skins[item] = (gameState.skins[item] || 0) + 1;
-        } else if (type === 'artifacts') {
-            gameState.artifacts[item] = (gameState.artifacts[item] || 0) + 1;
-        }
+      } else if (type === 'artifacts') {
+          gameState.artifacts[item] = (gameState.artifacts[item] || 0) + 1;
+      }
          return names[item];
     }
 
