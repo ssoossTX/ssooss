@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'artifact_epic_4': { autoClickerBonus: 1.5 },
         },
         SKIN_NAMES: {
-            'skin_common_1': 'Простой Наборчик',
-            'skin_uncommon_1': 'Потрепанный Костюм',
+            'skin_common_1': 'Кепка',
+            'skin_uncommon_1': 'Плащь',
             'skin_rare_1': 'Элитный Наряд',
             'skin_epic_1': 'Легендарное Облачение',
             'skin_common_2': 'Усиленные Перчатки',
