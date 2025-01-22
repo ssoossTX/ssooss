@@ -370,24 +370,25 @@ main.game-container {
     padding: 20px;
     border-radius: 8px;
     animation: slideIn 0.3s ease;
-        background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
-        background-size: cover;
+    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
-
-.inventory-container.active {
+    
+    .inventory-container.active {
     display: block;
 }
+
 
 .profile-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 15px;
-       background-color: rgba(0, 0, 0, 0.5);
-       padding: 10px;
-       border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .profile-header h2 {
@@ -412,9 +413,9 @@ main.game-container {
     margin-top: 0;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     margin-bottom: 10px;
-        background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     padding: 10px;
-        border-radius: 5px;
+    border-radius: 5px;
 }
 
 .skins-display,
@@ -432,16 +433,24 @@ main.game-container {
     padding: 10px;
     border-radius: 5px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-          background-color: rgba(255, 255, 255, 0.1);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      animation: cardFadeIn 0.3s ease;
-       box-sizing: border-box;
-       min-width: 90px;
-           display: flex;
-           flex-direction: column;
-           align-items: center;
-           flex: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    animation: cardFadeIn 0.3s ease;
+    box-sizing: border-box;
+    min-width: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
+
+.skins-display div:hover,
+.artifacts-display div:hover {
+    transform: scale(1.05);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
 @keyframes cardFadeIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -483,9 +492,9 @@ main.game-container {
     text-align: center;
     display: none;
     animation: fadeIn 0.3s ease;
-    }
+}
 
-    /* Всплывающие окна */
+/* Всплывающие окна */
 .item-popup {
     position: fixed;
     top: 50%;
@@ -501,15 +510,15 @@ main.game-container {
     animation: fadeIn 0.3s ease;
     max-width: 80%;
     max-height: 80vh;
-        overflow: auto;
+    overflow: auto;
 }
 .item-popup-close-button{
     position: absolute;
-     top: 5px;
+    top: 5px;
     right: 10px;
     cursor: pointer;
-   font-size: 1.5em;
-    }
+    font-size: 1.5em;
+}
 
 .popup-content {
     display: flex;
@@ -535,7 +544,7 @@ main.game-container {
     max-height: 60px;
     margin-right: 0px;
     border-radius: 5px;
-     margin-bottom: 5px;
+    margin-bottom: 5px;
     object-fit: contain;
 }
 
@@ -545,4 +554,61 @@ main.game-container {
     width: 100%;
     text-align: center;
     font-size: 0.8em;
+}
+/* Модальное окно профиля */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1004;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: rgba(0, 0, 0, 0.9);
+        background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+        background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+        max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 10px;
+    position: relative;
+}
+
+.modal .close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.modal-content h2{
+  margin-bottom: 20px;
+        text-align: center;
+}
+#profile-info {
+    text-align: left;
+}
+#profile-info h3{
+  margin-bottom: 10px;
+    padding: 10px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+}
+    #profile-info h4{
+        margin-top: 15px;
+            margin-bottom: 5px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
