@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     // 1. gameConfig (все константы и настройки)
     const gameConfig = {
@@ -169,6 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
         skins: {},
         artifacts: {},
         prestigeCost: gameConfig.PRESTIGE_BASE_COST,
+        totalClicks: 0,
+        totalAutoClicks: 0,
+        totalDiamondsEarned: 0,
+        totalKeysBought: 0,
+        totalChestsOpened: 0,
+        totalPrestigeCount: 0
     };
 
     // 3. Объекты DOM элементов
@@ -223,7 +228,15 @@ document.addEventListener('DOMContentLoaded', () => {
             menuItems: document.querySelectorAll('.menu-items li button'),
             clickerContent: document.getElementById('clicker-content'),
             gameContent: document.getElementById('game-content'),
-            resetButton: document.getElementById('reset-button'),
+             resetButton: document.getElementById('reset-button'),
+        },
+        profile: {
+            totalClicksDisplay: document.getElementById('total-clicks-display'),
+            totalAutoClicksDisplay: document.getElementById('total-auto-clicks-display'),
+            totalDiamondsEarnedDisplay: document.getElementById('total-diamonds-earned-display'),
+            totalKeysBoughtDisplay: document.getElementById('total-keys-bought-display'),
+            totalChestsOpenedDisplay: document.getElementById('total-chests-opened-display'),
+             totalPrestigeCountDisplay: document.getElementById('total-prestige-count-display'),
         }
     };
     const tWebApp = window.Telegram && window.Telegram.WebApp;
@@ -281,6 +294,15 @@ document.addEventListener('DOMContentLoaded', () => {
             finishExpedition();
         }
     };
+    
+     const updateProfileDisplay = () => {
+        elements.profile.totalClicksDisplay.textContent = `Всего кликов: ${gameState.totalClicks}`;
+        elements.profile.totalAutoClicksDisplay.textContent = `Всего автокликов: ${gameState.totalAutoClicks}`;
+        elements.profile.totalDiamondsEarnedDisplay.textContent = `Всего алмазов заработано: ${gameState.totalDiamondsEarned}`;
+        elements.profile.totalKeysBoughtDisplay.textContent = `Всего ключей куплено: ${gameState.totalKeysBought}`;
+        elements.profile.totalChestsOpenedDisplay.textContent = `Всего сундуков открыто: ${gameState.totalChestsOpened}`;
+         elements.profile.totalPrestigeCountDisplay.textContent = `Всего перерождений: ${gameState.totalPrestigeCount}`;
+    };
 
     const updateDisplay = () => {
         updateClickCountDisplay();
@@ -293,6 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateExpeditionProgressBar();
         updateExpeditionButtonInfo();
         updateInventoryDisplay();
+        updateProfileDisplay();
     };
 
     // 5. Сообщения
@@ -351,12 +374,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. Игровые механики
     const applyClick = () => {
         gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier;
+        gameState.totalClicks += (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier
         updateDisplay();
         checkAchievements();
     };
 
     const autoClick = () => {
         gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * calculateAutoClickBonus(gameState.skins)) * gameState.prestigeMultiplier;
+          gameState.totalAutoClicks += (gameState.autoClickerValue * gameState.clickUpgradeLevel * calculateAutoClickBonus(gameState.skins)) * gameState.prestigeMultiplier
         updateDisplay();
     };
 
@@ -417,6 +442,12 @@ document.addEventListener('DOMContentLoaded', () => {
             skins: {},
             artifacts: {},
             prestigeCost: gameConfig.PRESTIGE_BASE_COST,
+            totalClicks: 0,
+            totalAutoClicks: 0,
+            totalDiamondsEarned: 0,
+            totalKeysBought: 0,
+            totalChestsOpened: 0,
+             totalPrestigeCount: 0,
         };
         clearAllTimeouts();
         updateDisplay();
@@ -459,6 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Failed to save game', e);
         }
     };
+
     const loadGame = () => {
         const loadFromStorage = (storage) => {
             const savedDataString = storage.getItem(gameConfig.SAVE_KEY);
@@ -516,8 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
-
-    const startExpedition = (type) => {
+     const startExpedition = (type) => {
         if (gameState.activeExpedition) {
             displayMessage('Уже есть активная экспедиция', 'red');
             return;
@@ -564,6 +595,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.expeditionInterval = null;
         const reward = gameState.expeditionReward;
         gameState.diamonds += Math.round(reward * calculateDiamondBonus(gameState.artifacts));
+        gameState.totalDiamondsEarned += Math.round(reward * calculateDiamondBonus(gameState.artifacts))
         const expeditionType = gameState.activeExpedition;
         gameState.activeExpedition = null;
         gameState.expeditionStartTime = null;
@@ -578,6 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameState.diamonds >= 10) {
             gameState.diamonds -= 10;
             gameState.keys++;
+            gameState.totalKeysBought++;
             updateDisplay();
             displayMessage('Куплен ключ!', 'green');
         } else {
@@ -621,6 +654,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gameState.keys > 0) {
         gameState.keys--;
         gameState.chests[chestType]--;
+        gameState.totalChestsOpened++;
         const item = openChestLogic(chestType);
         if (item) {
             const itemElement = document.createElement('div');
@@ -635,7 +669,6 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage('Нет ключей для открытия', 'red');
     }
 };
-
 
 const closeChest = () => {
     elements.shop.chestContainer.style.display = 'none';
@@ -732,6 +765,7 @@ const updateInventoryDisplay = () => {
         skinElement.addEventListener('click', () => {
             const rarity = gameConfig.SKIN_RARITY[skin];
             let bonuses = '';
+         
             if (gameConfig.SKIN_EFFECTS[skin]) {
                 for (const effect in gameConfig.SKIN_EFFECTS[skin]) {
                     bonuses += `${effect}: ${gameConfig.SKIN_EFFECTS[skin][effect]} \n`;
@@ -809,6 +843,7 @@ elements.clicker.upgradeAutoButton.addEventListener('click', () => {
 elements.shop.prestigeButton.addEventListener('click', () => {
     if (gameState.clickCount >= gameState.prestigeCost) {
         gameState.prestigeLevel++;
+         gameState.totalPrestigeCount++;
         gameState.prestigeMultiplier = Math.round(gameState.prestigeMultiplier * calculatePrestigeBonus(gameState.artifacts));
         gameState.clickCount = 0;
         gameState.clickValue = 1;
