@@ -924,22 +924,36 @@ elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button 
     const profileButton = document.querySelector('[data-tab="profile"]');
     const profileModal = document.getElementById('profile-modal');
     const closeModalButton = profileModal.querySelector('.close-button');
+    const profileInfoDiv = document.getElementById('profile-info');
+    const inventoryInfoDiv = document.getElementById('inventory-info');
+    const tabButtons = document.querySelectorAll('.tab-button');
 
   profileButton.addEventListener('click', () => {
-      updateProfile();
-        updateInventoryDisplay();
+       updateProfile();
+      updateInventoryDisplay();
        profileModal.style.display = 'block';
+      profileInfoDiv.style.display = 'block';
+      inventoryInfoDiv.style.display = 'none';
+      tabButtons[0].classList.add('active');
+      tabButtons[1].classList.remove('active');
 });
     
-    closeModalButton.addEventListener('click', () => {
-        profileModal.style.display = 'none';
-    });
+    const switchProfileTab = (tabId) => {
+    profileInfoDiv.style.display = tabId === 'profile-info' ? 'block' : 'none';
+    inventoryInfoDiv.style.display = tabId === 'inventory-info' ? 'block' : 'none';
 
-        // Обработчик для закрытия окна по клику вне его
-    window.addEventListener('click', (event) => {
-        if (event.target === profileModal) {
-            profileModal.style.display = 'none';
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+        if (button.dataset.tab === tabId) {
+            button.classList.add('active');
         }
+    });
+};
+
+    tabButtons.forEach(button => {
+         button.addEventListener('click', () => {
+             switchProfileTab(button.dataset.tab);
+         });
     });
     
 const AUTO_SAVE_INTERVAL = 10000;
