@@ -14,7 +14,12 @@ body {
     min-height: 100vh;
     color: white;
     transition: background-color 0.3s ease;
-    overflow: hidden; /* Предотвращает скролл, если контент выходит за рамки */
+    animation: backgroundPulse 5s infinite alternate; /* Добавлена анимация для фона */
+}
+
+@keyframes backgroundPulse {
+    from { background-color: rgba(0, 0, 0, 0.7); }
+    to { background-color: rgba(0, 0, 0, 0.8); }
 }
 
 .container {
@@ -27,26 +32,12 @@ body {
     position: relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
-    animation: fadeIn 0.5s ease, pulse 2s infinite alternate; /* Добавляем пульсацию */
+    animation: fadeIn 0.5s ease;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(1.03);
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .menu-bar {
@@ -57,7 +48,6 @@ body {
     display: flex;
     align-items: center;
     width: calc(100% - 20px);
-    justify-content: space-between;
 }
 
 main.game-container {
@@ -73,7 +63,6 @@ main.game-container {
         transform: translateY(-20px);
         opacity: 0;
     }
-
     to {
         transform: translateY(0);
         opacity: 1;
@@ -99,34 +88,24 @@ main.game-container {
     margin-bottom: 15px;
     font-size: 2.5em;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    animation: glow 1.5s infinite alternate; /* Добавим свечение */
+    animation: pulse 2s infinite alternate; /* Добавлена анимация для заголовка */
 }
 
-@keyframes glow {
-    0% {
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    }
-    100% {
-        text-shadow: 1px 1px 8px rgba(52, 152, 219, 0.8);
-    }
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
 }
 
 .counter {
     font-size: 3em;
     margin-bottom: 15px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    animation: numberChange 0.5s ease; /* Плавное изменение чисел */
+    animation: glow 1.5s ease-in-out infinite alternate; /* Добавлена анимация для счетчика */
 }
 
-@keyframes numberChange {
-    0% {
-        opacity: 0.5;
-        transform: scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+@keyframes glow {
+    from { text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+    to { text-shadow: 0 0 15px rgba(0, 0, 0, 0.9); }
 }
 
 /* Общие стили для кнопок */
@@ -143,8 +122,12 @@ main.game-container {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background-image: linear-gradient(to bottom, #3498db, #2980b9);
     color: white;
-    overflow: hidden; /* Скрываем частицы за границами кнопки */
-    position: relative; /* Позиционируем кнопку относительно для частиц */
+    animation: buttonFadeIn 0.4s ease forwards; /* Добавлена анимация при появлении */
+    opacity: 0; /* Начальная прозрачность */
+}
+
+@keyframes buttonFadeIn {
+    to { opacity: 1; }
 }
 
 .game-button:hover,
@@ -162,65 +145,24 @@ main.game-container {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Эффект частиц при наведении на кнопку */
-.game-button::before,
-.menu-items li button::before,
-.expedition-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
-    clip-path: circle(10% at var(--x), var(--y));
-    transform: scale(0);
-    transition: transform 0.5s ease;
-}
-
-.game-button:hover::before,
-.menu-items li button:hover::before,
-.expedition-button:hover::before {
-    transform: scale(3);
-}
-
 #click-button {
     background-image: linear-gradient(to bottom right, #2ecc71, #3498db);
     color: white;
     text-transform: uppercase;
     font-weight: bold;
-    animation: buttonPulse 2s infinite alternate; /* Добавим пульсацию к кнопке клика */
+    animation: rainbow 5s linear infinite; /* Добавлена радужная анимация */
+    background-size: 200% 200%;
 }
 
-@keyframes buttonPulse {
-    0% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(1.05);
-    }
+@keyframes rainbow {
+    0% { background-position: left bottom; }
+    50% { background-position: right top; }
+    100% { background-position: left bottom; }
 }
 
 #click-button:active {
     transform: scale(1.1);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-/* Эффект искр при клике на кнопку */
-#click-button:active {
-    animation: sparks 0.5s ease-out;
-}
-
-@keyframes sparks {
-    0% {
-        transform: scale(1.1);
-    }
-    50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1.1);
-    }
 }
 
 .upgrades {
@@ -240,12 +182,21 @@ main.game-container {
     justify-content: space-between;
     align-items: center;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.2s ease;
+    animation: slideInLeft 0.4s ease forwards; /* Добавлена анимация для каждого элемента */
+    transform: translateX(-50px); /* Начальное положение за пределами экрана */
+    opacity: 0;
+}
+
+@keyframes slideInLeft {
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .upgrade-item:hover {
     background-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.02);
 }
 
 .upgrade-item p {
@@ -259,10 +210,8 @@ main.game-container {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: background-color 0.3s ease;
     background-image: linear-gradient(to bottom, #2ecc71, #27ae60);
-    position: relative;
-    overflow: hidden;
 }
 
 .buy-upgrade:hover {
@@ -270,42 +219,17 @@ main.game-container {
     background-image: linear-gradient(to bottom, #27ae60, #2ecc71);
 }
 
-/* Анимация "подтверждения" при покупке улучшения */
-.buy-upgrade.bought {
-    animation: boughtAnimation 0.5s ease-out;
-}
-
-@keyframes boughtAnimation {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-    50% {
-        transform: scale(1.1);
-        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-}
-
 #prestige-button {
     background-color: #f39c12;
     color: white;
     text-transform: uppercase;
     font-weight: bold;
-    animation: spin 2s linear infinite; /* Добавим вращение */
+    animation: spin 2s linear infinite; /* Добавлена анимация вращения */
 }
 
 @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 #reset-button {
@@ -313,6 +237,25 @@ main.game-container {
     color: white;
     text-transform: uppercase;
     font-weight: bold;
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both; /* Добавлена анимация тряски */
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 
 .message {
@@ -321,26 +264,16 @@ main.game-container {
     margin-top: 10px;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    animation: messageFade 3s forwards; /* Появление и исчезновение сообщения */
+    animation: blink 1s step-end infinite; /* Добавлена анимация мигания */
 }
 
-@keyframes messageFade {
-    0% {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    20% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    80% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(10px);
-    }
+@keyframes blink {
+  from, to {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Menu Styles */
@@ -360,7 +293,6 @@ main.game-container {
     transform: rotate(90deg);
 }
 
-/* Анимация выпадающего меню */
 #menu-items {
     list-style: none;
     padding: 0;
@@ -402,18 +334,8 @@ main.game-container {
 
 #menu-items.active {
     display: block;
-    animation: slideInMenu 0.3s ease-out;
-}
-
-@keyframes slideInMenu {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .diamonds-menu {
@@ -442,32 +364,13 @@ main.game-container {
     margin-bottom: 20px;
     width: 100%;
     box-sizing: border-box;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-/* Добавляем анимацию при появлении контента */
-#clicker-content.active,
-#game-content.active,
-.map-container.active {
-    animation: fadeInContent 0.5s ease-out;
-}
-
-@keyframes fadeInContent {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    transition: background-color 0.3s ease;
 }
 
 #clicker-content:hover,
 #game-content:hover,
 .map-container:hover {
     background-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.01);
 }
 
 #clicker-content h1 {
@@ -497,12 +400,11 @@ main.game-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.2s ease;
 }
 
 .chest-item:hover {
     background-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.01);
 }
 
 /* Экспедиции */
@@ -518,20 +420,11 @@ main.game-container {
     cursor: not-allowed;
 }
 
-/* Анимация прогресса экспедиции */
 .expedition-progress {
     margin-top: 10px;
     background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     border-radius: 5px;
-    overflow: hidden; /* Скрываем полоску за границами контейнера */
-}
-
-.progress-bar {
-    height: 10px;
-    background-color: #2ecc71;
-    width: 0%; /* Начальное значение ширины полосы прогресса */
-    transition: width 0.5s ease-in-out; /* Анимация изменения ширины */
 }
 
 /* Инвентарь */
@@ -554,21 +447,10 @@ main.game-container {
     background-repeat: no-repeat;
 }
 
-.inventory-container.active {
+    .inventory-container.active {
     display: block;
-    animation: slideInInventory 0.4s ease-out; /* Добавим анимацию при появлении инвентаря */
 }
 
-@keyframes slideInInventory {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 .profile-header {
     display: flex;
@@ -578,18 +460,6 @@ main.game-container {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 10px;
     border-radius: 5px;
-    animation: fadeInHeader 0.5s ease-out; /* Анимация появления заголовка профиля */
-}
-
-@keyframes fadeInHeader {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .profile-header h2 {
@@ -653,40 +523,9 @@ main.game-container {
 }
 
 @keyframes cardFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
-/* Добавим эффект "вылетающей" монетки при получении артефакта */
-.artifacts-display div.new::before {
-    content: '\f155'; /* Unicode для иконки монетки (Font Awesome) */
-    font-family: 'Font Awesome 5 Free'; /* Укажите семейство шрифтов Font Awesome */
-    font-weight: 900; /* Установите жирность шрифта */
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    color: gold;
-    font-size: 1.5em;
-    animation: flyOut 0.7s ease-out;
-}
-
-@keyframes flyOut {
-    0% {
-        transform: translate(0, 0);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(50px, -50px);
-        opacity: 0;
-    }
-}
-
 .chest-container {
     display: none;
     position: fixed;
@@ -703,23 +542,6 @@ main.game-container {
     max-height: 80vh;
     overflow: auto;
     animation: fadeIn 0.3s ease;
-}
-
-/* Анимация открытия сундука */
-.chest-container.opening {
-    animation: openChest 0.5s ease-out;
-}
-
-@keyframes openChest {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.1);
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-    }
 }
 
 .chest-content {
@@ -740,7 +562,12 @@ main.game-container {
     color: white;
     text-align: center;
     display: none;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.3s ease, slideInDown 0.5s ease forwards; /* Добавлена анимация появления сверху */
+    top: -50px; /* Начальное положение за пределами экрана */
+}
+
+@keyframes slideInDown {
+    to { top: 10px; }
 }
 
 /* Всплывающие окна */
@@ -756,44 +583,18 @@ main.game-container {
     z-index: 1003;
     color: white;
     text-align: left;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.3s ease, zoomIn 0.4s ease; /* Добавлена анимация увеличения масштаба */
     max-width: 80%;
     max-height: 80vh;
     overflow: auto;
 }
 
-/* Анимация плавного появления и исчезновения всплывающего окна */
-.item-popup.show {
-    animation: popupShow 0.3s ease-out;
+@keyframes zoomIn {
+    from { transform: translate(-50%, -50%) scale(0.5); }
+    to { transform: translate(-50%, -50%) scale(1); }
 }
 
-@keyframes popupShow {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -40%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-}
-
-.item-popup.hide {
-    animation: popupHide 0.3s ease-in forwards;
-}
-
-@keyframes popupHide {
-    from {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-    to {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-    }
-}
-
-.item-popup-close-button {
+.item-popup-close-button{
     position: absolute;
     top: 5px;
     right: 10px;
@@ -830,13 +631,12 @@ main.game-container {
 }
 
 .skins-display div span,
-.artifacts-display div span {
+.artifacts-display div span{
     display: block;
     width: 100%;
     text-align: center;
     font-size: 0.8em;
 }
-
 /* Модальное окно профиля */
 .modal {
     display: none;
@@ -852,30 +652,24 @@ main.game-container {
 
 .modal-content {
     background-color: rgba(0, 0, 0, 0.9);
-    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
-    background-size: cover;
+        background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+        background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-height: 90vh;
+        max-height: 90vh;
     overflow-y: auto;
     border-radius: 10px;
     position: relative;
-    animation: modalSlideIn 0.4s ease-out; /* Добавим анимацию появления модального окна */
+    animation: modalFadeIn 0.4s ease; /* Анимация для плавного появления модального окна */
 }
 
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .modal .close-button {
@@ -887,30 +681,25 @@ main.game-container {
     font-weight: bold;
     cursor: pointer;
 }
-
-.modal-content h2 {
-    margin-bottom: 20px;
-    text-align: center;
+.modal-content h2{
+  margin-bottom: 20px;
+        text-align: center;
 }
-
 #profile-info {
     text-align: left;
 }
-
-#profile-info h3 {
-    margin-bottom: 10px;
+#profile-info h3{
+  margin-bottom: 10px;
     padding: 10px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
 }
-
-#profile-info h4 {
-    margin-top: 15px;
-    margin-bottom: 5px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    #profile-info h4{
+        margin-top: 15px;
+            margin-bottom: 5px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
-
 /* Добавляем стили для контейнера профиля и табов */
 #profile-container {
     display: none; /* Скрываем контейнер профиля по умолчанию */
