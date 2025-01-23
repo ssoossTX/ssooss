@@ -14,6 +14,18 @@ body {
     min-height: 100vh;
     color: white;
     transition: background-color 0.3s ease;
+    overflow-x: hidden; /*  Предотвращает горизонтальную полосу прокрутки */
+}
+
+/* Добавление плавного появления элементов при загрузке страницы */
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+  opacity: 0; /* Изначально скрываем элемент */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .container {
@@ -374,10 +386,23 @@ main.game-container {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    transition: all 0.3s ease; /*  Плавные переходы для изменений */
 }
 
-.inventory-container.active {
+    .inventory-container.active {
     display: block;
+    animation: slideInFromRight 0.5s ease; /*  Новая анимация появления справа */
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 
@@ -389,13 +414,19 @@ main.game-container {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 10px;
     border-radius: 5px;
-    transition: all 0.3s ease; /* Плавное изменение при наведении */
+    animation: pulse 2s infinite alternate; /*  Мягкая пульсация */
 }
 
-.profile-header:hover {
-    background-color: rgba(0, 0, 0, 0.6);
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.03); }
+}
+
+.profile-header h2 {
+    margin: 0;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    flex: 1;
 }
 
 .profile-content {
@@ -407,6 +438,18 @@ main.game-container {
 .profile-section {
     padding: 0;
     margin-bottom: 15px;
+    animation: slideInDown 0.5s ease backwards; /*  Плавное появление сверху */
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .profile-section h3 {
@@ -442,12 +485,13 @@ main.game-container {
     flex-direction: column;
     align-items: center;
     flex: 1;
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Более плавные переходы */
 }
 
 .skins-display div:hover,
 .artifacts-display div:hover {
-    transform: scale(1.05);
+    transform: scale(1.1); /*  Увеличение при наведении */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /*  Более выраженная тень */
     background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -566,23 +610,34 @@ main.game-container {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.8);
-    animation: fadeIn 0.3s ease; /* Анимация появления модального окна */
+    animation: fadeInModal 0.4s ease forwards; /*  Анимация появления модального окна */
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .modal-content {
     background-color: rgba(0, 0, 0, 0.9);
-    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
-    background-size: cover;
+        background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+        background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-height: 90vh;
+        max-height: 90vh;
     overflow-y: auto;
     border-radius: 10px;
     position: relative;
+    animation: zoomIn 0.3s ease; /*  Анимация увеличения содержимого модального окна */
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
 
 .modal .close-button {
@@ -593,6 +648,10 @@ main.game-container {
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+}
+.modal .close-button:hover {
+    color: white; /* Изменение цвета при наведении на кнопку закрытия */
+    text-shadow: 0 0 5px white; /* Добавляем свечение */
 }
 .modal-content h2{
   margin-bottom: 20px;
@@ -620,28 +679,24 @@ main.game-container {
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 20px;
-    animation: slideInDown 0.5s ease; /* Добавим анимацию появления */
-}
-
-#profile-container.active {
-    display: block; /* Отображаем контейнер профиля */
-}
-
-@keyframes slideInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .profile-tabs {
     display: flex;
     justify-content: space-around;
     margin-bottom: 10px;
+    animation: slideInLeft 0.5s ease; /* Плавное появление слева */
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .profile-tab-button {
@@ -651,17 +706,19 @@ main.game-container {
     color: white;
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease;
 }
 
 .profile-tab-button:hover {
     background-color: #777;
-    transform: translateY(-2px);
 }
 
 .profile-tab-button.active {
     background-color: #3498db;
-    transform: scale(1.05);
+}
+
+.profile-tab-button:active {
+    transform: translateY(1px); /* Эффект нажатия */
 }
 
 .profile-tab-content {
