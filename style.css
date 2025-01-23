@@ -14,12 +14,6 @@ body {
     min-height: 100vh;
     color: white;
     transition: background-color 0.3s ease;
-    animation: backgroundPulse 5s infinite alternate; /* Добавлена анимация для фона */
-}
-
-@keyframes backgroundPulse {
-    from { background-color: rgba(0, 0, 0, 0.7); }
-    to { background-color: rgba(0, 0, 0, 0.8); }
 }
 
 .container {
@@ -36,8 +30,13 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .menu-bar {
@@ -63,6 +62,7 @@ main.game-container {
         transform: translateY(-20px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -88,24 +88,13 @@ main.game-container {
     margin-bottom: 15px;
     font-size: 2.5em;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    animation: pulse 2s infinite alternate; /* Добавлена анимация для заголовка */
-}
-
-@keyframes pulse {
-    from { transform: scale(1); }
-    to { transform: scale(1.05); }
+    font-family: "Roboto", sans-serif; /* Пример шрифта для заголовка */
 }
 
 .counter {
     font-size: 3em;
     margin-bottom: 15px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    animation: glow 1.5s ease-in-out infinite alternate; /* Добавлена анимация для счетчика */
-}
-
-@keyframes glow {
-    from { text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
-    to { text-shadow: 0 0 15px rgba(0, 0, 0, 0.9); }
 }
 
 /* Общие стили для кнопок */
@@ -118,16 +107,10 @@ main.game-container {
     cursor: pointer;
     margin-bottom: 10px;
     border-radius: 8px;
-    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, border 0.2s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background-image: linear-gradient(to bottom, #3498db, #2980b9);
     color: white;
-    animation: buttonFadeIn 0.4s ease forwards; /* Добавлена анимация при появлении */
-    opacity: 0; /* Начальная прозрачность */
-}
-
-@keyframes buttonFadeIn {
-    to { opacity: 1; }
 }
 
 .game-button:hover,
@@ -143,6 +126,7 @@ main.game-container {
 .expedition-button:active {
     transform: translateY(1px);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    border: 2px solid #f39c12; /* Акцентный цвет для более четкой обратной связи */
 }
 
 #click-button {
@@ -150,14 +134,6 @@ main.game-container {
     color: white;
     text-transform: uppercase;
     font-weight: bold;
-    animation: rainbow 5s linear infinite; /* Добавлена радужная анимация */
-    background-size: 200% 200%;
-}
-
-@keyframes rainbow {
-    0% { background-position: left bottom; }
-    50% { background-position: right top; }
-    100% { background-position: left bottom; }
 }
 
 #click-button:active {
@@ -183,16 +159,6 @@ main.game-container {
     align-items: center;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     transition: background-color 0.2s ease;
-    animation: slideInLeft 0.4s ease forwards; /* Добавлена анимация для каждого элемента */
-    transform: translateX(-50px); /* Начальное положение за пределами экрана */
-    opacity: 0;
-}
-
-@keyframes slideInLeft {
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
 }
 
 .upgrade-item:hover {
@@ -224,12 +190,6 @@ main.game-container {
     color: white;
     text-transform: uppercase;
     font-weight: bold;
-    animation: spin 2s linear infinite; /* Добавлена анимация вращения */
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
 }
 
 #reset-button {
@@ -237,25 +197,6 @@ main.game-container {
     color: white;
     text-transform: uppercase;
     font-weight: bold;
-    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both; /* Добавлена анимация тряски */
-}
-
-@keyframes shake {
-  10%, 90% {
-    transform: translate3d(-1px, 0, 0);
-  }
-
-  20%, 80% {
-    transform: translate3d(2px, 0, 0);
-  }
-
-  30%, 50%, 70% {
-    transform: translate3d(-4px, 0, 0);
-  }
-
-  40%, 60% {
-    transform: translate3d(4px, 0, 0);
-  }
 }
 
 .message {
@@ -264,16 +205,6 @@ main.game-container {
     margin-top: 10px;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    animation: blink 1s step-end infinite; /* Добавлена анимация мигания */
-}
-
-@keyframes blink {
-  from, to {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
 }
 
 /* Menu Styles */
@@ -307,6 +238,7 @@ main.game-container {
     top: 40px;
     left: 0;
     z-index: 1002;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Добавляем тень для лучшей видимости */
 }
 
 #menu-items li button {
@@ -418,6 +350,8 @@ main.game-container {
 .expedition-button.disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    background-color: #777;
+    color: #aaa;
 }
 
 .expedition-progress {
@@ -562,12 +496,7 @@ main.game-container {
     color: white;
     text-align: center;
     display: none;
-    animation: fadeIn 0.3s ease, slideInDown 0.5s ease forwards; /* Добавлена анимация появления сверху */
-    top: -50px; /* Начальное положение за пределами экрана */
-}
-
-@keyframes slideInDown {
-    to { top: 10px; }
+    animation: fadeIn 0.3s ease;
 }
 
 /* Всплывающие окна */
@@ -576,22 +505,46 @@ main.game-container {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный */
+    backdrop-filter: blur(5px); /* Добавляем размытие фона */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
     z-index: 1003;
     color: white;
     text-align: left;
-    animation: fadeIn 0.3s ease, zoomIn 0.4s ease; /* Добавлена анимация увеличения масштаба */
+    animation: popupFadeIn 0.3s ease;
     max-width: 80%;
     max-height: 80vh;
     overflow: auto;
 }
 
-@keyframes zoomIn {
-    from { transform: translate(-50%, -50%) scale(0.5); }
-    to { transform: translate(-50%, -50%) scale(1); }
+.item-popup.closing {
+    animation: popupFadeOut 0.3s ease;
+}
+
+@keyframes popupFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes popupFadeOut {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
 }
 
 .item-popup-close-button{
@@ -664,12 +617,6 @@ main.game-container {
     overflow-y: auto;
     border-radius: 10px;
     position: relative;
-    animation: modalFadeIn 0.4s ease; /* Анимация для плавного появления модального окна */
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
 }
 
 .modal .close-button {
