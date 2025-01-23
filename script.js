@@ -504,24 +504,57 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const switchTab = (tabId) => {
-        elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
-        elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
-        elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
-        // Добавляем здесь скрытие инвентаря, чтобы избежать одновременного отображения инвентаря и модального окна.
-        elements.inventory.inventoryContainer.style.display = 'none';
-         // Если открыта вкладка профиля, то показываем инвентарь
-       if (tabId === 'profile') {
-          elements.inventory.inventoryContainer.style.display = 'block';
-       }
-        elements.menu.menuItems.forEach(item => {
-            item.classList.remove('active');
-            if (item.dataset.tab === tabId) {
-                item.classList.add('active');
-            }
+    elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
+    elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
+    elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
+    elements.inventory.inventoryContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
+
+    // Добавляем логику для переключения табов внутри профиля
+    if (tabId === 'profile') {
+        const profileInfo = document.getElementById('profile-info');
+        const profileInventory = document.getElementById('profile-inventory');
+        const profileContainer = document.getElementById('profile-container'); // Получаем контейнер профиля
+
+        // Показываем контейнер профиля и вкладку "Профиль" по умолчанию
+        profileContainer.style.display = 'block';
+        profileInfo.style.display = 'block';
+        profileInventory.style.display = 'none';
+
+        const profileTabButtons = document.querySelectorAll('.profile-tab-button');
+        profileTabButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const tab = event.target.dataset.tab;
+                profileInfo.style.display = (tab === 'profile-info') ? 'block' : 'none';
+                profileInventory.style.display = (tab === 'profile-inventory') ? 'block' : 'none';
+                // Убираем класс "active" у всех кнопок
+                profileTabButtons.forEach(btn => btn.classList.remove('active'));
+                // Добавляем класс "active" только активной кнопке
+                event.target.classList.add('active');
+            });
         });
-          // Скрываем модальное окно профиля при переключении вкладок
-           document.getElementById('profile-modal').style.display = 'none';
-    };
+        updateProfile();
+        updateInventoryDisplay();
+    } else {
+        // Скрываем контейнер профиля, если открыта другая вкладка
+        const profileContainer = document.getElementById('profile-container');
+        if (profileContainer) {
+            profileContainer.style.display = 'none';
+        }
+    }
+
+    elements.menu.menuItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.tab === tabId) {
+            item.classList.add('active');
+        }
+    });
+
+    // Скрываем модальное окно профиля при переключении вкладок (уже не нужно, но оставим на всякий случай)
+    const profileModal = document.getElementById('profile-modal'); // Получаем модальное окно
+    if (profileModal) {
+        profileModal.style.display = 'none';
+    }
+};
 
     const startExpedition = (type) => {
         if (gameState.activeExpedition) {
@@ -921,26 +954,6 @@ elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button 
     });
 });
     
-    const profileButton = document.querySelector('[data-tab="profile"]');
-    const profileModal = document.getElementById('profile-modal');
-    const closeModalButton = profileModal.querySelector('.close-button');
-
-  profileButton.addEventListener('click', () => {
-      updateProfile();
-        updateInventoryDisplay();
-       profileModal.style.display = 'block';
-});
-    
-    closeModalButton.addEventListener('click', () => {
-        profileModal.style.display = 'none';
-    });
-
-        // Обработчик для закрытия окна по клику вне его
-    window.addEventListener('click', (event) => {
-        if (event.target === profileModal) {
-            profileModal.style.display = 'none';
-        }
-    });
     
 const AUTO_SAVE_INTERVAL = 10000;
 const autoSave = () => {
