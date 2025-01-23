@@ -2,7 +2,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Press Start 2P', cursive, Arial, sans-serif; /* Добавим "игровой" шрифт */
+    font-family: Arial, sans-serif;
     background-image: url('IMG_20250114_111552_356.jpg');
     background-size: cover;
     background-position: center;
@@ -12,28 +12,22 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    color: #eee; /* Светло-серый текст для лучшей читаемости */
+    color: white;
     transition: background-color 0.3s ease;
     overflow: hidden; /* Предотвращает скролл, если контент выходит за рамки */
 }
 
-@font-face {
-    font-family: 'Press Start 2P';
-    src: url('PressStart2P-Regular.ttf') format('truetype');
-}
-
 .container {
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.8); /* Увеличение прозрачности */
-    padding: 30px; /* Увеличение отступов */
-    border-radius: 15px; /* Более скругленные края */
-    max-width: 700px; /* Увеличение максимальной ширины */
-    width: 95%; /* Увеличение занимаемой ширины */
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
     position: relative;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Увеличение тени */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
-    animation: fadeIn 0.7s ease, pulse 2s infinite alternate; /* Добавим пульсацию */
-    border: 2px solid #555; /* Добавим рамку */
+    animation: fadeIn 0.5s ease, pulse 2s infinite alternate; /* Добавляем пульсацию */
 }
 
 @keyframes fadeIn {
@@ -47,37 +41,36 @@ body {
 }
 
 @keyframes pulse {
-    from {
+    0% {
         transform: scale(1);
     }
-
-    to {
-        transform: scale(1.02);
+    100% {
+        transform: scale(1.03);
     }
 }
 
 .menu-bar {
     position: absolute;
-    top: 15px;
-    left: 15px;
+    top: 10px;
+    left: 10px;
     z-index: 1000;
     display: flex;
     align-items: center;
-    width: calc(100% - 30px);
-    justify-content: space-between; /* Распределяем элементы по краям */
+    width: calc(100% - 20px);
+    justify-content: space-between;
 }
 
 main.game-container {
-    padding-top: 30px;
+    padding-top: 20px;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 30px;
-    animation: slideIn 0.7s ease;
+    gap: 20px;
+    animation: slideIn 0.5s ease;
 }
 
 @keyframes slideIn {
     from {
-        transform: translateY(-30px);
+        transform: translateY(-20px);
         opacity: 0;
     }
 
@@ -103,38 +96,34 @@ main.game-container {
 }
 
 #game-title {
-    margin-bottom: 20px;
-    font-size: 3em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    color: #ffcc00; /* Золотистый цвет */
+    margin-bottom: 15px;
+    font-size: 2.5em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     animation: glow 1.5s infinite alternate; /* Добавим свечение */
 }
 
 @keyframes glow {
-    from {
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    0% {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
-
-    to {
-        text-shadow: 2px 2px 8px rgba(255, 204, 0, 0.9);
+    100% {
+        text-shadow: 1px 1px 8px rgba(52, 152, 219, 0.8);
     }
 }
 
 .counter {
-    font-size: 4em;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    color: #ffffff; /* Белый цвет для счетчика */
+    font-size: 3em;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     animation: numberChange 0.5s ease; /* Плавное изменение чисел */
 }
 
 @keyframes numberChange {
-    from {
+    0% {
         opacity: 0.5;
         transform: scale(0.9);
     }
-
-    to {
+    100% {
         opacity: 1;
         transform: scale(1);
     }
@@ -144,37 +133,59 @@ main.game-container {
 .game-button,
 .menu-items li button,
 .expedition-button {
-    padding: 15px 30px;
-    font-size: 1.1em;
+    padding: 12px 24px;
+    font-size: 1em;
     border: none;
     cursor: pointer;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    background-image: linear-gradient(to bottom, #4a90e2, #346cb7); /* Измененные цвета */
+    margin-bottom: 10px;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
     color: white;
-    text-transform: uppercase; /* Добавим заглавные буквы */
-    font-weight: bold;
+    overflow: hidden; /* Скрываем частицы за границами кнопки */
+    position: relative; /* Позиционируем кнопку относительно для частиц */
 }
 
 .game-button:hover,
 .menu-items li button:hover,
 .expedition-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #2c3e50;
 }
 
 .game-button:active,
 .menu-items li button:active,
 .expedition-button:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Эффект частиц при наведении на кнопку */
+.game-button::before,
+.menu-items li button::before,
+.expedition-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+    clip-path: circle(10% at var(--x), var(--y));
+    transform: scale(0);
+    transition: transform 0.5s ease;
+}
+
+.game-button:hover::before,
+.menu-items li button:hover::before,
+.expedition-button:hover::before {
+    transform: scale(3);
 }
 
 #click-button {
-    background-image: linear-gradient(to bottom right, #3498db, #2ecc71); /* Измененные цвета */
+    background-image: linear-gradient(to bottom right, #2ecc71, #3498db);
     color: white;
     text-transform: uppercase;
     font-weight: bold;
@@ -182,68 +193,101 @@ main.game-container {
 }
 
 @keyframes buttonPulse {
-    from {
+    0% {
         transform: scale(1);
     }
-
-    to {
+    100% {
         transform: scale(1.05);
     }
 }
 
 #click-button:active {
-    transform: scale(1.15);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Эффект искр при клике на кнопку */
+#click-button:active {
+    animation: sparks 0.5s ease-out;
+}
+
+@keyframes sparks {
+    0% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1.1);
+    }
 }
 
 .upgrades {
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: left;
     width: 100%;
     box-sizing: border-box;
 }
 
 .upgrade-item {
-    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
-    padding: 15px; /* Увеличение отступов */
-    margin-bottom: 15px;
-    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-    transition: background-color 0.2s ease, transform 0.2s;
-    border: 1px solid #444; /* Добавим рамку */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .upgrade-item:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.2);
     transform: scale(1.02);
 }
 
 .upgrade-item p {
     margin: 0;
-    font-size: 1.1em;
 }
 
 .buy-upgrade {
     background-color: #3498db;
     color: white;
-    padding: 10px 20px;
+    padding: 8px 15px;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     background-image: linear-gradient(to bottom, #2ecc71, #27ae60);
-    font-size: 1em;
-    font-weight: bold;
+    position: relative;
+    overflow: hidden;
 }
 
 .buy-upgrade:hover {
     background-color: #2980b9;
     background-image: linear-gradient(to bottom, #27ae60, #2ecc71);
-    transform: scale(1.05);
+}
+
+/* Анимация "подтверждения" при покупке улучшения */
+.buy-upgrade.bought {
+    animation: boughtAnimation 0.5s ease-out;
+}
+
+@keyframes boughtAnimation {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
 }
 
 #prestige-button {
@@ -274,68 +318,69 @@ main.game-container {
 .message {
     text-align: center;
     color: #f1c40f;
-    margin-top: 15px;
+    margin-top: 10px;
     font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     animation: messageFade 3s forwards; /* Появление и исчезновение сообщения */
 }
 
 @keyframes messageFade {
     0% {
         opacity: 0;
+        transform: translateY(-10px);
     }
-
     20% {
         opacity: 1;
+        transform: translateY(0);
     }
-
     80% {
         opacity: 1;
+        transform: translateY(0);
     }
-
     100% {
         opacity: 0;
+        transform: translateY(10px);
     }
 }
 
 /* Menu Styles */
 .menu-toggle {
-    font-size: 2em; /* Увеличение размера */
+    font-size: 1.5em;
     background-color: transparent;
     border: none;
     color: white;
     cursor: pointer;
-    padding: 8px; /* Увеличение отступов */
+    padding: 5px;
     display: inline-block;
     transition: transform 0.3s ease;
-    margin-right: 15px;
+    margin-right: 10px;
 }
 
 .menu-toggle.active {
     transform: rotate(90deg);
 }
 
+/* Анимация выпадающего меню */
 #menu-items {
     list-style: none;
     padding: 0;
     margin: 0;
-    background-color: rgba(0, 0, 0, 0.9); /* Увеличение прозрачности */
-    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
     display: none;
     opacity: 0;
-    transform: translateY(-15px);
+    transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
     position: absolute;
-    top: 50px;
+    top: 40px;
     left: 0;
     z-index: 1002;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Добавим тень */
 }
 
 #menu-items li button {
     display: block;
     width: 100%;
-    padding: 12px; /* Увеличение отступов */
+    padding: 10px;
     border: none;
     border-radius: 0;
     cursor: pointer;
@@ -344,7 +389,6 @@ main.game-container {
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: background-color 0.2s ease;
-    font-size: 1.1em;
 }
 
 #menu-items li button.active {
@@ -358,16 +402,26 @@ main.game-container {
 
 #menu-items.active {
     display: block;
-    opacity: 1;
-    transform: translateY(0);
+    animation: slideInMenu 0.3s ease-out;
+}
+
+@keyframes slideInMenu {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .diamonds-menu {
-  margin-left: 15px;
-    font-size: 1.3em;
+  margin-left: 10px;
+    font-size: 1.2em;
     position: absolute;
-    top: 15px;
-    left: 90px;
+    top: 10px;
+    left: 80px;
     z-index: 1001;
 }
 
@@ -382,62 +436,78 @@ main.game-container {
 #clicker-content,
 #game-content,
 .map-container {
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
-    border-radius: 10px;
-    margin-bottom: 25px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    margin-bottom: 20px;
     width: 100%;
     box-sizing: border-box;
-    transition: background-color 0.2s ease, transform 0.2s;
-    border: 1px solid #444; /* Добавим рамку */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Добавляем анимацию при появлении контента */
+#clicker-content.active,
+#game-content.active,
+.map-container.active {
+    animation: fadeInContent 0.5s ease-out;
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 #clicker-content:hover,
 #game-content:hover,
 .map-container:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.2);
     transform: scale(1.01);
 }
 
 #clicker-content h1 {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .prestige-level {
-    margin-top: 25px;
+    margin-top: 20px;
 }
 
 /* Стили магазина */
 #game-content h2 {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     text-align: center;
 }
 
 .chests {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .chest-item {
-    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
-    padding: 12px; /* Увеличение отступов */
-    margin: 12px 0;
-    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.2s ease, transform 0.2s;
-    border: 1px solid #444; /* Добавим рамку */
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .chest-item:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.2);
     transform: scale(1.01);
 }
 
 /* Экспедиции */
 .expedition-button {
-    margin: 6px 0;
+    margin: 5px 0;
     display: block;
     width: 100%;
     text-align: center;
@@ -448,85 +518,112 @@ main.game-container {
     cursor: not-allowed;
 }
 
+/* Анимация прогресса экспедиции */
 .expedition-progress {
-    margin-top: 12px;
-    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
-    padding: 12px;
-    border-radius: 8px;
+    margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    overflow: hidden; /* Скрываем полоску за границами контейнера */
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: #2ecc71;
+    width: 0%; /* Начальное значение ширины полосы прогресса */
+    transition: width 0.5s ease-in-out; /* Анимация изменения ширины */
 }
 
 /* Инвентарь */
 .inventory-container {
     display: none;
-    margin: 25px auto;
-    max-width: 95%;
-    background-color: rgba(0, 0, 0, 0.95); /* Увеличение прозрачности */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7); /* Увеличение тени */
+    margin: 20px auto;
+    max-width: 90%;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 999;
     overflow: auto;
     text-align: left;
     box-sizing: border-box;
-    padding: 25px; /* Увеличение отступов */
-    border-radius: 12px; /* Больше скругления */
-    animation: slideIn 0.5s ease;
+    padding: 20px;
+    border-radius: 8px;
+    animation: slideIn 0.3s ease;
     background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border: 2px solid #555; /* Добавим рамку */
 }
 
-    .inventory-container.active {
+.inventory-container.active {
     display: block;
+    animation: slideInInventory 0.4s ease-out; /* Добавим анимацию при появлении инвентаря */
 }
 
+@keyframes slideInInventory {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 .profile-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 20px;
-    background-color: rgba(0, 0, 0, 0.6); /* Увеличение прозрачности */
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #444; /* Добавим рамку */
+    margin-bottom: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    animation: fadeInHeader 0.5s ease-out; /* Анимация появления заголовка профиля */
+}
+
+@keyframes fadeInHeader {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .profile-header h2 {
     margin: 0;
     text-align: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     flex: 1;
-    font-size: 1.8em;
 }
 
 .profile-content {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
 }
 
 .profile-section {
     padding: 0;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .profile-section h3 {
     margin-top: 0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    margin-bottom: 12px;
-    background-color: rgba(0, 0, 0, 0.6); /* Увеличение прозрачности */
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 1.4em;
-    border: 1px solid #444; /* Добавим рамку */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .skins-display,
 .artifacts-display {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
     justify-content: flex-start;
 }
 
@@ -534,32 +631,62 @@ main.game-container {
 .artifacts-display div,
 .skins-display div.expanded,
 .artifacts-display div.expanded {
-    padding: 12px;
-    border-radius: 8px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    animation: cardFadeIn 0.4s ease;
+    padding: 10px;
+    border-radius: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    animation: cardFadeIn 0.3s ease;
     box-sizing: border-box;
-    min-width: 100px; /* Увеличение минимальной ширины */
+    min-width: 90px;
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
     transition: transform 0.2s ease, background-color 0.2s ease;
-    border: 1px solid #444; /* Добавим рамку */
 }
 
 .skins-display div:hover,
 .artifacts-display div:hover {
     transform: scale(1.05);
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 @keyframes cardFadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
+/* Добавим эффект "вылетающей" монетки при получении артефакта */
+.artifacts-display div.new::before {
+    content: '\f155'; /* Unicode для иконки монетки (Font Awesome) */
+    font-family: 'Font Awesome 5 Free'; /* Укажите семейство шрифтов Font Awesome */
+    font-weight: 900; /* Установите жирность шрифта */
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    color: gold;
+    font-size: 1.5em;
+    animation: flyOut 0.7s ease-out;
+}
+
+@keyframes flyOut {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(50px, -50px);
+        opacity: 0;
+    }
+}
+
 .chest-container {
     display: none;
     position: fixed;
@@ -578,6 +705,23 @@ main.game-container {
     animation: fadeIn 0.3s ease;
 }
 
+/* Анимация открытия сундука */
+.chest-container.opening {
+    animation: openChest 0.5s ease-out;
+}
+
+@keyframes openChest {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
 .chest-content {
     max-height: 70vh;
     overflow-y: auto;
@@ -586,19 +730,17 @@ main.game-container {
 /* Глобальные сообщения */
 #global-message {
     position: fixed;
-    top: 15px;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1002;
-    background-color: rgba(0, 0, 0, 0.9); /* Увеличение прозрачности */
-    padding: 12px;
-    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 5px;
     color: white;
     text-align: center;
     display: none;
     animation: fadeIn 0.3s ease;
-    font-size: 1.1em;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Добавим тень */
 }
 
 /* Всплывающие окна */
@@ -607,65 +749,94 @@ main.game-container {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.95); /* Увеличение прозрачности */
-    padding: 25px; /* Увеличение отступов */
-    border-radius: 12px; /* Больше скругления */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.9); /* Увеличение тени */
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
     z-index: 1003;
     color: white;
     text-align: left;
-    animation: fadeIn 0.4s ease;
-    max-width: 85%; /* Увеличение максимальной ширины */
-    max-height: 85vh; /* Увеличение максимальной высоты */
+    animation: fadeIn 0.3s ease;
+    max-width: 80%;
+    max-height: 80vh;
     overflow: auto;
-    border: 2px solid #555; /* Добавим рамку */
 }
-.item-popup-close-button{
+
+/* Анимация плавного появления и исчезновения всплывающего окна */
+.item-popup.show {
+    animation: popupShow 0.3s ease-out;
+}
+
+@keyframes popupShow {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.item-popup.hide {
+    animation: popupHide 0.3s ease-in forwards;
+}
+
+@keyframes popupHide {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+}
+
+.item-popup-close-button {
     position: absolute;
-    top: 8px;
-    right: 12px;
+    top: 5px;
+    right: 10px;
     cursor: pointer;
-    font-size: 1.8em;
+    font-size: 1.5em;
 }
 
 .popup-content {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .popup-content h3 {
-    margin-bottom: 12px;
-    font-size: 1.4em;
+    margin-bottom: 10px;
 }
 
 .popup-content img {
-    max-width: 120px; /* Увеличение размера */
-    max-height: 120px; /* Увеличение размера */
-    margin-right: 12px;
-    border-radius: 8px;
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 10px;
+    border-radius: 5px;
     object-fit: contain;
-    border: 1px solid #444; /* Добавим рамку */
 }
 
 .skins-display div img,
 .artifacts-display div img {
-    max-width: 70px; /* Увеличение размера */
-    max-height: 70px; /* Увеличение размера */
+    max-width: 60px;
+    max-height: 60px;
     margin-right: 0px;
-    border-radius: 8px;
-    margin-bottom: 6px;
+    border-radius: 5px;
+    margin-bottom: 5px;
     object-fit: contain;
-    border: 1px solid #444; /* Добавим рамку */
 }
 
 .skins-display div span,
-.artifacts-display div span{
+.artifacts-display div span {
     display: block;
     width: 100%;
     text-align: center;
-    font-size: 0.9em;
+    font-size: 0.8em;
 }
+
 /* Модальное окно профиля */
 .modal {
     display: none;
@@ -676,24 +847,35 @@ main.game-container {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.9); /* Увеличение прозрачности */
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .modal-content {
-    background-color: rgba(0, 0, 0, 0.95); /* Увеличение прозрачности */
-        background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
-        background-size: cover;
+    background-color: rgba(0, 0, 0, 0.9);
+    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    margin: 6% auto;
-    padding: 25px; /* Увеличение отступов */
-    border: 2px solid #555; /* Добавим рамку */
-    width: 85%; /* Увеличение ширины */
-        max-height: 90vh;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-height: 90vh;
     overflow-y: auto;
-    border-radius: 12px; /* Больше скругления */
+    border-radius: 10px;
     position: relative;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.9); /* Увеличение тени */
+    animation: modalSlideIn 0.4s ease-out; /* Добавим анимацию появления модального окна */
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .modal .close-button {
@@ -705,61 +887,57 @@ main.game-container {
     font-weight: bold;
     cursor: pointer;
 }
-.modal-content h2{
-  margin-bottom: 25px;
-        text-align: center;
-        font-size: 2em;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    text-align: center;
 }
+
 #profile-info {
     text-align: left;
 }
-#profile-info h3{
-  margin-bottom: 12px;
-    padding: 12px;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-        background-color: rgba(0, 0, 0, 0.6); /* Увеличение прозрачности */
-            border-radius: 8px;
-            font-size: 1.4em;
-            border: 1px solid #444; /* Добавим рамку */
+
+#profile-info h3 {
+    margin-bottom: 10px;
+    padding: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
 }
-    #profile-info h4{
-        margin-top: 18px;
-            margin-bottom: 6px;
-                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-                font-size: 1.2em;
+
+#profile-info h4 {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
+
 /* Добавляем стили для контейнера профиля и табов */
 #profile-container {
     display: none; /* Скрываем контейнер профиля по умолчанию */
-    background-color: rgba(0, 0, 0, 0.8); /* Увеличение прозрачности */
-    border-radius: 12px; /* Больше скругления */
-    padding: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Добавим тень */
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
 }
 
 .profile-tabs {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .profile-tab-button {
-    padding: 10px 20px;
+    padding: 8px 16px;
     border: none;
     background-color: #555;
     color: white;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.2s;
-    font-size: 1.1em;
-    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
 .profile-tab-button:hover {
     background-color: #777;
-    transform: scale(1.05);
 }
 
 .profile-tab-button.active {
@@ -767,5 +945,5 @@ main.game-container {
 }
 
 .profile-tab-content {
-    padding: 12px;
+    padding: 10px;
 }
