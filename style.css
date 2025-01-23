@@ -1,19 +1,8 @@
 /* Общие стили */
-:root {
-    --primary-color: #4CAF50;
-    --secondary-color: #388E3C;
-    --text-color: #FFFFFF;
-    --background-color: rgba(0, 0, 0, 0.8);
-    --container-border-radius: 12px;
-    --box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-    --font-family: 'Roboto', sans-serif;
-    --transition-duration: 0.3s; /* Общая продолжительность анимаций */
-}
-
 body {
     margin: 0;
     padding: 0;
-    font-family: var(--font-family);
+    font-family: 'Press Start 2P', cursive, Arial, sans-serif; /* Добавим "игровой" шрифт */
     background-image: url('IMG_20250114_111552_356.jpg');
     background-size: cover;
     background-position: center;
@@ -23,44 +12,47 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    color: var(--text-color);
-    transition: background-color var(--transition-duration) ease;
-    overflow: hidden; /* Предотвращает появление полос прокрутки при анимациях */
+    color: #eee; /* Светло-серый текст для лучшей читаемости */
+    transition: background-color 0.3s ease;
+    overflow: hidden; /* Предотвращает скролл, если контент выходит за рамки */
 }
 
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: -1;
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('PressStart2P-Regular.ttf') format('truetype');
 }
 
 .container {
     text-align: center;
-    background-color: var(--background-color);
-    padding: 30px;
-    border-radius: var(--container-border-radius);
-    max-width: 700px;
-    width: 95%;
+    background-color: rgba(0, 0, 0, 0.8); /* Увеличение прозрачности */
+    padding: 30px; /* Увеличение отступов */
+    border-radius: 15px; /* Более скругленные края */
+    max-width: 700px; /* Увеличение максимальной ширины */
+    width: 95%; /* Увеличение занимаемой ширины */
     position: relative;
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Увеличение тени */
     box-sizing: border-box;
-    animation: fadeIn var(--transition-duration) ease;
+    animation: fadeIn 0.7s ease, pulse 2s infinite alternate; /* Добавим пульсацию */
+    border: 2px solid #555; /* Добавим рамку */
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(-20px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.02);
     }
 }
 
@@ -72,7 +64,7 @@ body::before {
     display: flex;
     align-items: center;
     width: calc(100% - 30px);
-    justify-content: space-between; /* Выравнивание элементов меню */
+    justify-content: space-between; /* Распределяем элементы по краям */
 }
 
 main.game-container {
@@ -80,7 +72,7 @@ main.game-container {
     display: grid;
     grid-template-columns: 1fr;
     gap: 30px;
-    animation: slideIn var(--transition-duration) ease;
+    animation: slideIn 0.7s ease;
 }
 
 @keyframes slideIn {
@@ -90,8 +82,8 @@ main.game-container {
     }
 
     to {
-        opacity: 1;
         transform: translateY(0);
+        opacity: 1;
     }
 }
 
@@ -112,14 +104,84 @@ main.game-container {
 
 #game-title {
     margin-bottom: 20px;
-    font-size: 3.5em;
+    font-size: 3em;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    letter-spacing: 1px;
-    color: #FFEB3B; /* Золотистый цвет для заголовка */
-    animation: pulse 2s infinite alternate; /* Анимация пульсации */
+    color: #ffcc00; /* Золотистый цвет */
+    animation: glow 1.5s infinite alternate; /* Добавим свечение */
 }
 
-@keyframes pulse {
+@keyframes glow {
+    from {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    to {
+        text-shadow: 2px 2px 8px rgba(255, 204, 0, 0.9);
+    }
+}
+
+.counter {
+    font-size: 4em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    color: #ffffff; /* Белый цвет для счетчика */
+    animation: numberChange 0.5s ease; /* Плавное изменение чисел */
+}
+
+@keyframes numberChange {
+    from {
+        opacity: 0.5;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Общие стили для кнопок */
+.game-button,
+.menu-items li button,
+.expedition-button {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-image: linear-gradient(to bottom, #4a90e2, #346cb7); /* Измененные цвета */
+    color: white;
+    text-transform: uppercase; /* Добавим заглавные буквы */
+    font-weight: bold;
+}
+
+.game-button:hover,
+.menu-items li button:hover,
+.expedition-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    background-color: #333;
+}
+
+.game-button:active,
+.menu-items li button:active,
+.expedition-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+#click-button {
+    background-image: linear-gradient(to bottom right, #3498db, #2ecc71); /* Измененные цвета */
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    animation: buttonPulse 2s infinite alternate; /* Добавим пульсацию к кнопке клика */
+}
+
+@keyframes buttonPulse {
     from {
         transform: scale(1);
     }
@@ -129,195 +191,124 @@ main.game-container {
     }
 }
 
-.counter {
-    font-size: 4.5em;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    color: #8BC34A; /* Светло-зеленый цвет для счетчика */
-    animation: glow 1.5s infinite alternate; /* Анимация свечения */
-}
-
-@keyframes glow {
-    from {
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    }
-
-    to {
-        text-shadow: 2px 2px 10px rgba(139, 195, 74, 0.8);
-    }
-}
-
-.game-button,
-.menu-items li button,
-.expedition-button {
-    padding: 16px 32px;
-    font-size: 1.2em;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    transition: transform var(--transition-duration), box-shadow var(--transition-duration), background-color var(--transition-duration);
-    box-shadow: var(--box-shadow);
-    background-image: linear-gradient(to bottom, #66BB6A, #43A047);
-    color: var(--text-color);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.game-button:hover,
-.menu-items li button:hover,
-.expedition-button:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-    background-color: #388E3C;
-}
-
-.game-button:active,
-.menu-items li button:active,
-.expedition-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-#click-button {
-    background-image: linear-gradient(to bottom right, #4CAF50, #81C784);
-    color: var(--text-color);
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 1.3em;
-    padding: 20px 40px;
-    animation: gradientShift 5s infinite alternate; /* Анимация сдвига градиента */
-}
-
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    100% {
-        background-position: 100% 50%;
-    }
-}
-
 #click-button:active {
-    transform: scale(1.1);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.6);
+    transform: scale(1.15);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
 }
 
 .upgrades {
-    margin-top: 25px;
+    margin-top: 20px;
     text-align: left;
     width: 100%;
     box-sizing: border-box;
 }
 
 .upgrade-item {
-    background-color: rgba(255, 255, 255, 0.15);
-    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
+    padding: 15px; /* Увеличение отступов */
     margin-bottom: 15px;
     border-radius: 10px;
-    color: var(--text-color);
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-    transition: background-color var(--transition-duration) ease, transform 0.1s ease; /* Добавляем плавный переход для transform */
+    transition: background-color 0.2s ease, transform 0.2s;
+    border: 1px solid #444; /* Добавим рамку */
 }
 
 .upgrade-item:hover {
     background-color: rgba(255, 255, 255, 0.25);
-    transform: scale(1.02); /* Небольшое увеличение при наведении */
+    transform: scale(1.02);
 }
 
 .upgrade-item p {
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 .buy-upgrade {
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    padding: 12px 24px;
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color var(--transition-duration) ease, transform 0.1s ease; /* Добавляем плавный переход для transform */
-    background-image: linear-gradient(to bottom, #66BB6A, #43A047);
-    font-size: 1.1em;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s ease, transform 0.2s;
+    background-image: linear-gradient(to bottom, #2ecc71, #27ae60);
+    font-size: 1em;
+    font-weight: bold;
 }
 
 .buy-upgrade:hover {
-    background-color: #2E7D32;
-    background-image: linear-gradient(to bottom, #43A047, #66BB6A);
-    transform: scale(1.05); /* Небольшое увеличение при наведении */
+    background-color: #2980b9;
+    background-image: linear-gradient(to bottom, #27ae60, #2ecc71);
+    transform: scale(1.05);
 }
 
 #prestige-button {
-    background-color: #FFB300;
-    color: var(--text-color);
+    background-color: #f39c12;
+    color: white;
     text-transform: uppercase;
     font-weight: bold;
-    padding: 16px 32px;
-    border-radius: 10px;
-    font-size: 1.2em;
-    box-shadow: var(--box-shadow);
-    transition: background-color var(--transition-duration) ease, transform 0.1s ease; /* Добавляем плавный переход для transform */
+    animation: spin 2s linear infinite; /* Добавим вращение */
 }
 
-#prestige-button:hover {
-    background-color: #F57F17;
-    transform: scale(1.03); /* Небольшое увеличение при наведении */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 #reset-button {
-    background-color: #E53935;
-    color: var(--text-color);
+    background-color: #e74c3c;
+    color: white;
     text-transform: uppercase;
     font-weight: bold;
-    padding: 16px 32px;
-    border-radius: 10px;
-    font-size: 1.2em;
-    box-shadow: var(--box-shadow);
-    transition: background-color var(--transition-duration) ease, transform 0.1s ease; /* Добавляем плавный переход для transform */
-}
-
-#reset-button:hover {
-    background-color: #B71C1C;
-    transform: scale(1.03); /* Небольшое увеличение при наведении */
 }
 
 .message {
     text-align: center;
-    color: #FFCA28;
-    margin-top: 20px;
+    color: #f1c40f;
+    margin-top: 15px;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    font-size: 1.3em;
-    animation: fadeInUp 1s ease; /* Анимация появления снизу */
+    animation: messageFade 3s forwards; /* Появление и исчезновение сообщения */
 }
 
-@keyframes fadeInUp {
-    from {
+@keyframes messageFade {
+    0% {
         opacity: 0;
-        transform: translateY(20px);
     }
 
-    to {
+    20% {
         opacity: 1;
-        transform: translateY(0);
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
 
+/* Menu Styles */
 .menu-toggle {
-    font-size: 2em;
+    font-size: 2em; /* Увеличение размера */
     background-color: transparent;
     border: none;
-    color: var(--text-color);
+    color: white;
     cursor: pointer;
-    padding: 10px;
+    padding: 8px; /* Увеличение отступов */
     display: inline-block;
-    transition: transform var(--transition-duration) ease;
-    margin-right: 20px;
+    transition: transform 0.3s ease;
+    margin-right: 15px;
 }
 
 .menu-toggle.active {
@@ -328,42 +319,41 @@ main.game-container {
     list-style: none;
     padding: 0;
     margin: 0;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.9); /* Увеличение прозрачности */
     border-radius: 10px;
     display: none;
     opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity var(--transition-duration) ease, transform var(--transition-duration) ease;
+    transform: translateY(-15px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
     position: absolute;
-    top: 60px;
+    top: 50px;
     left: 0;
     z-index: 1002;
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Добавим тень */
 }
 
 #menu-items li button {
     display: block;
     width: 100%;
-    padding: 15px;
+    padding: 12px; /* Увеличение отступов */
     border: none;
     border-radius: 0;
     cursor: pointer;
     background-color: transparent;
-    color: var(--text-color);
+    color: white;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    transition: background-color var(--transition-duration) ease, color var(--transition-duration) ease; /* Добавляем transition для цвета */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transition: background-color 0.2s ease;
+    font-size: 1.1em;
 }
 
 #menu-items li button.active {
-    background-color: var(--secondary-color);
-    border-bottom: 2px solid #FFCA28;
-    color: #FFCA28; /* Подсвечиваем активный пункт меню */
+    background-color: #2c3e50;
+    border-bottom: 2px solid #f1c40f;
 }
 
 #menu-items li button:hover {
-    background-color: var(--secondary-color);
-    color: #FFCA28; /* Подсвечиваем пункт меню при наведении */
+    background-color: #2c3e50;
 }
 
 #menu-items.active {
@@ -373,27 +363,15 @@ main.game-container {
 }
 
 .diamonds-menu {
-    margin-left: 20px;
-    font-size: 1.4em;
+  margin-left: 15px;
+    font-size: 1.3em;
     position: absolute;
     top: 15px;
-    left: 80px;
+    left: 90px;
     z-index: 1001;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    color: #BBDEFB; /* Более светлый оттенок синего */
-    animation: rotate 5s linear infinite; /* Анимация вращения */
 }
 
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
+/* Game content */
 #clicker-content,
 #game-content,
 .map-container,
@@ -404,140 +382,122 @@ main.game-container {
 #clicker-content,
 #game-content,
 .map-container {
-    padding: 25px;
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 8px;
-    margin-bottom: 30px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
+    border-radius: 10px;
+    margin-bottom: 25px;
     width: 100%;
     box-sizing: border-box;
-    transition: background-color var(--transition-duration) ease, transform 0.1s ease; /* Добавляем плавный переход для transform */
+    transition: background-color 0.2s ease, transform 0.2s;
+    border: 1px solid #444; /* Добавим рамку */
 }
 
 #clicker-content:hover,
 #game-content:hover,
 .map-container:hover {
     background-color: rgba(255, 255, 255, 0.25);
-    transform: scale(1.01); /* Небольшое увеличение при наведении */
+    transform: scale(1.01);
 }
 
 #clicker-content h1 {
     text-align: center;
-    margin-bottom: 30px;
-    font-size: 3em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    margin-bottom: 25px;
 }
 
 .prestige-level {
-    margin-top: 30px;
-    font-size: 1.3em;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    margin-top: 25px;
 }
 
+/* Стили магазина */
 #game-content h2 {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     text-align: center;
-    font-size: 2.5em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .chests {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .chest-item {
-    background-color: rgba(255, 255, 255, 0.15);
-    padding: 15px;
-    margin: 15px 0;
+    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
+    padding: 12px; /* Увеличение отступов */
+    margin: 12px 0;
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background-color var(--transition-duration) ease, transform 0.1s ease; /* Добавляем плавный переход для transform */
+    transition: background-color 0.2s ease, transform 0.2s;
+    border: 1px solid #444; /* Добавим рамку */
 }
 
 .chest-item:hover {
     background-color: rgba(255, 255, 255, 0.25);
-    transform: scale(1.01); /* Небольшое увеличение при наведении */
+    transform: scale(1.01);
 }
 
+/* Экспедиции */
 .expedition-button {
-    margin: 8px 0;
+    margin: 6px 0;
     display: block;
     width: 100%;
     text-align: center;
-    padding: 16px 32px;
-    font-size: 1.2em;
-    animation: slideInLeft 1s ease; /* Анимация появления слева */
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
 }
 
 .expedition-button.disabled {
-    opacity: 0.7;
+    opacity: 0.6;
     cursor: not-allowed;
-    animation: none; /* Отключаем анимацию, если кнопка неактивна */
 }
 
 .expedition-progress {
-    margin-top: 15px;
-    background-color: rgba(255, 255, 255, 0.15);
-    padding: 15px;
+    margin-top: 12px;
+    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
+    padding: 12px;
     border-radius: 8px;
-    font-size: 1.2em;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
+/* Инвентарь */
 .inventory-container {
     display: none;
-    margin: 30px auto;
+    margin: 25px auto;
     max-width: 95%;
-    background-color: rgba(0, 0, 0, 0.95);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.95); /* Увеличение прозрачности */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7); /* Увеличение тени */
     z-index: 999;
     overflow: auto;
     text-align: left;
     box-sizing: border-box;
-    padding: 30px;
-    border-radius: 10px;
-    animation: slideIn var(--transition-duration) ease;
+    padding: 25px; /* Увеличение отступов */
+    border-radius: 12px; /* Больше скругления */
+    animation: slideIn 0.5s ease;
     background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    border: 2px solid #555; /* Добавим рамку */
 }
 
-.inventory-container.active {
+    .inventory-container.active {
     display: block;
 }
+
 
 .profile-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 20px;
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.6); /* Увеличение прозрачности */
+    padding: 12px;
     border-radius: 8px;
-    animation: fadeIn var(--transition-duration) ease; /* Анимация появления */
+    border: 1px solid #444; /* Добавим рамку */
 }
 
 .profile-header h2 {
     margin: 0;
     text-align: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
     flex: 1;
-    font-size: 2.6em;
-    color: #90CAF9; /* Светло-синий цвет для заголовка профиля */
+    font-size: 1.8em;
 }
 
 .profile-content {
@@ -549,44 +509,24 @@ main.game-container {
 .profile-section {
     padding: 0;
     margin-bottom: 20px;
-    animation: slideInRight 1s ease; /* Анимация появления справа */
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
 }
 
 .profile-section h3 {
     margin-top: 0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    margin-bottom: 15px;
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    margin-bottom: 12px;
+    background-color: rgba(0, 0, 0, 0.6); /* Увеличение прозрачности */
+    padding: 12px;
     border-radius: 8px;
-    font-size: 2em;
-    color: #A5D6A7; /* Светло-зеленый цвет для заголовка секции */
-}
-
-#profile-info h4 {
-    margin-top: 20px;
-    margin-bottom: 8px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     font-size: 1.4em;
+    border: 1px solid #444; /* Добавим рамку */
 }
 
 .skins-display,
 .artifacts-display {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 12px;
     justify-content: flex-start;
 }
 
@@ -594,40 +534,32 @@ main.game-container {
 .artifacts-display div,
 .skins-display div.expanded,
 .artifacts-display div.expanded {
-    padding: 15px;
+    padding: 12px;
     border-radius: 8px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    background-color: rgba(255, 255, 255, 0.15);
-    box-shadow: var(--box-shadow);
-    animation: cardFadeIn 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    background-color: rgba(255, 255, 255, 0.15); /* Увеличение прозрачности */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: cardFadeIn 0.4s ease;
     box-sizing: border-box;
-    min-width: 100px;
+    min-width: 100px; /* Увеличение минимальной ширины */
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
-    transition: transform var(--transition-duration) ease, background-color var(--transition-duration) ease; /* Добавляем плавный переход */
-    position: relative; /* Для позиционирования значка редкости */
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    border: 1px solid #444; /* Добавим рамку */
 }
 
 .skins-display div:hover,
 .artifacts-display div:hover {
-    transform: scale(1.07);
-    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
 @keyframes cardFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
 .chest-container {
     display: none;
     position: fixed;
@@ -635,110 +567,105 @@ main.game-container {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1001;
-    background-color: rgba(0, 0, 0, 0.95);
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     text-align: left;
-    max-width: 90%;
-    max-height: 90vh;
+    max-width: 80%;
+    max-height: 80vh;
     overflow: auto;
-    animation: fadeIn var(--transition-duration) ease;
+    animation: fadeIn 0.3s ease;
 }
 
 .chest-content {
-    max-height: 80vh;
+    max-height: 70vh;
     overflow-y: auto;
-    font-size: 1.2em;
 }
 
+/* Глобальные сообщения */
 #global-message {
     position: fixed;
     top: 15px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1002;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.9); /* Увеличение прозрачности */
+    padding: 12px;
     border-radius: 8px;
     color: white;
     text-align: center;
     display: none;
-    animation: fadeIn var(--transition-duration) ease;
-    font-size: 1.3em;
+    animation: fadeIn 0.3s ease;
+    font-size: 1.1em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Добавим тень */
 }
 
+/* Всплывающие окна */
 .item-popup {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.95);
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.95); /* Увеличение прозрачности */
+    padding: 25px; /* Увеличение отступов */
+    border-radius: 12px; /* Больше скругления */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.9); /* Увеличение тени */
     z-index: 1003;
-    color: var(--text-color);
+    color: white;
     text-align: left;
-    animation: fadeIn var(--transition-duration) ease;
-    max-width: 90%;
-    max-height: 90vh;
+    animation: fadeIn 0.4s ease;
+    max-width: 85%; /* Увеличение максимальной ширины */
+    max-height: 85vh; /* Увеличение максимальной высоты */
     overflow: auto;
+    border: 2px solid #555; /* Добавим рамку */
 }
-
-.item-popup-close-button {
+.item-popup-close-button{
     position: absolute;
-    top: 10px;
-    right: 15px;
+    top: 8px;
+    right: 12px;
     cursor: pointer;
     font-size: 1.8em;
-    transition: color var(--transition-duration) ease; /* Добавляем переход для цвета */
-}
-
-.item-popup-close-button:hover {
-    color: #bbb;
 }
 
 .popup-content {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .popup-content h3 {
-    margin-bottom: 15px;
-    font-size: 2em;
+    margin-bottom: 12px;
+    font-size: 1.4em;
 }
 
 .popup-content img {
-    max-width: 150px;
-    max-height: 150px;
-    margin-right: 20px;
+    max-width: 120px; /* Увеличение размера */
+    max-height: 120px; /* Увеличение размера */
+    margin-right: 12px;
     border-radius: 8px;
     object-fit: contain;
-    box-shadow: var(--box-shadow);
+    border: 1px solid #444; /* Добавим рамку */
 }
 
 .skins-display div img,
 .artifacts-display div img {
-    max-width: 80px;
-    max-height: 80px;
+    max-width: 70px; /* Увеличение размера */
+    max-height: 70px; /* Увеличение размера */
     margin-right: 0px;
     border-radius: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     object-fit: contain;
-    box-shadow: var(--box-shadow);
+    border: 1px solid #444; /* Добавим рамку */
 }
 
 .skins-display div span,
-.artifacts-display div span {
+.artifacts-display div span{
     display: block;
     width: 100%;
     text-align: center;
-    font-size: 1em;
-    color: #B0BEC5; /* Мягкий серый цвет для подписей */
+    font-size: 0.9em;
 }
-
 /* Модальное окно профиля */
 .modal {
     display: none;
@@ -749,95 +676,73 @@ main.game-container {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.9); /* Увеличение прозрачности */
 }
 
 .modal-content {
-    background-color: rgba(0, 0, 0, 0.95);
-    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
-    background-size: cover;
+    background-color: rgba(0, 0, 0, 0.95); /* Увеличение прозрачности */
+        background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+        background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    margin: 8% auto;
-    padding: 30px;
-    border: 1px solid #888;
-    width: 90%;
-    max-height: 90vh;
+    margin: 6% auto;
+    padding: 25px; /* Увеличение отступов */
+    border: 2px solid #555; /* Добавим рамку */
+    width: 85%; /* Увеличение ширины */
+        max-height: 90vh;
     overflow-y: auto;
-    border-radius: 12px;
+    border-radius: 12px; /* Больше скругления */
     position: relative;
-    animation: zoomIn 0.4s ease; /* Плавное увеличение при появлении */
-}
-
-@keyframes zoomIn {
-    from {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.9); /* Увеличение тени */
 }
 
 .modal .close-button {
-    color: #bbb;
+    color: #aaa;
     position: absolute;
     top: 10px;
     right: 15px;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-    transition: color var(--transition-duration) ease; /* Добавляем transition для цвета */
 }
-
-.modal .close-button:hover {
-    color: #fff;
+.modal-content h2{
+  margin-bottom: 25px;
+        text-align: center;
+        font-size: 2em;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
-
-.modal-content h2 {
-    margin-bottom: 30px;
-    text-align: center;
-    font-size: 3em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    color: #90CAF9;
-}
-
 #profile-info {
     text-align: left;
-    font-size: 1.2em;
 }
-
-#profile-info h3 {
-    margin-bottom: 15px;
-    padding: 15px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    font-size: 1.8em;
-    color: #A5D6A7;
+#profile-info h3{
+  margin-bottom: 12px;
+    padding: 12px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        background-color: rgba(0, 0, 0, 0.6); /* Увеличение прозрачности */
+            border-radius: 8px;
+            font-size: 1.4em;
+            border: 1px solid #444; /* Добавим рамку */
 }
-
-#profile-info h4 {
-    margin-top: 20px;
-    margin-bottom: 8px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    font-size: 1.4em;
+    #profile-info h4{
+        margin-top: 18px;
+            margin-bottom: 6px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+                font-size: 1.2em;
 }
-
+/* Добавляем стили для контейнера профиля и табов */
 #profile-container {
-    display: none;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 30px;
+    display: none; /* Скрываем контейнер профиля по умолчанию */
+    background-color: rgba(0, 0, 0, 0.8); /* Увеличение прозрачности */
+    border-radius: 12px; /* Больше скругления */
+    padding: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Добавим тень */
 }
 
 .profile-tabs {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .profile-tab-button {
@@ -846,12 +751,15 @@ main.game-container {
     background-color: #555;
     color: white;
     cursor: pointer;
-    border-radius: 5px;
-    transition: background-color var(--transition-duration) ease; /* Добавляем плавный переход */
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 .profile-tab-button:hover {
     background-color: #777;
+    transform: scale(1.05);
 }
 
 .profile-tab-button.active {
@@ -859,66 +767,5 @@ main.game-container {
 }
 
 .profile-tab-content {
-    padding: 15px;
-}
-
-/* Значки редкости */
-.rarity-common::before {
-    content: "";
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #9E9E9E; /* Серый */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.rarity-uncommon::before {
-    content: "";
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #8BC34A; /* Зеленый */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.rarity-rare::before {
-    content: "";
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #29B6F6; /* Синий */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.rarity-epic::before {
-    content: "";
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #BA68C8; /* Фиолетовый */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.rarity-legendary::before {
-    content: "";
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #FFC107; /* Желтый */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    padding: 12px;
 }
