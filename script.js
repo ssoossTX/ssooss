@@ -926,6 +926,7 @@ elements.shop.prestigeButton.addEventListener('click', () => {
         displayMessage(`Недостаточно кликов! (нужно ${gameState.prestigeCost})`, 'red');
     }
 });
+
 elements.shop.buyKeyButton.addEventListener('click', buyKey);
 elements.shop.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
 elements.shop.buyRareChestButton.addEventListener('click', () => buyChest('rare'));
