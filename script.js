@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'artifact_rare_4': 'Паровой Двигатель',
             'artifact_epic_4': 'Реактивный Движок',
         },
-         SKIN_RARITY: {
+        SKIN_RARITY: {
             'skin_common_1': 'common',
             'skin_common_2': 'common',
             'skin_uncommon_1': 'uncommon',
@@ -138,6 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'medium': 300000,
             'hard': 600000,
         },
+        LEVEL_BASE_EXP: 100,
+        LEVEL_EXP_MULTIPLIER: 1.5,
     };
 
     // 2. Состояние игры
@@ -168,6 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
         skins: {},
         artifacts: {},
         prestigeCost: gameConfig.PRESTIGE_BASE_COST,
+        playerLevel: 1,
+        playerExperience: 0,
+        playerPoints: 0,
+        experienceRequired: gameConfig.LEVEL_BASE_EXP,
     };
 
     // 3. Объекты DOM элементов
@@ -211,6 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
             inventoryContainer: document.getElementById('inventory-container'),
             skinsDisplay: document.getElementById('skins-display'),
             artifactsDisplay: document.getElementById('artifacts-display'),
+        },
+         profile: {
+             levelDisplay: document.getElementById('player-level'),
+             experienceDisplay: document.getElementById('player-experience'),
+              experienceBar: document.getElementById('player-experience-bar'),
+            pointsDisplay: document.getElementById('player-points'),
         },
         global: {
             messageDisplay: document.getElementById('message'),
@@ -280,6 +292,14 @@ document.addEventListener('DOMContentLoaded', () => {
             finishExpedition();
         }
     };
+    
+    const updateLevelDisplay = () => {
+      elements.profile.levelDisplay.textContent = `Уровень: ${gameState.playerLevel}`;
+      elements.profile.experienceDisplay.textContent = `${gameState.playerExperience} / ${gameState.experienceRequired} XP`;
+      const progress = (gameState.playerExperience / gameState.experienceRequired) * 100;
+       elements.profile.experienceBar.style.width = `${progress}%`;
+        elements.profile.pointsDisplay.textContent = `Очки: ${gameState.playerPoints}`;
+    };
 
     const updateDisplay = () => {
         updateClickCountDisplay();
@@ -291,6 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateChestDisplay();
         updateExpeditionProgressBar();
         updateExpeditionButtonInfo();
+        updateLevelDisplay();
     };
 
     // 5. Сообщения
@@ -415,6 +436,10 @@ document.addEventListener('DOMContentLoaded', () => {
             skins: {},
             artifacts: {},
             prestigeCost: gameConfig.PRESTIGE_BASE_COST,
+           playerLevel: 1,
+          playerExperience: 0,
+          playerPoints: 0,
+          experienceRequired: gameConfig.LEVEL_BASE_EXP,
         };
         clearAllTimeouts();
         updateDisplay();
@@ -439,8 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem(gameConfig.SAVE_KEY);
         }
     };
-
-    const saveData = () => {
+const saveData = () => {
         try {
             const {
                 autoClickerInterval,
@@ -476,6 +500,18 @@ document.addEventListener('DOMContentLoaded', () => {
                  if (savedData.clickUpgradeLevel == undefined) {
                     gameState.clickUpgradeLevel = 1;
                 }
+                 if (savedData.playerLevel == undefined) {
+                      gameState.playerLevel = 1;
+                  }
+                 if (savedData.playerExperience == undefined) {
+                      gameState.playerExperience = 0;
+                    }
+                 if (savedData.playerPoints == undefined) {
+                      gameState.playerPoints = 0;
+                    }
+                if (savedData.experienceRequired == undefined) {
+                      gameState.experienceRequired = gameConfig.LEVEL_BASE_EXP;
+                  }
                 startAutoClicker();
                 if (gameState.activeExpedition) {
                     startExpeditionTimer();
@@ -597,6 +633,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const startExpeditionTimer = () => {
         gameState.expeditionInterval = setInterval(updateExpeditionProgressBar, 1000);
     };
+    
+     const grantExperience = (diamonds) => {
+        const experience = diamonds * 1.5;
+        gameState.playerExperience += experience;
+           
+       while (gameState.playerExperience >= gameState.experienceRequired) {
+           gameState.playerExperience -= gameState.experienceRequired;
+            gameState.playerLevel++;
+           gameState.experienceRequired = Math.round(gameConfig.LEVEL_BASE_EXP * Math.pow(gameConfig.LEVEL_EXP_MULTIPLIER, gameState.playerLevel - 1));
+            gameState.playerPoints++;
+            displayMessage(`Уровень повышен! Теперь уровень ${gameState.playerLevel}. Получено очко навыков!`, 'gold', '1.2em')
+       }
+         updateDisplay();
+    };
 
     const finishExpedition = () => {
         clearInterval(gameState.expeditionInterval);
@@ -609,6 +659,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.expeditionDuration = 0;
         gameState.expeditionReward = 0;
         displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${Math.round(reward * calculateDiamondBonus(gameState.artifacts))} алмазов`, 'gold', '1.2em');
+        grantExperience(Math.round(reward * calculateDiamondBonus(gameState.artifacts)));
         updateDisplay();
         saveData();
     };
