@@ -464,7 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem(gameConfig.SAVE_KEY);
         }
     };
-const saveData = () => {
+    const saveData = () => {
         try {
             const {
                 autoClickerInterval,
