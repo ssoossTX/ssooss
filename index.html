@@ -15,6 +15,7 @@
                 <li><button data-tab="shop">Магазин</button></li>
                 <li><button data-tab="profile">Профиль</button></li>
                 <li><button data-tab="map">Карта</button></li>
+                <li><button data-tab="rating">Рейтинг</button></li>
             </ul>
             <div class="diamonds-menu" id="diamonds-menu">Алмазы: 0</div>
         </div>
@@ -41,7 +42,7 @@
                         <p>Уровень улучшения базового клика: <span id="click-upgrade-level-display">1</span></p>
                         <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
                         <button class="buy-upgrade game-button" aria-label="Купить уровень улучшения клика">Купить уровень</button>
-                    </div>
+                                            </div>
                     <div class="message" id="message" aria-live="polite"></div>
                 </section>
                 <button id="prestige-button" class="game-button">
@@ -52,7 +53,7 @@
                 <div id="achievements">Достижения: 0</div>
                 <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
             </div>
-            <div id="game-content" role="region" aria-label="Магазин">
+            <div id="game-content" role="region" aria-label="Магазин" style="display: none;">
                 <h2>Магазин</h2>
                 <section class="chests">
                     <h2>Ящики</h2>
@@ -77,12 +78,12 @@
                 <div class="chest-container" id="chest-container">
                     <div class="chest-content">
                         <h2>Выпавшие предметы:</h2>
-                        <div id="chest-items" class="chest-items"></div>
+                                                <div id="chest-items" class="chest-items"></div>
                         <button id="close-chest-button" class="game-button">Закрыть</button>
                     </div>
                 </div>
             </div>
-            <div class="map-container" id="map-container">
+            <div class="map-container" id="map-container" style="display: none;">
                 <h2>Экспедиции</h2>
                 <button class="expedition-button" data-type="easy">Лёгкая (1 мин)</button>
                 <button class="expedition-button" data-type="medium">Средняя (5 мин)</button>
@@ -90,14 +91,14 @@
                 <div id="expedition-progress" class="expedition-progress"></div>
             </div>
 
-            <div id="profile-container">
+             <div id="profile-container" style="display: none;">
                 <div class="profile-tabs">
                     <button class="profile-tab-button active" data-tab="profile-info">Профиль</button>
                     <button class="profile-tab-button" data-tab="profile-inventory">Инвентарь</button>
                 </div>
                 <div id="profile-info" class="profile-tab-content">
                     <!-- Здесь информация о профиле -->
-                    <div id="profile-info"></div>
+                    <div id="profile-info-content"></div>
                 </div>
                 <div id="profile-inventory" class="profile-tab-content" style="display: none;">
                     <!-- Здесь содержимое инвентаря -->
@@ -118,7 +119,12 @@
                      </div>
                 </div>
             </div>
-
+            <div id="rating-content" class="game-content" style="display:none;">
+                <h2>Рейтинг игроков</h2>
+                <div id="rating-table">
+                </div>
+                <button id="update-rating-button" class="game-button">Обновить рейтинг</button>
+            </div>
         </main>
     </div>
     <script src="script.js"></script>
