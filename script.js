@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tWebApp) {
         tWebApp.ready();
     }
-       
+
     const firebaseConfig = {
         apiKey: "AIzaSyCH-KqOdSyqOVwopPNVB6e3sn1iPQHemJM",
         authDomain: "reting-97f62.firebaseapp.com",
@@ -243,8 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
         storageBucket: "reting-97f62.firebasestorage.app",
         messagingSenderId: "541400270797",
         appId: "1:541400270797:web:1d83e2ab9968f0f29c6684",
-        measurementId: "G-LD4YXN8KZY"
     };
+    
        
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
