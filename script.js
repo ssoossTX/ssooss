@@ -188,6 +188,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
             db = firebase.firestore(firebaseApp);
         }
+  
+    // Добавляем переменные для контроля частоты обновления рейтинга
+    let lastRatingUpdateTime = 0;
+    const RATING_UPDATE_INTERVAL = 5000; // 5 секунд
+
+    const updateRating = async () => {
+        if (!db) return;
+    
+        const now = Date.now();
+        if (now - lastRatingUpdateTime < RATING_UPDATE_INTERVAL) {
+            return; // Если прошло меньше интервала, не обновляем рейтинг
+        }
+
+        try {
+            const userId = tWebApp ? tWebApp.initDataUnsafe?.user?.id : 'localUser'; // Use Telegram user ID or a fallback
+            if (!userId) {
+                console.log('User ID not found.');
+                return;
+            }
+            const userRef = db.collection('players').doc(String(userId));
+            await userRef.set({
+                clickCount: gameState.clickCount,
+            }, { merge: true });
+          lastRatingUpdateTime = now; // Обновляем время последнего обновления
+        } catch (error) {
+            console.error('Error updating rating:', error);
+        }
+    };
+
 
         const getAndUpdateLeaderboard = async () => {
             if (!db) return;
@@ -282,7 +311,10 @@ document.addEventListener('DOMContentLoaded', () => {
               updateRatingButton: document.getElementById('update-rating-button'),
             },
     };
-      elements.rating.updateRatingButton.addEventListener('click', getAndUpdateLeaderboard);
+      elements.rating.updateRatingButton.addEventListener('click', () => {
+        getAndUpdateLeaderboard();
+        updateRating();
+    });
     
     // 4. Обновление дисплея
     const updateClickCountDisplay = () => {
@@ -404,13 +436,13 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier;
         updateDisplay();
         checkAchievements();
-        updateRating();
+    //  updateRating(); // Убираем из клика
     };
 
     const autoClick = () => {
         gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * calculateAutoClickBonus(gameState.skins)) * gameState.prestigeMultiplier;
         updateDisplay();
-         updateRating();
+      //  updateRating(); // Убираем из автоклика
     };
 
     const startAutoClicker = () => {
@@ -475,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
-        updateRating();
+     //   updateRating();
     };
 
     const clearAllTimeouts = () => {
@@ -559,23 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadFromStorage(localStorage);
         }
     };
-     const updateRating = async () => {
-        if (!db) return;
-
-        try {
-            const userId = tWebApp ? tWebApp.initDataUnsafe?.user?.id : 'localUser'; // Use Telegram user ID or a fallback
-            if (!userId) {
-                console.log('User ID not found.');
-                return;
-            }
-             const userRef = db.collection('players').doc(String(userId));
-             await userRef.set({
-                clickCount: gameState.clickCount,
-             }, { merge: true });
-        } catch (error) {
-            console.error('Error updating rating:', error);
-        }
-    };
+  
     
     const switchTab = (tabId) => {
     elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
@@ -583,6 +599,9 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
     elements.inventory.inventoryContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
     elements.rating.ratingContent.style.display = (tabId === 'rating') ? 'block' : 'none';
+    if(tabId === 'rating') {
+        updateRating();
+    }
     // Добавляем логику для переключения табов внутри профиля
     if (tabId === 'profile') {
         const profileInfo = document.getElementById('profile-info');
@@ -981,7 +1000,7 @@ elements.shop.prestigeButton.addEventListener('click', () => {
         clearAllTimeouts();
         updateDisplay();
         displayMessage('Перерождение!');
-        updateRating();
+      //  updateRating();
     } else {
         displayMessage(`Недостаточно кликов! (нужно ${gameState.prestigeCost})`, 'red');
     }
