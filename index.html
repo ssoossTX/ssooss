@@ -3,129 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Продвинутый Кликер</title>
+    <title>Advanced Clicker</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Подключение Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <div class="container">
+    <div class="container fade-in">
         <div class="menu-bar">
-            <button class="menu-toggle" aria-label="Открыть меню" aria-controls="menu-items" aria-expanded="false">☰</button>
+            <button class="menu-toggle">&#9776;</button>
             <ul class="menu-items" id="menu-items">
-                <li><button class="active" data-tab="clicker">Кликер</button></li>
+                <li><button data-tab="clicker" class="active">Кликер</button></li>
                 <li><button data-tab="shop">Магазин</button></li>
-                <li><button data-tab="profile">Профиль</button></li>
                 <li><button data-tab="map">Карта</button></li>
-                <li><button data-tab="rating">Рейтинг</button></li>
+                <li><button data-tab="profile">Профиль</button></li>
+                 <li><button data-tab="rating">Рейтинг</button></li>
             </ul>
-            <div class="diamonds-menu" id="diamonds-menu">Алмазы: 0</div>
+            <div class="diamonds-menu" id="diamonds-menu"></div>
         </div>
         <main class="game-container">
-            <div id="clicker-content" role="region" aria-label="Кликер">
-                <h1 id="game-title">Кликер</h1>
-                <div class="counter">
-                    <p id="click-count">0</p>
-                </div>
-                <button id="click-button" class="game-button" aria-label="Кликнуть для увеличения счетчика на 1">Клик!</button>
-                <section class="upgrades">
-                    <h2>Улучшения</h2>
+            <section id="clicker-content" style="display: block;">
+                <h1 id="game-title">Advanced Clicker</h1>
+                <h2 id="click-count" class="counter">0</h2>
+                <button id="click-button" class="game-button">Клик!</button>
+                <div class="upgrades">
                     <div class="upgrade-item" id="upgrade-click">
-                        <p>Улучшение клика (+1)</p>
-                        <p>Цена: <span id="click-upgrade-cost">10</span></p>
-                        <button class="buy-upgrade game-button" aria-label="Купить улучшение клика">Купить</button>
+                        <p>Улучшение клика (Уровень: 1)</p>
+                        <button class="buy-upgrade">Купить <span id="click-upgrade-cost">10</span></button>
                     </div>
                     <div class="upgrade-item" id="upgrade-auto">
-                        <p>Автокликер</p>
-                        <p>Цена: <span id="auto-upgrade-cost">50</span></p>
-                        <button class="buy-upgrade game-button" aria-label="Купить автокликер">Купить</button>
+                        <p>Автокликер (Уровень: 0)</p>
+                        <button class="buy-upgrade">Купить <span id="auto-upgrade-cost">50</span></button>
                     </div>
-                    <div class="upgrade-item" id="upgrade-click-level">
-                        <p>Уровень улучшения базового клика: <span id="click-upgrade-level-display">1</span></p>
-                        <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
-                        <button class="buy-upgrade game-button" aria-label="Купить уровень улучшения клика">Купить уровень</button>
-                                            </div>
-                    <div class="message" id="message" aria-live="polite"></div>
-                </section>
-                <button id="prestige-button" class="game-button">
-                    Перерождение <br>
-                    <span id="prestige-cost">Стоимость: 10000</span>
-                </button>
-                <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
-                <div id="achievements">Достижения: 0</div>
-                <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
-            </div>
-            <div id="game-content" role="region" aria-label="Магазин" style="display: none;">
+                     <div class="upgrade-item" id="upgrade-click-level">
+                        <p>Уровень улучшения клика: <span id="click-upgrade-level-display">1</span></p>
+                        <button class="buy-upgrade">Купить <span id="click-upgrade-level-cost">100</span></button>
+                    </div>
+                </div>
+            </section>
+            <section id="game-content" style="display: none;">
                 <h2>Магазин</h2>
-                <section class="chests">
-                    <h2>Ящики</h2>
-                    <div class="chest-item">
-                        <p>Ключи: <span id="key-display">0</span></p>
-                        <button id="buy-key-button" class="game-button">Купить ключ (10💎)</button>
-                    </div>
-                    <div class="chest-item">
-                        <p>Обычные сундуки: <span id="common-chest-count">0</span></p>
-                        <button id="buy-common-chest-button" class="game-button">Купить обычный сундук (5💎)</button>
-                    </div>
-                    <div class="chest-item">
-                        <p>Редкие сундуки: <span id="rare-chest-count">0</span></p>
-                        <button id="buy-rare-chest-button" class="game-button">Купить редкий сундук (10💎)</button>
-                    </div>
-                    <div class="chest-item">
-                        <p>Эпические сундуки: <span id="epic-chest-count">0</span></p>
-                        <button id="buy-epic-chest-button" class="game-button">Купить эпический сундук (20💎)</button>
-                    </div>
+                                <p id="prestige-level" class="prestige-level">Уровень перерождения: 0</p>
+                  <p id="prestige-cost">Стоимость: 10000</p>
+                <button id="prestige-button" class="game-button">Переродиться</button>
+                  <p id="key-display">Ключи: 0</p>
+                <button id="buy-key-button" class="game-button">Купить ключ (10💎)</button>
+                <div class="chests">
+                    <p>Обычные сундуки <span id="common-chest-count">0</span><button id="buy-common-chest-button" class="game-button">Купить (5💎)</button></p>
+                    <p>Редкие сундуки <span id="rare-chest-count">0</span><button id="buy-rare-chest-button" class="game-button">Купить (10💎)</button></p>
+                    <p>Эпические сундуки <span id="epic-chest-count">0</span><button id="buy-epic-chest-button" class="game-button">Купить (20💎)</button></p>
                     <button id="open-chest-button" class="game-button">Открыть сундук</button>
-                </section>
-                <div class="chest-container" id="chest-container">
-                    <div class="chest-content">
-                        <h2>Выпавшие предметы:</h2>
-                                                <div id="chest-items" class="chest-items"></div>
-                        <button id="close-chest-button" class="game-button">Закрыть</button>
-                    </div>
                 </div>
+            </section>
+             <section id="map-container" style="display: none;">
+                 <h2>Карта</h2>
+                 <div class="expeditions">
+                     <button class="expedition-button" data-type="easy">Легкая (0💎)</button>
+                     <button class="expedition-button" data-type="medium">Средняя (10💎)</button>
+                     <button class="expedition-button" data-type="hard">Тяжелая (100💎)</button>
+                 </div>
+                 <p id="expedition-progress"></p>
+             </section>
+            <section id="rating-content" style="display: none;">
+                 <h2>Рейтинг</h2>
+                    <button id="update-rating-button" class="game-button">Обновить рейтинг</button>
+                 <div id="rating-table"></div>
+             </section>
+         </main>
+          <div id="profile-container" style="display: none;">
+           <div class="profile-tabs">
+                  <button class="profile-tab-button active" data-tab="profile-info">Профиль</button>
+                  <button class="profile-tab-button" data-tab="profile-inventory">Инвентарь</button>
             </div>
-            <div class="map-container" id="map-container" style="display: none;">
-                <h2>Экспедиции</h2>
-                <button class="expedition-button" data-type="easy">Лёгкая (1 мин)</button>
-                <button class="expedition-button" data-type="medium">Средняя (5 мин)</button>
-                <button class="expedition-button" data-type="hard">Сложная (10 мин)</button>
-                <div id="expedition-progress" class="expedition-progress"></div>
-            </div>
-
-             <div id="profile-container" style="display: none;">
-                <div class="profile-tabs">
-                    <button class="profile-tab-button active" data-tab="profile-info">Профиль</button>
-                    <button class="profile-tab-button" data-tab="profile-inventory">Инвентарь</button>
+              <div class="profile-tab-content">
+                    <div id="profile-info-content" style="display:block">
+                  </div>
+                   <div id="profile-inventory" style="display:none">
+                        <h3>Скины</h3>
+                        <div id="skins-display" class="skins-display"></div>
+                          <h3>Артефакты</h3>
+                        <div id="artifacts-display" class="artifacts-display"></div>
+                   </div>
                 </div>
-                <div id="profile-info" class="profile-tab-content">
-                    <!-- Здесь информация о профиле -->
-                    <div id="profile-info-content"></div>
-                </div>
-                <div id="profile-inventory" class="profile-tab-content" style="display: none;">
-                    <!-- Здесь содержимое инвентаря -->
-                      <div class="inventory-container" id="inventory-container">
-                          <div class="profile-header">
-                              <h2>Инвентарь</h2>
-                          </div>
-                         <div class="profile-content">
-                             <div class="profile-section">
-                                  <h3>Скины</h3>
-                                  <div class="skins-display" id="skins-display"></div>
-                               </div>
-                              <div class="profile-section">
-                                  <h3>Артефакты</h3>
-                                 <div class="artifacts-display" id="artifacts-display"></div>
-                              </div>
-                         </div>
-                     </div>
-                </div>
-            </div>
-            <div id="rating-content" class="game-content" style="display:none;">
-                <h2>Рейтинг игроков</h2>
-                <div id="rating-table">
-                </div>
-                <button id="update-rating-button" class="game-button">Обновить рейтинг</button>
-            </div>
-        </main>
+         </div>
+        <div id="chest-container" class="chest-container" style="display: none;">
+             <h3>Выпавшие предметы</h3>
+             <div id="chest-items" class="chest-content"></div>
+             <button class="game-button" id="close-chest-button">Закрыть</button>
+          </div>
+        <div id="global-message" class="message" style="display: none;"></div>
+        <div id="message" class="message"></div>
+           <button id="reset-button" class="game-button">Сброс прогресса</button>
     </div>
     <script src="script.js"></script>
 </body>
