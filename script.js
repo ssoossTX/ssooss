@@ -224,7 +224,11 @@ document.addEventListener('DOMContentLoaded', () => {
             clickerContent: document.getElementById('clicker-content'),
             gameContent: document.getElementById('game-content'),
             resetButton: document.getElementById('reset-button'),
-        }
+        },
+         rating: {
+             ratingContent: document.getElementById('rating-content'),
+              updateRatingButton: document.getElementById('update-rating-button'),
+            },
     };
         
         const tWebApp = window.Telegram && window.Telegram.WebApp;
@@ -235,16 +239,53 @@ document.addEventListener('DOMContentLoaded', () => {
             tWebApp.ready();
 
             firebaseApp = firebase.initializeApp({
-              apiKey: "AIzaSyCH-KqOdSyqOVwopPNVB6e3sn1iPQHemJM",
-              authDomain: "reting-97f62.firebaseapp.com",
-              projectId: "reting-97f62",
-              storageBucket: "reting-97f62.firebasestorage.app",
-              messagingSenderId: "541400270797",
-              appId: "1:541400270797:web:1d83e2ab9968f0f29c6684"
+              apiKey: "your_api_key",
+              authDomain: "your_auth_domain",
+              projectId: "your_project_id",
+              storageBucket: "your_storage_bucket",
+              messagingSenderId: "your_messaging_sender_id",
+              appId: "your_app_id"
             });
 
             db = firebase.firestore(firebaseApp);
         }
+     
+    const getAndUpdateLeaderboard = async () => {
+            if (!db) return;
+
+            try {
+                const playersRef = db.collection('players');
+                const snapshot = await playersRef.orderBy('clickCount', 'desc').get(); // Получаем всех игроков, отсортированных по кликам
+                const leaderboard = [];
+                snapshot.forEach(doc => {
+                    leaderboard.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+              //  console.log(leaderboard)
+                // Теперь у вас есть массив leaderboard, который отсортирован по кликам
+                // Здесь нужно добавить логику для отображения рейтинга в UI
+                 updateLeaderboardDisplay(leaderboard); // Функция отображения
+            } catch (error) {
+                console.error('Error fetching leaderboard:', error);
+            }
+        };
+
+        const updateLeaderboardDisplay = (leaderboard) => {
+          const leaderboardContainer = document.getElementById('leaderboard-container'); // Получаем div под рейтинг
+            if(!leaderboardContainer) return
+           leaderboardContainer.innerHTML = ''; // Очищаем предыдущий рейтинг
+
+            leaderboard.forEach((player, index) => {
+                const playerElement = document.createElement('p');
+                playerElement.textContent = `#${index + 1}  ${player.id} - Кликов: ${Math.round(player.clickCount)}`;
+                leaderboardContainer.appendChild(playerElement);
+            });
+        };
+         elements.rating.updateRatingButton.addEventListener('click', getAndUpdateLeaderboard);
+
+    getAndUpdateLeaderboard();
 
     // 4. Обновление дисплея
     const updateClickCountDisplay = () => {
@@ -543,7 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
     elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
     elements.inventory.inventoryContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
-
+    elements.rating.ratingContent.style.display = (tabId === 'rating') ? 'block' : 'none';
     // Добавляем логику для переключения табов внутри профиля
     if (tabId === 'profile') {
         const profileInfo = document.getElementById('profile-info');
@@ -692,99 +733,84 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    if (gameState.keys > 0) {
+    if (gameState.keys <= 0) {
+            displayMessage('Нет ключей для открытия', 'red');
+            return;
+        }
+    
         gameState.keys--;
         gameState.chests[chestType]--;
-        const item = openChestLogic(chestType);
-        if (item) {
-            const itemElement = document.createElement('div');
-            itemElement.textContent = `Выпал предмет: ${item}`;
-            elements.shop.chestItemsDisplay.appendChild(itemElement);
-            displayMessage(`Выпал предмет: ${item}`, 'green', '1.2em');
-        }
-        elements.shop.chestContainer.style.display = 'block';
         updateDisplay();
-        saveData();
-    } else {
-        displayMessage('Нет ключей для открытия', 'red');
-    }
-};
+        
+        const rollItem = (itemType) => {
+        let items = null;
+        let rarityChances = null;
 
+            if(itemType === 'skins') {
+            items = Object.keys(gameConfig.SKIN_NAMES);
+            rarityChances = gameConfig.SKIN_RARITY_CHANCE;
+           }
+        if(itemType === 'artifacts') {
+            items = Object.keys(gameConfig.ARTIFACT_NAMES);
+            rarityChances = gameConfig.ARTIFACT_RARITY_CHANCE;
+           }
 
-const closeChest = () => {
+            if (!items) return null;
+
+            const random = Math.random();
+            let cumulativeChance = 0;
+            let rarity = 'common';
+
+            for (const key in rarityChances) {
+                cumulativeChance += rarityChances[key];
+                if (random <= cumulativeChance) {
+                    rarity = key;
+                    break;
+                }
+            }
+
+           const filteredItems = items.filter(item => gameConfig[`${itemType.toUpperCase()}_RARITY`][item] === rarity);
+            const randomIndex = Math.floor(Math.random() * filteredItems.length);
+          return filteredItems[randomIndex];
+        };
+        
+        const items = [];
+        for (let i = 0; i < 3; i++) {
+            const itemType = Math.random() < 0.5 ? 'skins' : 'artifacts';
+             const item = rollItem(itemType);
+            if (item) {
+            items.push({type:itemType, item});
+            }
+        }
+        
+        
+    items.forEach(item => {
+           if(item.type === 'skins') {
+            gameState.skins[item.item] = (gameState.skins[item.item] || 0) + 1;
+               const imagePath = `${item.item}.jpg`;
+                const newItemElement = document.createElement('div');
+                newItemElement.innerHTML = `Выпал ${getImageTag(item.item, imagePath, gameConfig.SKIN_NAMES[item.item] || item.item)} <span>${gameConfig.SKIN_NAMES[item.item] || item.item}</span>`;
+                 elements.shop.chestItemsDisplay.appendChild(newItemElement);
+           }
+             if(item.type === 'artifacts') {
+            gameState.artifacts[item.item] = (gameState.artifacts[item.item] || 0) + 1;
+                const imagePath = `${item.item}.jpg`;
+                const newItemElement = document.createElement('div');
+               newItemElement.innerHTML = `Выпал ${getImageTag(item.item, imagePath, gameConfig.ARTIFACT_NAMES[item.item] || item.item)} <span>${gameConfig.ARTIFACT_NAMES[item.item] || item.item}</span>`;
+                 elements.shop.chestItemsDisplay.appendChild(newItemElement);
+            }
+        });
+    
+        elements.shop.chestContainer.style.display = 'block';
+    };
+    
+    const closeChest = () => {
     elements.shop.chestContainer.style.display = 'none';
 };
 
-
-const openChestLogic = (chestType) => {
-    const allSkins = Object.keys(gameConfig.SKIN_NAMES);
-    const allArtifacts = Object.keys(gameConfig.ARTIFACT_NAMES);
-
-    const itemTypeRoll = Math.random();
-    const skinChance = 0.5;
-    let item = null;
-    if (itemTypeRoll <= skinChance) {
-        item = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
-    } else {
-        item = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
-    }
-    return item;
-};
-
-const applyRarity = (rarityChances, names, type) => {
-    const allItems = Object.keys(names);
-    if (allItems.length === 0) {
-        return null;
-    }
-    const item = getRandomItem(allItems, names, type);
-    return item;
-};
-
-function getRandomItem(itemsArray, names, type) {
-    const item = itemsArray[Math.floor(Math.random() * itemsArray.length)];
-    if (type === 'skins') {
-        gameState.skins[item] = (gameState.skins[item] || 0) + 1;
-    } else if (type === 'artifacts') {
-        gameState.artifacts[item] = (gameState.artifacts[item] || 0) + 1;
-    }
-    return names[item];
-}
-
-const createItemPopup = (itemType, itemId, itemName, count, rarity, bonuses) => {
-    const popup = document.createElement('div');
-    popup.classList.add('item-popup');
-    const imagePath = `${itemId}.jpg`;
-    popup.innerHTML = `
-        <div class="popup-content">
-             <span class="item-popup-close-button">&times;</span>
-             ${getImageTag(itemId, imagePath, itemName)}
-            <h3>${itemName}</h3>
-            <p>Количество: ${count}</p>
-            <p>Редкость: ${rarity}</p>
-             ${bonuses ? `<p>Бонусы: ${bonuses}</p>` : ''}
-        </div>
-    `;
-    document.body.appendChild(popup);
-    // Обработчик для закрытия окна по крестику
-    const closeButton = popup.querySelector('.item-popup-close-button');
-    closeButton.addEventListener('click', () => {
-        popup.remove();
-    });
-    // Обработчик для закрытия окна по клику вне его
-    document.addEventListener('click', (event) => {
-        if (event.target === popup) {
-            popup.remove();
-        }
-    });
-};
-
-const getImageTag = (itemId, imagePath, itemName) => {
-    // Проверяем, существует ли картинка
-    const img = new Image();
-    img.src = imagePath;
-    // Если картинка загрузилась, возвращаем тег img
-    if (img.complete || img.naturalWidth !== 0) {
-        return `<img src="${imagePath}" alt="${itemName}">`;
+const getImageTag = (itemName, imagePath, name = '') => {
+    if (imagePath) {
+        return `<img class="item-image" src="img/${imagePath}" alt="${name}">`;
     }
     // В противном случае, возвращаем пустую строку или другое значение по умолчанию
     return '';
