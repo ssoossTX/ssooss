@@ -239,12 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
             tWebApp.ready();
 
             firebaseApp = firebase.initializeApp({
-              apiKey: "your_api_key",
-              authDomain: "your_auth_domain",
-              projectId: "your_project_id",
-              storageBucket: "your_storage_bucket",
-              messagingSenderId: "your_messaging_sender_id",
-              appId: "your_app_id"
+              apiKey: "AIzaSyCH-KqOdSyqOVwopPNVB6e3sn1iPQHemJM",
+              authDomain: "reting-97f62.firebaseapp.com",
+              projectId: "reting-97f62",
+              storageBucket: "reting-97f62.firebasestorage.app",
+              messagingSenderId: "541400270797",
+              appId: "1:541400270797:web:1d83e2ab9968f0f29c6684"
             });
 
             db = firebase.firestore(firebaseApp);
