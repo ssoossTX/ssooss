@@ -170,6 +170,58 @@ document.addEventListener('DOMContentLoaded', () => {
         artifacts: {},
         prestigeCost: gameConfig.PRESTIGE_BASE_COST,
     };
+    const tWebApp = window.Telegram && window.Telegram.WebApp;
+    let firebaseApp;
+    let db;
+
+     if (tWebApp) {
+            tWebApp.ready();
+
+            firebaseApp = firebase.initializeApp({
+              apiKey: "your_api_key",
+              authDomain: "your_auth_domain",
+              projectId: "your_project_id",
+              storageBucket: "your_storage_bucket",
+              messagingSenderId: "your_messaging_sender_id",
+              appId: "your_app_id"
+            });
+
+            db = firebase.firestore(firebaseApp);
+        }
+
+        const getAndUpdateLeaderboard = async () => {
+            if (!db) return;
+
+            try {
+                const playersRef = db.collection('players');
+                const snapshot = await playersRef.orderBy('clickCount', 'desc').get(); // Получаем всех игроков, отсортированных по кликам
+                const leaderboard = [];
+                snapshot.forEach(doc => {
+                    leaderboard.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+              //  console.log(leaderboard)
+                // Теперь у вас есть массив leaderboard, который отсортирован по кликам
+                // Здесь нужно добавить логику для отображения рейтинга в UI
+                 updateLeaderboardDisplay(leaderboard); // Функция отображения
+            } catch (error) {
+                console.error('Error fetching leaderboard:', error);
+            }
+        };
+
+        const updateLeaderboardDisplay = (leaderboard) => {
+          const leaderboardContainer = document.getElementById('leaderboard-container'); // Получаем div под рейтинг
+            if(!leaderboardContainer) return
+           leaderboardContainer.innerHTML = ''; // Очищаем предыдущий рейтинг
+
+            leaderboard.forEach((player, index) => {
+                const playerElement = document.createElement('p');
+                playerElement.textContent = `#${index + 1}  ${player.id} - Кликов: ${Math.round(player.clickCount)}`;
+                leaderboardContainer.appendChild(playerElement);
+            });
+        };
 
     // 3. Объекты DOM элементов
     const elements = {
@@ -230,68 +282,13 @@ document.addEventListener('DOMContentLoaded', () => {
               updateRatingButton: document.getElementById('update-rating-button'),
             },
     };
-        
-        const tWebApp = window.Telegram && window.Telegram.WebApp;
-        let firebaseApp;
-        let db;
-
-        if (tWebApp) {
-            tWebApp.ready();
-
-            firebaseApp = firebase.initializeApp({
-              apiKey: "AIzaSyCH-KqOdSyqOVwopPNVB6e3sn1iPQHemJM",
-              authDomain: "reting-97f62.firebaseapp.com",
-              projectId: "reting-97f62",
-              storageBucket: "reting-97f62.firebasestorage.app",
-              messagingSenderId: "541400270797",
-              appId: "1:541400270797:web:1d83e2ab9968f0f29c6684"
-            });
-
-            db = firebase.firestore(firebaseApp);
-        }
-     
-    const getAndUpdateLeaderboard = async () => {
-            if (!db) return;
-
-            try {
-                const playersRef = db.collection('players');
-                const snapshot = await playersRef.orderBy('clickCount', 'desc').get(); // Получаем всех игроков, отсортированных по кликам
-                const leaderboard = [];
-                snapshot.forEach(doc => {
-                    leaderboard.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                });
-              //  console.log(leaderboard)
-                // Теперь у вас есть массив leaderboard, который отсортирован по кликам
-                // Здесь нужно добавить логику для отображения рейтинга в UI
-                 updateLeaderboardDisplay(leaderboard); // Функция отображения
-            } catch (error) {
-                console.error('Error fetching leaderboard:', error);
-            }
-        };
-
-        const updateLeaderboardDisplay = (leaderboard) => {
-          const leaderboardContainer = document.getElementById('leaderboard-container'); // Получаем div под рейтинг
-            if(!leaderboardContainer) return
-           leaderboardContainer.innerHTML = ''; // Очищаем предыдущий рейтинг
-
-            leaderboard.forEach((player, index) => {
-                const playerElement = document.createElement('p');
-                playerElement.textContent = `#${index + 1}  ${player.id} - Кликов: ${Math.round(player.clickCount)}`;
-                leaderboardContainer.appendChild(playerElement);
-            });
-        };
-         elements.rating.updateRatingButton.addEventListener('click', getAndUpdateLeaderboard);
-
-    getAndUpdateLeaderboard();
-
+      elements.rating.updateRatingButton.addEventListener('click', getAndUpdateLeaderboard);
+    
     // 4. Обновление дисплея
     const updateClickCountDisplay = () => {
         elements.clicker.clickCountDisplay.textContent = Math.round(gameState.clickCount);
     };
-
+    
     const updateUpgradeCostDisplay = () => {
         elements.clicker.clickUpgradeCostDisplay.textContent = gameState.clickUpgradeCost;
         elements.clicker.autoUpgradeCostDisplay.textContent = gameState.autoUpgradeCost;
@@ -540,6 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     startExpeditionTimer();
                 }
                 updateDisplay();
+                getAndUpdateLeaderboard();// Вызов getAndUpdateLeaderboard после загрузки игры
             } catch (e) {
                 clearSaveData();
                 console.error('Failed to load game', e);
