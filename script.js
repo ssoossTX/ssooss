@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'medium': 300000,
             'hard': 600000,
         },
+        LEADERBOARD_LIMIT: 100, // Максимальное количество записей в рейтинге
     };
 
     // 2. Состояние игры
@@ -202,14 +203,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const userId = tWebApp ? tWebApp.initDataUnsafe?.user?.id : 'localUser'; // Use Telegram user ID or a fallback
+            const userId = tWebApp ? tWebApp.initDataUnsafe?.user?.id : 'localUser';
             if (!userId) {
                 console.log('User ID not found.');
                 return;
             }
+           const userName = tWebApp ? (tWebApp.initDataUnsafe?.user?.first_name || `ID: ${userId}`) : 'Local User';
+            const userPhoto = tWebApp ? (tWebApp.initDataUnsafe?.user?.photo_url || null) : null
             const userRef = db.collection('players').doc(String(userId));
             await userRef.set({
                 clickCount: gameState.clickCount,
+                name: userName,
+                photo: userPhoto,
             }, { merge: true });
           lastRatingUpdateTime = now; // Обновляем время последнего обновления
         } catch (error) {
@@ -223,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const playersRef = db.collection('players');
-                const snapshot = await playersRef.orderBy('clickCount', 'desc').get(); // Получаем всех игроков, отсортированных по кликам
+                const snapshot = await playersRef.orderBy('clickCount', 'desc').limit(gameConfig.LEADERBOARD_LIMIT).get();
                 const leaderboard = [];
                 snapshot.forEach(doc => {
                     leaderboard.push({
@@ -231,27 +236,45 @@ document.addEventListener('DOMContentLoaded', () => {
                         ...doc.data()
                     });
                 });
-              //  console.log(leaderboard)
-                // Теперь у вас есть массив leaderboard, который отсортирован по кликам
-                // Здесь нужно добавить логику для отображения рейтинга в UI
-                 updateLeaderboardDisplay(leaderboard); // Функция отображения
+                updateLeaderboardDisplay(leaderboard);
             } catch (error) {
                 console.error('Error fetching leaderboard:', error);
             }
         };
 
-        const updateLeaderboardDisplay = (leaderboard) => {
-          const leaderboardContainer = document.getElementById('leaderboard-container'); // Получаем div под рейтинг
-            if(!leaderboardContainer) return
+    const updateLeaderboardDisplay = (leaderboard) => {
+        const leaderboardContainer = document.getElementById('leaderboard-container');
+        if(!leaderboardContainer) return;
            leaderboardContainer.innerHTML = ''; // Очищаем предыдущий рейтинг
 
-            leaderboard.forEach((player, index) => {
-                const playerElement = document.createElement('p');
-                playerElement.textContent = `#${index + 1}  ${player.id} - Кликов: ${Math.round(player.clickCount)}`;
-                leaderboardContainer.appendChild(playerElement);
-            });
-        };
+        leaderboard.forEach((player, index) => {
+             const playerElement = document.createElement('div');
+              playerElement.classList.add('leaderboard-player');
+            
+            // Аватарка (если есть)
+             if (player.photo) {
+                const avatar = document.createElement('img');
+                avatar.src = player.photo;
+                avatar.alt = 'Avatar';
+                avatar.classList.add('leaderboard-avatar');
+                playerElement.appendChild(avatar);
+            }
 
+             // Имя и клики
+            const playerInfo = document.createElement('div');
+            playerInfo.classList.add('leaderboard-info');
+            const nameSpan = document.createElement('span');
+            nameSpan.classList.add('leaderboard-name');
+            nameSpan.textContent = `#${index + 1} ${player.name}`;
+             const scoreSpan = document.createElement('span');
+             scoreSpan.classList.add('leaderboard-score');
+             scoreSpan.textContent = ` - Кликов: ${Math.round(player.clickCount)}`;
+            playerInfo.appendChild(nameSpan);
+            playerInfo.appendChild(scoreSpan);
+           playerElement.appendChild(playerInfo);
+           leaderboardContainer.appendChild(playerElement);
+        });
+};
     // 3. Объекты DOM элементов
     const elements = {
         clicker: {
@@ -296,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         global: {
             messageDisplay: document.getElementById('message'),
-            globalMessageDisplay: document.getElementById('global-message'),
+            globalMessageDisplay: null,
         },
         menu: {
             menuButton: document.querySelector('.menu-toggle'),
@@ -436,13 +459,11 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier;
         updateDisplay();
         checkAchievements();
-    //  updateRating(); // Убираем из клика
     };
 
     const autoClick = () => {
         gameState.clickCount += (gameState.autoClickerValue * gameState.clickUpgradeLevel * calculateAutoClickBonus(gameState.skins)) * gameState.prestigeMultiplier;
         updateDisplay();
-      //  updateRating(); // Убираем из автоклика
     };
 
     const startAutoClicker = () => {
@@ -507,7 +528,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
         clearSaveData();
         displayMessage('Прогресс сброшен!', 'orange');
-     //   updateRating();
     };
 
     const clearAllTimeouts = () => {
@@ -1000,7 +1020,6 @@ elements.shop.prestigeButton.addEventListener('click', () => {
         clearAllTimeouts();
         updateDisplay();
         displayMessage('Перерождение!');
-      //  updateRating();
     } else {
         displayMessage(`Недостаточно кликов! (нужно ${gameState.prestigeCost})`, 'red');
     }
