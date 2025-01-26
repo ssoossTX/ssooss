@@ -292,15 +292,13 @@ main.game-container {
 #clicker-content,
 #game-content,
 .map-container,
-.inventory-container,
-#rating-content {
+.inventory-container {
     display: none;
 }
 
 #clicker-content,
 #game-content,
-.map-container,
-#rating-content {
+.map-container {
     padding: 15px;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
@@ -312,8 +310,7 @@ main.game-container {
 
 #clicker-content:hover,
 #game-content:hover,
-.map-container:hover,
-#rating-content:hover {
+.map-container:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -370,30 +367,6 @@ main.game-container {
     padding: 10px;
     border-radius: 5px;
 }
-    
-/* Стили таблицы рейтинга */
-#rating-table {
-    width: 100%;
-    overflow-x: auto;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-#rating-table th,
-#rating-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-#rating-table th {
-    background-color: #333;
-}
-
-#rating-table tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
 
 /* Инвентарь */
 .inventory-container {
