@@ -416,12 +416,11 @@ main.game-container {
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 20px;
-    animation: slideInUp 0.5s ease;
+    animation: slideInUp 0.5s ease; /* Анимация появления сверху */
 }
 #profile-container.active{
    display: block;
 }
-
 
 @keyframes slideInUp {
     from {
@@ -799,34 +798,17 @@ main.game-container {
     flex-direction: column;
     align-items: center;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.2s ease;
     width: 250px;
 }
-  
+
 .ability-item:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.2);
 }
-.ability-item.fade-in {
-        animation: abilityItemFadeIn 0.4s ease forwards;
-  }
-
-@keyframes abilityItemFadeIn {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
 
 .ability-item button {
     margin-top: 10px;
     width: 100%;
-
 }
 
 .ability-item button.disabled {
@@ -837,6 +819,7 @@ main.game-container {
 .ability-item button.disabled:hover {
     background-color: #777;
 }
+
 /* Общие стили для анимации контента */
 .game-content.active,
 #clicker-content.active,
@@ -854,11 +837,4 @@ main.game-container {
     to {
         opacity: 1;
     }
-}
-
-/* Анимация появления для контента каждой вкладки */
-.game-content.active,
-#clicker-content.active,
-.map-container.active {
-  animation: slideIn 0.5s ease forwards;
 }
