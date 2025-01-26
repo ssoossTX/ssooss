@@ -10,111 +10,119 @@
     <div class="container">
         <div class="menu-bar">
             <button class="menu-toggle" aria-label="Открыть меню" aria-controls="menu-items" aria-expanded="false">☰</button>
-            <ul class="menu-items" id="menu-items" aria-label="Навигационное меню">
-                <li><button class="active" data-tab="clicker" aria-label="Перейти на вкладку Кликер">Кликер</button></li>
-                <li><button data-tab="shop" aria-label="Перейти на вкладку Магазин">Магазин</button></li>
-                <li><button data-tab="profile" aria-label="Перейти на вкладку Профиль">Профиль</button></li>
-                  <li><button data-tab="map" aria-label="Перейти на вкладку Карта">Карта</button></li>
+            <ul class="menu-items" id="menu-items">
+                <li><button class="active" data-tab="clicker">Кликер</button></li>
+                <li><button data-tab="shop">Магазин</button></li>
+                 <li><button data-tab="map">Карта</button></li>
+                 <li><button data-tab="profile">Профиль</button></li>
             </ul>
-            <div class="diamonds-menu" id="diamonds-menu" aria-live="polite">Алмазы: 0</div>
+             <div class="diamonds-menu" id="diamonds-menu">Алмазы: 0</div>
         </div>
         <main class="game-container">
             <div id="clicker-content" role="region" aria-label="Кликер">
                 <h1 id="game-title">Кликер</h1>
                 <div class="counter">
-                    <p id="click-count" aria-live="polite">0</p>
+                    <p id="click-count">0</p>
                 </div>
                 <button id="click-button" class="game-button" aria-label="Кликнуть для увеличения счетчика на 1">Клик!</button>
                 <section class="upgrades">
                     <h2>Улучшения</h2>
                     <div class="upgrade-item" id="upgrade-click">
                         <p>Улучшение клика (+1)</p>
-                        <p>Цена: <span id="click-upgrade-cost" aria-live="polite">10</span></p>
+                        <p>Цена: <span id="click-upgrade-cost">10</span></p>
                         <button class="buy-upgrade game-button" aria-label="Купить улучшение клика">Купить</button>
                     </div>
+                      <div class="upgrade-item" id="upgrade-click-level">
+                            <p>Уровень улучшения базового клика: <span id="click-upgrade-level-display">1</span></p>
+                           <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
+                          <button class="buy-upgrade game-button" aria-label="Купить уровень улучшения клика">Купить уровень</button>
+                     </div>
                     <div class="upgrade-item" id="upgrade-auto">
                         <p>Автокликер</p>
-                        <p>Цена: <span id="auto-upgrade-cost" aria-live="polite">50</span></p>
+                        <p>Цена: <span id="auto-upgrade-cost">50</span></p>
                         <button class="buy-upgrade game-button" aria-label="Купить автокликер">Купить</button>
                     </div>
-                      <div class="upgrade-item" id="upgrade-click-level">
-                         <p>Уровень улучшения базового клика: <span id="click-upgrade-level-display" aria-live="polite">1</span></p>
-                                                   <p>Цена следующего уровня: <span id="click-upgrade-level-cost" aria-live="polite">100</span></p>
-                        <button class="buy-upgrade game-button" aria-label="Купить уровень улучшения клика">Купить уровень</button>
-                    </div>
-                    <div class="message" id="message" aria-live="polite"></div>
+                                        <div class="message" id="message" aria-live="polite"></div>
                 </section>
-                  <button id="prestige-button" class="game-button" aria-label="Перерождение для получения большего бонуса">
+                <button id="prestige-button" class="game-button">
                     Перерождение <br>
-                    <span id="prestige-cost" aria-live="polite">Стоимость: 10000</span>
+                    <span id="prestige-cost">Стоимость: 10000</span>
                 </button>
-                <div class="prestige-level" aria-live="polite">Уровень перерождения: <span id="prestige-level">0</span></div>
-                  <div id="achievements" aria-live="polite">Достижения: 0</div>
-                <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
+                 <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
+                <div id="achievements">Достижения: 0</div>
+                  <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
             </div>
-             <div id="game-content" role="region" aria-label="Магазин" style="display: none">
+             <div id="game-content" role="region" aria-label="Магазин">
                  <h2>Магазин</h2>
-                <section class="chests">
+                  <section class="chests">
                     <h2>Ящики</h2>
-                    <div class="chest-item">
-                        <p>Ключи: <span id="key-display" aria-live="polite">0</span></p>
-                        <button id="buy-key-button" class="game-button" aria-label="Купить ключ за 10 алмазов">Купить ключ (10💎)</button>
-                    </div>
-                    <div class="chest-item">
-                        <p>Обычные сундуки: <span id="common-chest-count" aria-live="polite">0</span></p>
-                        <button id="buy-common-chest-button" class="game-button" aria-label="Купить обычный сундук за 5 алмазов">Купить обычный сундук (5💎)</button>
-                    </div>
                       <div class="chest-item">
-                         <p>Редкие сундуки: <span id="rare-chest-count" aria-live="polite">0</span></p>
-                         <button id="buy-rare-chest-button" class="game-button" aria-label="Купить редкий сундук за 10 алмазов">Купить редкий сундук (10💎)</button>
+                         <p>Ключи: <span id="key-display">0</span></p>
+                        <button id="buy-key-button" class="game-button">Купить ключ (10💎)</button>
+                       </div>
+                    <div class="chest-item">
+                        <p>Обычные сундуки: <span id="common-chest-count">0</span></p>
+                       <button id="buy-common-chest-button" class="game-button">Купить обычный сундук (5💎)</button>
                     </div>
                      <div class="chest-item">
-                                                 <p>Эпические сундуки: <span id="epic-chest-count" aria-live="polite">0</span></p>
-                        <button id="buy-epic-chest-button" class="game-button" aria-label="Купить эпический сундук за 20 алмазов">Купить эпический сундук (20💎)</button>
+                        <p>Редкие сундуки: <span id="rare-chest-count">0</span></p>
+                        <button id="buy-rare-chest-button" class="game-button">Купить редкий сундук (10💎)</button>
+                     </div>
+                     <div class="chest-item">
+                        <p>Эпические сундуки: <span id="epic-chest-count">0</span></p>
+                       <button id="buy-epic-chest-button" class="game-button">Купить эпический сундук (20💎)</button>
                     </div>
-                     <button id="open-chest-button" class="game-button" aria-label="Открыть сундук">Открыть сундук</button>
+                   <button id="open-chest-button" class="game-button">Открыть сундук</button>
                 </section>
-                    <div class="chest-container" id="chest-container" style="display:none;">
-                        <div class="chest-content">
-                            <h2>Выпавшие предметы:</h2>
-                           <div id="chest-items" class="chest-items" aria-live="polite"></div>
-                           <button id="close-chest-button" class="game-button" aria-label="Закрыть сундук">Закрыть</button>
-                       </div>
-                  </div>
-            </div>
-               <div class="map-container" id="map-container" style="display:none;">
-                  <h2>Экспедиции</h2>
-                   <button class="expedition-button" data-type="easy" aria-label="Отправить лёгкую экспедицию">Лёгкая (1 мин)</button>
-                   <button class="expedition-button" data-type="medium" aria-label="Отправить среднюю экспедицию">Средняя (5 мин)</button>
-                   <button class="expedition-button" data-type="hard" aria-label="Отправить сложную экспедицию">Сложная (10 мин)</button>
-                    <div id="expedition-progress" class="expedition-progress" aria-live="polite"></div>
-                </div>
-             <div id="profile-container" style="display: none;">
+                 <div class="chest-container" id="chest-container">
+                    <div class="chest-content">
+                       <h2>Выпавшие предметы:</h2>
+                       <div id="chest-items" class="chest-items"></div>
+                                                <button id="close-chest-button" class="game-button">Закрыть</button>
+                   </div>
+               </div>
+           </div>
+            <div class="map-container" id="map-container">
+                <h2>Экспедиции</h2>
+                <button class="expedition-button" data-type="easy">Лёгкая (1 мин)</button>
+                <button class="expedition-button" data-type="medium">Средняя (5 мин)</button>
+                <button class="expedition-button" data-type="hard">Сложная (10 мин)</button>
+                <div id="expedition-progress" class="expedition-progress"></div>
+           </div>
+            <div id="profile-container">
                 <div class="profile-tabs">
-                  <button class="profile-tab-button active" data-tab="profile-info" aria-label="Перейти на вкладку профиля">Профиль</button>
-                   <button class="profile-tab-button" data-tab="profile-inventory" aria-label="Перейти на вкладку инвентарь">Инвентарь</button>
+                    <button class="profile-tab-button active" data-tab="profile-info">Профиль</button>
+                    <button class="profile-tab-button" data-tab="profile-inventory">Инвентарь</button>
+                     <button class="profile-tab-button" data-tab="profile-abilities">Способности</button>
                 </div>
                <div id="profile-info" class="profile-tab-content">
-                </div>
-               <div id="profile-inventory" class="profile-tab-content" style="display: none;">
-                    <div class="inventory-container" id="inventory-container">
+                    <!-- Здесь информация о профиле -->
+                 </div>
+                <div id="profile-inventory" class="profile-tab-content" style="display: none;">
+                    <!-- Здесь содержимое инвентаря -->
+                      <div class="inventory-container" id="inventory-container">
                           <div class="profile-header">
-                             <h2>Инвентарь</h2>
+                              <h2>Инвентарь</h2>
                           </div>
                          <div class="profile-content">
                              <div class="profile-section">
                                   <h3>Скины</h3>
-                                  <div class="skins-display" id="skins-display" aria-live="polite"></div>
+                                  <div class="skins-display" id="skins-display"></div>
                                </div>
                               <div class="profile-section">
                                   <h3>Артефакты</h3>
-                                 <div class="artifacts-display" id="artifacts-display" aria-live="polite"></div>
+                                 <div class="artifacts-display" id="artifacts-display"></div>
                               </div>
                          </div>
                      </div>
                 </div>
-          </div>
-
+                <div id="profile-abilities" class="profile-tab-content" style="display: none;">
+                     <h3>Способности</h3>
+                     <div id="abilities-list">
+                          <!-- Сюда добавятся способности -->
+                     </div>
+               </div>
+           </div>
         </main>
     </div>
     <script src="script.js"></script>
