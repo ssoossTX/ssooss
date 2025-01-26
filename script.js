@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  costPerLevel: 1,
                 baseValue: 1.0, // Начальное значение
                 increment: 0.5, // Увеличение за уровень
-                maxLevel: 5,
+                maxLevel: 50,
             },
             'exp_bonus': {
                 name: 'Бонус к опыту',
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  costPerLevel: 1,
                 baseValue: 1.0,
                  increment: 0.5,
-                 maxLevel: 5,
+                 maxLevel: 50,
             },
             'click_bonus': {
                 name: 'Бонус к кликам',
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   costPerLevel: 1,
                 baseValue: 1.0,
                 increment: 0.5,
-                maxLevel: 5,
+                maxLevel: 100,
             },
              'expedition_speed': {
                 name: 'Скорость Экспедиций',
@@ -171,14 +171,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 costPerLevel: 1,
                 baseValue: 1.0,
                  increment: 0.5,
-                maxLevel: 5,
+                maxLevel: 10,
             },
               'luck_bonus': {
                 name: 'Удача',
                 description: 'Увеличивает шанс выпадения редких предметов',
                 costPerLevel: 1,
                 baseValue: 1.0,
-                increment: 0.5,
+                increment: 0.1,
                 maxLevel: 5,
             },
         },
