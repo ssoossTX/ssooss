@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Продвинутый Кликер</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -18,7 +15,6 @@
                 <li><button data-tab="shop">Магазин</button></li>
                 <li><button data-tab="profile">Профиль</button></li>
                 <li><button data-tab="map">Карта</button></li>
-                 <li><button data-tab="rating">Рейтинг</button></li>
             </ul>
             <div class="diamonds-menu" id="diamonds-menu">Алмазы: 0</div>
         </div>
@@ -43,7 +39,7 @@
                     </div>
                     <div class="upgrade-item" id="upgrade-click-level">
                         <p>Уровень улучшения базового клика: <span id="click-upgrade-level-display">1</span></p>
-                                                                        <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
+                        <p>Цена следующего уровня: <span id="click-upgrade-level-cost">100</span></p>
                         <button class="buy-upgrade game-button" aria-label="Купить уровень улучшения клика">Купить уровень</button>
                     </div>
                     <div class="message" id="message" aria-live="polite"></div>
@@ -77,8 +73,8 @@
                         <button id="buy-epic-chest-button" class="game-button">Купить эпический сундук (20💎)</button>
                     </div>
                     <button id="open-chest-button" class="game-button">Открыть сундук</button>
-                                    </section>
-                                <div class="chest-container" id="chest-container">
+                </section>
+                <div class="chest-container" id="chest-container">
                     <div class="chest-content">
                         <h2>Выпавшие предметы:</h2>
                         <div id="chest-items" class="chest-items"></div>
@@ -86,7 +82,7 @@
                     </div>
                 </div>
             </div>
-            <div class="map-container" id="map-container" role="region" aria-label="Карта">
+            <div class="map-container" id="map-container">
                 <h2>Экспедиции</h2>
                 <button class="expedition-button" data-type="easy">Лёгкая (1 мин)</button>
                 <button class="expedition-button" data-type="medium">Средняя (5 мин)</button>
@@ -94,16 +90,16 @@
                 <div id="expedition-progress" class="expedition-progress"></div>
             </div>
 
-            <div id="profile-container" role="region" aria-label="Профиль">
+            <div id="profile-container">
                 <div class="profile-tabs">
                     <button class="profile-tab-button active" data-tab="profile-info">Профиль</button>
                     <button class="profile-tab-button" data-tab="profile-inventory">Инвентарь</button>
                 </div>
                 <div id="profile-info" class="profile-tab-content">
                     <!-- Здесь информация о профиле -->
-                    <div id="profile-info-content"></div>
-                    </div>
-                 <div id="profile-inventory" class="profile-tab-content" style="display: none;">
+                    <div id="profile-info"></div>
+                </div>
+                <div id="profile-inventory" class="profile-tab-content" style="display: none;">
                     <!-- Здесь содержимое инвентаря -->
                       <div class="inventory-container" id="inventory-container">
                           <div class="profile-header">
@@ -121,11 +117,6 @@
                          </div>
                      </div>
                 </div>
-            </div>
-            <div id="rating-content" role="region" aria-label="Рейтинг">
-                <h2>Рейтинг</h2>
-                <button id="update-rating-button" class="game-button">Обновить рейтинг</button>
-                <div id="leaderboard-container"></div>
             </div>
 
         </main>
