@@ -606,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.expeditionInterval = setInterval(updateExpeditionProgressBar, 1000);
     };
 
-        const finishExpedition = () => {
+    const finishExpedition = () => {
         clearInterval(gameState.expeditionInterval);
         gameState.expeditionInterval = null;
         const reward = gameState.expeditionReward;
