@@ -986,7 +986,6 @@ const updateInventoryDisplay = () => {
                const ability = gameConfig.ABILITY_CONFIG[abilityId];
               const abilityItem = document.createElement('div');
                 abilityItem.classList.add('ability-item');
-                abilityItem.classList.add('fade-in');
 
             const currentLevel = gameState.abilities[abilityId] || 0;
             const maxLevel = ability.maxLevel;
