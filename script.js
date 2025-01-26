@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 description: 'Увеличивает количество алмазов за экспедиции',
                  costPerLevel: 1,
                 baseValue: 1.0, // Начальное значение
-                increment: 0.05, // Увеличение за уровень
+                increment: 0.5, // Увеличение за уровень
                 maxLevel: 5,
             },
             'exp_bonus': {
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 description: 'Увеличивает количество опыта за экспедиции',
                  costPerLevel: 1,
                 baseValue: 1.0,
-                 increment: 0.05,
+                 increment: 0.5,
                  maxLevel: 5,
             },
             'click_bonus': {
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  description: 'Увеличивает силу кликов',
                   costPerLevel: 1,
                 baseValue: 1.0,
-                increment: 0.05,
+                increment: 0.5,
                 maxLevel: 5,
             },
              'expedition_speed': {
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 description: 'Уменьшает время экспедиций',
                 costPerLevel: 1,
                 baseValue: 1.0,
-                 increment: 0.05,
+                 increment: 0.5,
                 maxLevel: 5,
             },
               'luck_bonus': {
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 description: 'Увеличивает шанс выпадения редких предметов',
                 costPerLevel: 1,
                 baseValue: 1.0,
-                increment: 0.05,
+                increment: 0.5,
                 maxLevel: 5,
             },
         },
@@ -644,7 +644,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.diamonds -= cost;
         gameState.activeExpedition = type;
         gameState.expeditionStartTime = Date.now();
-        gameState.expeditionDuration = gameConfig.EXPEDITION_DURATIONS[type] * calculateAbilityBonus('expedition_speed', gameState.abilities.expedition_speed);
+        gameState.expeditionDuration = gameConfig.EXPEDITION_DURATIONS[type] / calculateAbilityBonus('expedition_speed', gameState.abilities.expedition_speed);
         const [minReward, maxReward] = gameConfig.EXPEDITION_REWARDS[type];
         gameState.expeditionReward = Math.floor(Math.random() * (maxReward - minReward + 1)) + minReward;
         startExpeditionTimer();
