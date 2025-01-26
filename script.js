@@ -907,7 +907,7 @@ function getRandomItem(itemsArray, names, type) {
     };
     let autoSaveInterval;
      const setupAutoSave = () => {
-       autoSaveInterval = setInterval(saveData, 30000);
+       autoSaveInterval = setInterval(saveData, 5000);
     };
 
     const clearAutoSave = () => {
