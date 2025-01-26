@@ -14,13 +14,15 @@ body {
     min-height: 100vh;
     color: white;
     transition: background-color 0.3s ease;
-    overflow-x: hidden; /*  Предотвращает горизонтальную полосу прокрутки */
+    overflow-x: hidden;
+    /*  Предотвращает горизонтальную полосу прокрутки */
 }
 
 /* Добавление плавного появления элементов при загрузке страницы */
 .fade-in {
     animation: fadeIn 1s ease forwards;
-    opacity: 0; /* Изначально скрываем элемент */
+    opacity: 0;
+    /* Изначально скрываем элемент */
 }
 
 @keyframes fadeIn {
@@ -112,7 +114,7 @@ main.game-container {
 .game-button,
 .menu-items li button,
 .expedition-button,
-#abilities-list .ability-item button {
+.ability-item button{
     padding: 12px 24px;
     font-size: 1em;
     border: none;
@@ -128,7 +130,7 @@ main.game-container {
 .game-button:hover,
 .menu-items li button:hover,
 .expedition-button:hover,
-#abilities-list .ability-item button:hover {
+.ability-item button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     background-color: #2c3e50;
@@ -137,7 +139,7 @@ main.game-container {
 .game-button:active,
 .menu-items li button:active,
 .expedition-button:active,
-#abilities-list .ability-item button:active {
+.ability-item button:active {
     transform: translateY(1px);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -389,12 +391,14 @@ main.game-container {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    transition: all 0.3s ease; /*  Плавные переходы для изменений */
+    transition: all 0.3s ease;
+    /*  Плавные переходы для изменений */
 }
 
 .inventory-container.active {
     display: block;
-    animation: slideInFromRight 0.5s ease; /*  Новая анимация появления справа */
+    animation: slideInFromRight 0.5s ease;
+    /*  Новая анимация появления справа */
 }
 
 @keyframes slideInFromRight {
@@ -416,7 +420,8 @@ main.game-container {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 10px;
     border-radius: 5px;
-    animation: pulse 2s infinite alternate; /*  Мягкая пульсация */
+    animation: pulse 2s infinite alternate;
+    /*  Мягкая пульсация */
 }
 
 @keyframes pulse {
@@ -444,7 +449,8 @@ main.game-container {
 .profile-section {
     padding: 0;
     margin-bottom: 15px;
-    animation: slideInDown 0.5s ease backwards; /*  Плавное появление сверху */
+    animation: slideInDown 0.5s ease backwards;
+    /*  Плавное появление сверху */
 }
 
 @keyframes slideInDown {
@@ -491,13 +497,16 @@ main.game-container {
     flex-direction: column;
     align-items: center;
     flex: 1;
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Более плавные переходы */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Более плавные переходы */
 }
 
 .skins-display div:hover,
 .artifacts-display div:hover {
-    transform: scale(1.1); /*  Увеличение при наведении */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /*  Более выраженная тень */
+    transform: scale(1.1);
+    /*  Увеличение при наведении */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    /*  Более выраженная тень */
     background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -625,7 +634,8 @@ main.game-container {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.8);
-    animation: fadeInModal 0.4s ease forwards; /*  Анимация появления модального окна */
+    animation: fadeInModal 0.4s ease forwards;
+    /*  Анимация появления модального окна */
 }
 
 @keyframes fadeInModal {
@@ -651,7 +661,8 @@ main.game-container {
     overflow-y: auto;
     border-radius: 10px;
     position: relative;
-    animation: zoomIn 0.3s ease; /*  Анимация увеличения содержимого модального окна */
+    animation: zoomIn 0.3s ease;
+    /*  Анимация увеличения содержимого модального окна */
 }
 
 @keyframes zoomIn {
@@ -676,8 +687,10 @@ main.game-container {
 }
 
 .modal .close-button:hover {
-    color: white; /* Изменение цвета при наведении на кнопку закрытия */
-    text-shadow: 0 0 5px white; /* Добавляем свечение */
+    color: white;
+    /* Изменение цвета при наведении на кнопку закрытия */
+    text-shadow: 0 0 5px white;
+    /* Добавляем свечение */
 }
 
 .modal-content h2 {
@@ -705,7 +718,8 @@ main.game-container {
 
 /* Добавляем стили для контейнера профиля и табов */
 #profile-container {
-    display: none; /* Скрываем контейнер профиля по умолчанию */
+    display: none;
+    /* Скрываем контейнер профиля по умолчанию */
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     padding: 10px;
@@ -716,7 +730,8 @@ main.game-container {
     display: flex;
     justify-content: space-around;
     margin-bottom: 10px;
-    animation: slideInLeft 0.5s ease; /* Плавное появление слева */
+    animation: slideInLeft 0.5s ease;
+    /* Плавное появление слева */
 }
 
 @keyframes slideInLeft {
@@ -749,7 +764,8 @@ main.game-container {
 }
 
 .profile-tab-button:active {
-    transform: translateY(1px); /* Эффект нажатия */
+    transform: translateY(1px);
+    /* Эффект нажатия */
 }
 
 .profile-tab-content {
@@ -762,21 +778,30 @@ main.game-container {
     gap: 20px;
 }
 .ability-item {
-    background-color: #333;
-    padding: 10px;
-    border: 1px solid #444;
-    border-radius: 5px;
-    text-align: center;
-    width: 250px;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        transition: background-color 0.2s ease;
+         width: 250px;
 }
-#abilities-list .ability-item button {
+.ability-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.ability-item button {
     margin-top: 10px;
     width: 100%;
 }
-#abilities-list .ability-item button.disabled {
+.ability-item button.disabled {
     background-color: #777;
     cursor: not-allowed;
 }
-#abilities-list .ability-item button.disabled:hover {
+.ability-item button.disabled:hover {
     background-color: #777;
 }
