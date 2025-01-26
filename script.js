@@ -1119,7 +1119,7 @@ elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button 
 });
     
     
-const AUTO_SAVE_INTERVAL = 10000;
+const AUTO_SAVE_INTERVAL = 5000;
 const autoSave = () => {
     saveData();
 };
