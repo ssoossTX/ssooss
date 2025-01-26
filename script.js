@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. gameConfig (все константы и настройки)
     const gameConfig = {
@@ -138,6 +139,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'medium': 300000,
             'hard': 600000,
         },
+        LEVEL_UP_BASE_EXP: 100,
+        EXPEDITION_EXP_MULTIPLIER: {
+            'easy': 0.2,
+            'medium': 0.7,
+            'hard': 1.5,
+       },
     };
 
     // 2. Состояние игры
@@ -168,6 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
         skins: {},
         artifacts: {},
         prestigeCost: gameConfig.PRESTIGE_BASE_COST,
+        level: 1,
+        experience: 0,
+        levelPoints: 0,
     };
 
     // 3. Объекты DOM элементов
@@ -415,6 +425,9 @@ document.addEventListener('DOMContentLoaded', () => {
             skins: {},
             artifacts: {},
             prestigeCost: gameConfig.PRESTIGE_BASE_COST,
+            level: 1,
+            experience: 0,
+            levelPoints: 0,
         };
         clearAllTimeouts();
         updateDisplay();
@@ -556,7 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 };
 
-    const startExpedition = (type) => {
+   const startExpedition = (type) => {
         if (gameState.activeExpedition) {
             displayMessage('Уже есть активная экспедиция', 'red');
             return;
@@ -608,10 +621,25 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.expeditionStartTime = null;
         gameState.expeditionDuration = 0;
         gameState.expeditionReward = 0;
-        displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${Math.round(reward * calculateDiamondBonus(gameState.artifacts))} алмазов`, 'gold', '1.2em');
+        const expGain = Math.round(gameConfig.EXPEDITION_EXP_MULTIPLIER[expeditionType] * (gameState.level * 10));
+        gameState.experience += expGain;
+       displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${Math.round(reward * calculateDiamondBonus(gameState.artifacts))} алмазов и ${expGain} опыта`, 'gold', '1.2em');
+        checkLevelUp();
         updateDisplay();
         saveData();
     };
+
+    const checkLevelUp = () => {
+      const requiredExp =  gameConfig.LEVEL_UP_BASE_EXP * Math.pow(1.5, gameState.level - 1);
+      if (gameState.experience >= requiredExp) {
+           gameState.level++;
+           gameState.experience -= requiredExp;
+           gameState.levelPoints++;
+           displayMessage(`Уровень повышен! Текущий уровень: ${gameState.level}`, 'green', '1.2em');
+             checkLevelUp();
+       }
+          updateProfile();
+   };
 
     const buyKey = () => {
         if (gameState.diamonds >= 10) {
@@ -818,6 +846,17 @@ const updateInventoryDisplay = () => {
         clickCountInfo.textContent = `Количество кликов: ${Math.round(gameState.clickCount)}`;
         profileInfo.appendChild(clickCountInfo);
 
+        const levelInfo = document.createElement('p');
+        levelInfo.textContent = `Уровень: ${gameState.level}`;
+        profileInfo.appendChild(levelInfo);
+
+        const experienceInfo = document.createElement('p');
+        experienceInfo.textContent = `Опыт: ${gameState.experience}/${Math.round(gameConfig.LEVEL_UP_BASE_EXP * Math.pow(1.5, gameState.level - 1))}`;
+        profileInfo.appendChild(experienceInfo);
+      
+        const levelPointsInfo = document.createElement('p');
+        levelPointsInfo.textContent = `Очки уровня: ${gameState.levelPoints}`;
+         profileInfo.appendChild(levelPointsInfo);
 
         const diamondsInfo = document.createElement('p');
         diamondsInfo.textContent = `Алмазов: ${gameState.diamonds}`;
