@@ -139,12 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'medium': 300000,
             'hard': 600000,
         },
-        LEVEL_UP_BASE_EXP: 100,
-        EXPEDITION_EXP_MULTIPLIER: {
-            'easy': 0.2,
-            'medium': 0.7,
-            'hard': 1.5,
-       },
+         LEVEL_UP_BASE_EXP: 100,
     };
 
     // 2. Состояние игры
@@ -615,15 +610,16 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(gameState.expeditionInterval);
         gameState.expeditionInterval = null;
         const reward = gameState.expeditionReward;
-        gameState.diamonds += Math.round(reward * calculateDiamondBonus(gameState.artifacts));
+       const diamondGain = Math.round(reward * calculateDiamondBonus(gameState.artifacts));
+        gameState.diamonds += diamondGain;
         const expeditionType = gameState.activeExpedition;
         gameState.activeExpedition = null;
         gameState.expeditionStartTime = null;
         gameState.expeditionDuration = 0;
         gameState.expeditionReward = 0;
-        const expGain = Math.round(gameConfig.EXPEDITION_EXP_MULTIPLIER[expeditionType] * (gameState.level * 10));
+        const expGain = Math.round(diamondGain * 0.25 * (gameState.level + 1));
         gameState.experience += expGain;
-       displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${Math.round(reward * calculateDiamondBonus(gameState.artifacts))} алмазов и ${expGain} опыта`, 'gold', '1.2em');
+       displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${diamondGain} алмазов и ${expGain} опыта`, 'gold', '1.2em');
         checkLevelUp();
         updateDisplay();
         saveData();
