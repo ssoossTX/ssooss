@@ -801,9 +801,7 @@ main.game-container {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     transition: background-color 0.2s ease, transform 0.2s ease;
     width: 250px;
-    /* Анимация будет применяться при первоначальной загрузке и отображении, а не при каждом обновлении состояния */
-    opacity: 0; /* Начинаем с прозрачности 0 */
-  }
+}
   
 .ability-item:hover {
         background-color: rgba(255, 255, 255, 0.2);
@@ -811,7 +809,6 @@ main.game-container {
 }
 .ability-item.fade-in {
         animation: abilityItemFadeIn 0.4s ease forwards;
-        opacity: 1; /* Устанавливаем начальную прозрачность 1 после animation */
   }
 
 @keyframes abilityItemFadeIn {
