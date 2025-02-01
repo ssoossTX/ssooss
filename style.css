@@ -94,6 +94,9 @@ main.game-container {
     .map-container {
         grid-column: 1 / 3;
     }
+    #dungeon-container {
+        grid-column: 1 / 3;
+     }
 }
 
 #game-title {
@@ -112,6 +115,7 @@ main.game-container {
 .game-button,
 .menu-items li button,
 .expedition-button,
+.dungeon-button,
 .ability-item button {
     padding: 12px 24px;
     font-size: 1em;
@@ -128,6 +132,7 @@ main.game-container {
 .game-button:hover,
 .menu-items li button:hover,
 .expedition-button:hover,
+.dungeon-button:hover,
 .ability-item button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -137,6 +142,7 @@ main.game-container {
 .game-button:active,
 .menu-items li button:active,
 .expedition-button:active,
+.dungeon-button:active,
 .ability-item button:active {
     transform: translateY(1px);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -296,13 +302,15 @@ main.game-container {
 #game-content,
 .map-container,
 .inventory-container,
-#profile-container {
+#profile-container,
+#dungeon-container {
     display: none;
 }
 
 #clicker-content,
 #game-content,
-.map-container {
+.map-container,
+#dungeon-container {
     padding: 15px;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
@@ -314,7 +322,8 @@ main.game-container {
 
 #clicker-content:hover,
 #game-content:hover,
-.map-container:hover {
+.map-container:hover,
+#dungeon-container:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -353,6 +362,11 @@ main.game-container {
 }
 
 /* Экспедиции */
+.map-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
 .expedition-button {
     margin: 5px 0;
     display: block;
@@ -370,6 +384,37 @@ main.game-container {
     background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     border-radius: 5px;
+    text-align: center;
+}
+/* Подземелья */
+#dungeon-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#dungeon-container .buttons-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#dungeon-container .dungeon-button {
+    margin: 5px 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+#dungeon-container .dungeon-button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.dungeon-progress {
+    margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
 }
 
 /* Инвентарь */
@@ -386,7 +431,7 @@ main.game-container {
     padding: 20px;
     border-radius: 8px;
     animation: slideIn 0.3s ease;
-    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+     background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -416,12 +461,11 @@ main.game-container {
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 20px;
-    animation: slideInUp 0.5s ease; /* Анимация появления сверху */
+    animation: slideInUp 0.5s ease;
 }
 #profile-container.active{
    display: block;
 }
-
 @keyframes slideInUp {
     from {
         transform: translateY(50px);
@@ -819,17 +863,16 @@ main.game-container {
 .ability-item button.disabled:hover {
     background-color: #777;
 }
-
 /* Общие стили для анимации контента */
 .game-content.active,
 #clicker-content.active,
 .map-container.active,
 .inventory-container.active,
-#profile-container.active {
+#profile-container.active,
+#dungeon-container.active{
     display: block;
     animation: fadeInContent 0.4s ease;
 }
-
 @keyframes fadeInContent {
     from {
         opacity: 0;
