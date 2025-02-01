@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     // 1. gameConfig (все константы и настройки)
     const gameConfig = {
@@ -140,6 +139,79 @@ document.addEventListener('DOMContentLoaded', () => {
             'hard': 600000,
         },
          LEVEL_UP_BASE_EXP: 100,
+         DUNGEON_CONFIG: {
+            'tutorial': {
+                name: 'Обучение',
+                cost: 0,
+                duration: 60000,
+                rewards: {
+                    diamonds: [10, 20],
+                    keys: [1, 2],
+                    experience: [100, 200],
+                    skins: {
+                        'common': [0, 1],
+                    },
+                },
+            },
+           'easy': {
+                name: 'Легкое Подземелье',
+                cost: 50,
+                duration: 120000,
+                rewards: {
+                    diamonds: [50, 100],
+                    keys: [1, 3],
+                    experience: [250, 500],
+                     artifacts: {
+                        'common': [0, 1],
+                    },
+                },
+            },
+             'medium': {
+                name: 'Среднее Подземелье',
+                cost: 200,
+                duration: 300000,
+                rewards: {
+                   diamonds: [150, 300],
+                    keys: [2, 4],
+                    experience: [750, 1250],
+                    artifacts: {
+                       'uncommon': [0, 1],
+                        'common': [0, 1],
+                     },
+                },
+            },
+           'hard': {
+                name: 'Сложное Подземелье',
+                cost: 500,
+                duration: 600000,
+                rewards: {
+                    diamonds: [400, 700],
+                     keys: [3, 5],
+                     experience: [1500, 2500],
+                      artifacts: {
+                        'rare': [0, 1],
+                        'uncommon': [0, 1],
+                        'common': [0, 1],
+                     },
+                },
+            },
+            'legendary': {
+                 name: 'Легендарное Подземелье',
+                cost: 1000,
+                duration: 1200000,
+                rewards: {
+                    diamonds: [800, 1200],
+                    keys: [4, 6],
+                    experience: [3000, 5000],
+                    artifacts: {
+                        'epic': [0, 1],
+                        'rare': [0, 1],
+                        'uncommon': [0, 1],
+                        'common': [0, 1],
+                     },
+                },
+           },
+         },
            ABILITY_CONFIG: {
             'diamond_bonus': {
                 name: 'Бонус к алмазам',
@@ -176,6 +248,22 @@ document.addEventListener('DOMContentLoaded', () => {
               'luck_bonus': {
                 name: 'Удача',
                 description: 'Увеличивает шанс выпадения редких предметов',
+                costPerLevel: 1,
+                baseValue: 1.0,
+                increment: 0.1,
+                maxLevel: 5,
+            },
+               'dungeon_speed': {
+                name: 'Скорость Подземелий',
+                description: 'Уменьшает время прохождения подземелий',
+                costPerLevel: 1,
+                baseValue: 1.0,
+                increment: 0.5,
+                maxLevel: 10,
+            },
+            'dungeon_luck': {
+                name: 'Удача в Подземелье',
+                description: 'Увеличивает шанс выпадения редких предметов в подземелье',
                 costPerLevel: 1,
                 baseValue: 1.0,
                 increment: 0.1,
@@ -221,7 +309,13 @@ document.addEventListener('DOMContentLoaded', () => {
              'click_bonus': 0,
              'expedition_speed': 0,
               'luck_bonus': 0,
-           }
+               'dungeon_speed': 0,
+               'dungeon_luck': 0,
+           },
+           activeDungeon: null,
+            dungeonStartTime: null,
+             dungeonDuration: 0,
+             dungeonRewards: null,
     };
 
     // 3. Объекты DOM элементов
@@ -260,6 +354,10 @@ document.addEventListener('DOMContentLoaded', () => {
         map: {
             mapContainer: document.getElementById('map-container'),
             expeditionProgressDisplay: document.getElementById('expedition-progress'),
+        },
+         dungeon: {
+            dungeonContainer: document.getElementById('dungeon-container'),
+            dungeonProgressDisplay: document.getElementById('dungeon-progress'),
         },
         inventory: {
             inventoryContainer: document.getElementById('inventory-container'),
@@ -334,6 +432,23 @@ document.addEventListener('DOMContentLoaded', () => {
             finishExpedition();
         }
     };
+    
+     const updateDungeonProgressBar = () => {
+        if (!gameState.activeDungeon) {
+            elements.dungeon.dungeonProgressDisplay.textContent = '';
+            return;
+        }
+        const elapsed = Date.now() - gameState.dungeonStartTime;
+        const remaining = Math.max(0, gameState.dungeonDuration - elapsed);
+        const progress = Math.min(100, Math.round((elapsed / gameState.dungeonDuration) * 100));
+        const remainingSeconds = Math.ceil(remaining / 1000);
+         elements.dungeon.dungeonProgressDisplay.textContent = `Подземелье ${gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].name}: ${progress}%  (${remainingSeconds} сек. осталось)`;
+
+        if (remaining <= 0) {
+            finishDungeon();
+        }
+    };
+
 
     const updateDisplay = () => {
         updateClickCountDisplay();
@@ -345,6 +460,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateChestDisplay();
         updateExpeditionProgressBar();
         updateExpeditionButtonInfo();
+          updateDungeonProgressBar();
+        updateDungeonButtonInfo();
     };
 
     // 5. Сообщения
@@ -484,7 +601,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 'click_bonus': 0,
                 'expedition_speed': 0,
                  'luck_bonus': 0,
-            }
+                 'dungeon_speed': 0,
+                 'dungeon_luck': 0,
+            },
+             activeDungeon: null,
+            dungeonStartTime: null,
+             dungeonDuration: 0,
+             dungeonRewards: null,
         };
         clearAllTimeouts();
         updateDisplay();
@@ -499,6 +622,10 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(gameState.expeditionInterval);
             gameState.expeditionInterval = null;
         }
+        if (gameState.dungeonInterval) {
+            clearInterval(gameState.dungeonInterval);
+             gameState.dungeonInterval = null;
+       }
         clearAutoSave();
     };
 
@@ -514,7 +641,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const {
                 autoClickerInterval,
-                expeditionInterval,
+                 expeditionInterval,
+                dungeonInterval,
                 ...dataToSave
             } = gameState;
             const dataString = JSON.stringify(dataToSave);
@@ -550,6 +678,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (gameState.activeExpedition) {
                     startExpeditionTimer();
                 }
+                 if (gameState.activeDungeon) {
+                    startDungeonTimer();
+                }
                 updateDisplay();
             } catch (e) {
                 clearSaveData();
@@ -577,6 +708,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
     elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
     elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
+      elements.dungeon.dungeonContainer.style.display = tabId === 'dungeon' ? 'block' : 'none';
     elements.inventory.inventoryContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
 
     // Добавляем логику для переключения табов внутри профиля
@@ -694,6 +826,136 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
         saveData();
     };
+
+  const startDungeon = (type) => {
+       if (gameState.activeDungeon) {
+          displayMessage('Уже есть активное подземелье', 'red');
+            return;
+       }
+        const dungeonConfig = gameConfig.DUNGEON_CONFIG[type];
+        if (!dungeonConfig) {
+           displayMessage(`Подземелье "${type}" не найдено`, 'red');
+            return;
+       }
+       if(gameState.diamonds < dungeonConfig.cost){
+          const needed = dungeonConfig.cost - gameState.diamonds;
+            displayMessage(`Не хватает ${needed} алмазов для этого подземелья`, 'red');
+            return;
+       }
+
+        gameState.diamonds -= dungeonConfig.cost;
+        gameState.activeDungeon = type;
+        gameState.dungeonStartTime = Date.now();
+         gameState.dungeonDuration = dungeonConfig.duration / calculateAbilityBonus('dungeon_speed', gameState.abilities.dungeon_speed);
+        gameState.dungeonRewards = dungeonConfig.rewards;
+        startDungeonTimer();
+        updateDisplay();
+        displayMessage(`Подземелье "${dungeonConfig.name}" началось!`, 'green');
+    };
+
+const updateDungeonButtonInfo = () => {
+    elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
+       const type = button.dataset.type;
+       const dungeonConfig = gameConfig.DUNGEON_CONFIG[type];
+        if (dungeonConfig) {
+            button.textContent = `${dungeonConfig.name} (Стоимость: ${dungeonConfig.cost}💎)`;
+            if(gameState.diamonds < dungeonConfig.cost){
+                 button.classList.add('disabled');
+                button.disabled = true
+              } else {
+                button.classList.remove('disabled');
+                button.disabled = false
+              }
+        }
+   });
+};
+
+ const startDungeonTimer = () => {
+    gameState.dungeonInterval = setInterval(updateDungeonProgressBar, 1000);
+};
+
+const finishDungeon = () => {
+    clearInterval(gameState.dungeonInterval);
+     gameState.dungeonInterval = null;
+
+    const dungeonType = gameState.activeDungeon;
+    const rewards = gameState.dungeonRewards;
+     gameState.activeDungeon = null;
+     gameState.dungeonStartTime = null;
+      gameState.dungeonDuration = 0;
+    gameState.dungeonRewards = null;
+
+   let gainedDiamonds = 0;
+    let gainedKeys = 0;
+    let gainedExp = 0;
+    const gainedSkins = {};
+    const gainedArtifacts = {};
+
+   if (rewards) {
+        if (rewards.diamonds) {
+            const [minDiamonds, maxDiamonds] = rewards.diamonds;
+            gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
+             gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
+             gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
+             gameState.diamonds += gainedDiamonds;
+        }
+        if (rewards.keys) {
+           const [minKeys, maxKeys] = rewards.keys;
+            gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
+             gameState.keys += gainedKeys;
+        }
+           if (rewards.experience) {
+                const [minExp, maxExp] = rewards.experience;
+               gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
+                gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
+             gameState.experience += gainedExp;
+            }
+        if (rewards.skins) {
+            for (const skinRarity in rewards.skins) {
+                const [minSkins, maxSkins] = rewards.skins[skinRarity];
+                const numSkins = Math.floor(Math.random() * (maxSkins - minSkins + 1)) + minSkins;
+                for (let i = 0; i < numSkins; i++) {
+                    const skin = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
+                   if(skin) {
+                      gainedSkins[skin] = (gainedSkins[skin] || 0) + 1
+                   }
+                }
+            }
+        }
+          if (rewards.artifacts) {
+            for (const artifactRarity in rewards.artifacts) {
+                const [minArtifacts, maxArtifacts] = rewards.artifacts[artifactRarity];
+                const numArtifacts = Math.floor(Math.random() * (maxArtifacts - minArtifacts + 1)) + minArtifacts;
+                for (let i = 0; i < numArtifacts; i++) {
+                  const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
+                    if(artifact) {
+                      gainedArtifacts[artifact] = (gainedArtifacts[artifact] || 0) + 1
+                   }
+                }
+            }
+        }
+    }
+     let message = `Подземелье "${gameConfig.DUNGEON_CONFIG[dungeonType].name}" завершено!`;
+       if (gainedDiamonds > 0) {
+          message += ` Получено ${gainedDiamonds} алмазов.`;
+         }
+          if (gainedKeys > 0) {
+            message += ` Получено ${gainedKeys} ключей.`;
+        }
+        if (gainedExp > 0) {
+             message += ` Получено ${gainedExp} опыта.`;
+        }
+         if (Object.keys(gainedSkins).length > 0) {
+          message += ` Выпали предметы: ${Object.keys(gainedSkins).map(skin => `${skin} x${gainedSkins[skin]}`).join(', ')}.`;
+       }
+           if (Object.keys(gainedArtifacts).length > 0) {
+            message += ` Выпали предметы: ${Object.keys(gainedArtifacts).map(artifact => `${artifact} x${gainedArtifacts[artifact]}`).join(', ')}.`;
+       }
+     displayMessage(message, 'gold', '1.2em');
+    checkLevelUp();
+    updateDisplay();
+    saveData();
+};
 
     const checkLevelUp = () => {
       const requiredExp =  gameConfig.LEVEL_UP_BASE_EXP * Math.pow(1.5, gameState.level - 1);
@@ -1118,6 +1380,12 @@ elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button 
     });
 });
     
+elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
+    button.addEventListener('click', () => {
+        startDungeon(button.dataset.type);
+    });
+});
+    
     
 const AUTO_SAVE_INTERVAL = 3000;
 const autoSave = () => {
@@ -1156,9 +1424,13 @@ if (autoSaveInterval == null) {
 checkAchievements();
 switchTab('clicker');
 updateExpeditionButtonInfo();
+ updateDungeonButtonInfo();
     
     if (gameState.activeExpedition) {
         startExpeditionTimer();
+    }
+       if (gameState.activeDungeon) {
+          startDungeonTimer();
     }
     
 const globalMessageContainer = document.createElement('div');
