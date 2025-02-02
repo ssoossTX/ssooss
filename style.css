@@ -252,10 +252,12 @@ main.game-container {
     margin: 0;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 8px;
-    display: none;
+    /*display: none; УДАЛИТЬ*/
+     max-height: 0; /* добавить */
+    overflow: hidden; /* добавить */
     opacity: 0;
     transform: translateY(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease; /* добавить max-height*/
     position: absolute;
     top: 40px;
     left: 0;
@@ -286,7 +288,8 @@ main.game-container {
 }
 
 #menu-items.active {
-    display: block;
+    /*display: block; УДАЛИТЬ*/
+    max-height: 500px; /* добавить */
     opacity: 1;
     transform: translateY(0);
 }
