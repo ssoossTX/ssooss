@@ -1625,8 +1625,9 @@ const attack = () => {
      elements.shop.closeChestButton.addEventListener('click', closeChest);
      elements.dungeon.attackButton.addEventListener('click', attack); // Кнопка атаки
 
-   elements.menu.menuButton.addEventListener('click', () => {
-            elements.menu.menu.classList.toggle('open');
+  elements.menu.menuButton.addEventListener('click', () => {
+          elements.menu.menu.classList.toggle('open'); //переключение класса open
+          elements.menu.menuItems.classList.toggle('active'); // переключение класса active
         });
     elements.menu.menuItems.forEach(item => {
             item.addEventListener('click', () => {
