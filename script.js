@@ -1625,10 +1625,10 @@ const attack = () => {
      elements.shop.closeChestButton.addEventListener('click', closeChest);
      elements.dungeon.attackButton.addEventListener('click', attack); // Кнопка атаки
 
-  elements.menu.menuButton.addEventListener('click', () => {
-          elements.menu.menu.classList.toggle('open'); //переключение класса open
-          elements.menu.menuItems.classList.toggle('active'); // переключение класса active
-        });
+elements.menu.menuButton.addEventListener('click', () => {
+    elements.menu.menuButton.classList.toggle('open'); // переключаем класс open для самой кнопки
+    elements.menu.menuItems.classList.toggle('active');
+});
     elements.menu.menuItems.forEach(item => {
             item.addEventListener('click', () => {
               switchTab(item.dataset.tab);
