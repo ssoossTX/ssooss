@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'skin_uncommon_2': 'Автоматизированные Руки',
             'skin_rare_2': 'Механические Конечности',
             'skin_epic_2': 'Драконьи Лапы',
-            'skin_common_3': 'Древняя Маска',
+             'skin_common_3': 'Древняя Маска',
             'skin_uncommon_3': 'Оркская Маска',
             'skin_rare_3': 'Скифский Шлем',
             'skin_epic_3': 'Гномский Шлем',
@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'artifact_common_3': 'Древний Камень',
             'artifact_uncommon_3': 'Волшебная Пыль',
             'artifact_rare_3': 'Кристальный Шар',
-            'artifact_epic_3': 'Посох Мага',
-            'artifact_common_4': 'Простой Моторчик',
+             'artifact_epic_3': 'Посох Мага',
+              'artifact_common_4': 'Простой Моторчик',
             'artifact_uncommon_4': 'Шестерёнчатый Механизм',
             'artifact_rare_4': 'Паровой Двигатель',
             'artifact_epic_4': 'Реактивный Движок',
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'skin_rare_2': 'rare',
             'skin_epic_1': 'epic',
             'skin_epic_2': 'epic',
-            'skin_common_3': 'common',
+             'skin_common_3': 'common',
             'skin_uncommon_3': 'uncommon',
             'skin_rare_3': 'rare',
             'skin_epic_3': 'epic',
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'artifact_uncommon_2': 'uncommon',
             'artifact_rare_2': 'rare',
             'artifact_epic_2': 'epic',
-            'artifact_common_3': 'common',
+             'artifact_common_3': 'common',
             'artifact_uncommon_3': 'uncommon',
             'artifact_rare_3': 'rare',
             'artifact_epic_3': 'epic',
@@ -152,12 +152,64 @@ document.addEventListener('DOMContentLoaded', () => {
                         'common': [0, 1],
                     },
                 },
-                enemies: {
-                    'weak_goblin': {
-                       name: 'Слабый гоблин',
-                      health: 100,
-                   }
-                }
+                battle: {
+                    type: 'wave',
+                    waves: [
+                        {
+                            monsters: [{
+                                name: 'Слизень',
+                                health: 50,
+                                damage: 5,
+                                exp: 50,
+                                diamonds: 5,
+                            },
+                            {
+                                name: 'Слизень',
+                                health: 50,
+                                damage: 5,
+                                exp: 50,
+                                diamonds: 5,
+                             }],
+                             waveReward: {
+                                 experience: 100,
+                                 diamonds: 10,
+                            },
+                        },
+                        {
+                            monsters: [{
+                                 name: 'Слизень',
+                                health: 70,
+                                damage: 7,
+                                 exp: 70,
+                                diamonds: 7,
+                            },
+                             {
+                                 name: 'Слизень',
+                                 health: 70,
+                                 damage: 7,
+                                exp: 70,
+                                diamonds: 7,
+                             }],
+                             waveReward: {
+                                 experience: 150,
+                                 diamonds: 15,
+                            },
+                        },
+                         {
+                            monsters: [{
+                                name: 'Босс слизней',
+                                health: 250,
+                                damage: 15,
+                                exp: 250,
+                                diamonds: 25,
+                            }],
+                              waveReward: {
+                                 experience: 200,
+                                 diamonds: 20,
+                            },
+                        },
+                    ],
+                },
             },
            'easy': {
                 name: 'Легкое Подземелье',
@@ -171,16 +223,64 @@ document.addEventListener('DOMContentLoaded', () => {
                         'common': [0, 1],
                     },
                 },
-                enemies: {
-                    'goblin': {
-                        name: 'Гоблин',
-                        health: 500,
-                    },
-                     'slime': {
-                        name: 'Слизень',
-                         health: 350,
-                   },
-                }
+                battle: {
+                    type: 'wave',
+                     waves: [
+                         {
+                            monsters: [{
+                                name: 'Гоблин',
+                                health: 100,
+                                damage: 10,
+                                exp: 100,
+                                diamonds: 10,
+                                },
+                                 {
+                                name: 'Гоблин',
+                                health: 100,
+                                damage: 10,
+                                exp: 100,
+                                diamonds: 10,
+                            }],
+                             waveReward: {
+                                 experience: 150,
+                                 diamonds: 15,
+                            },
+                        },
+                        {
+                            monsters: [{
+                                 name: 'Гоблин',
+                                 health: 150,
+                                 damage: 15,
+                                 exp: 150,
+                                diamonds: 15,
+                            },
+                             {
+                                name: 'Гоблин',
+                                 health: 150,
+                                 damage: 15,
+                                 exp: 150,
+                                diamonds: 15,
+                            }],
+                             waveReward: {
+                                 experience: 200,
+                                 diamonds: 20,
+                            },
+                         },
+                         {
+                            monsters: [{
+                                 name: 'Босс гоблинов',
+                                 health: 500,
+                                damage: 30,
+                                exp: 500,
+                                diamonds: 50,
+                            }],
+                               waveReward: {
+                                 experience: 300,
+                                 diamonds: 30,
+                            },
+                        },
+                    ],
+                },
             },
              'medium': {
                 name: 'Среднее Подземелье',
@@ -195,20 +295,64 @@ document.addEventListener('DOMContentLoaded', () => {
                         'common': [0, 1],
                      },
                 },
-                 enemies: {
-                    'orc': {
-                        name: 'Орк',
-                         health: 1000,
-                  },
-                 'skeleton': {
-                         name: 'Скелет',
-                         health: 1500,
-                  },
-                 'spider': {
-                         name: 'Паук',
-                        health: 1300,
-                 },
-                 }
+                battle: {
+                    type: 'wave',
+                    waves: [
+                        {
+                             monsters: [{
+                                name: 'Орк',
+                                 health: 200,
+                                 damage: 20,
+                                  exp: 200,
+                                diamonds: 20,
+                            },
+                             {
+                                 name: 'Орк',
+                                 health: 200,
+                                damage: 20,
+                                exp: 200,
+                                diamonds: 20,
+                            }],
+                             waveReward: {
+                                 experience: 250,
+                                 diamonds: 25,
+                            },
+                         },
+                       {
+                            monsters: [{
+                                 name: 'Орк',
+                                 health: 300,
+                                 damage: 25,
+                                exp: 300,
+                                diamonds: 25,
+                             },
+                             {
+                                 name: 'Орк',
+                                  health: 300,
+                                 damage: 25,
+                                exp: 300,
+                                diamonds: 25,
+                            }],
+                             waveReward: {
+                                 experience: 300,
+                                 diamonds: 30,
+                            },
+                        },
+                        {
+                            monsters: [{
+                                name: 'Босс орков',
+                                health: 750,
+                                damage: 40,
+                                exp: 750,
+                                diamonds: 75,
+                            }],
+                            waveReward: {
+                                 experience: 400,
+                                 diamonds: 40,
+                            },
+                        },
+                    ],
+                },
             },
            'hard': {
                 name: 'Сложное Подземелье',
@@ -224,20 +368,64 @@ document.addEventListener('DOMContentLoaded', () => {
                         'common': [0, 1],
                      },
                 },
-                  enemies: {
-                    'troll': {
-                       name: 'Тролль',
-                        health: 2000,
-                   },
-                    'wolf': {
-                         name: 'Волк',
-                       health: 2500,
-                    },
-                    'golem': {
-                         name: 'Голем',
-                        health: 3000,
-                    },
-                }
+                  battle: {
+                    type: 'wave',
+                    waves: [
+                        {
+                             monsters: [{
+                                  name: 'Рыцарь',
+                                health: 400,
+                                damage: 30,
+                                exp: 400,
+                                diamonds: 30,
+                                },
+                                {
+                                    name: 'Рыцарь',
+                                health: 400,
+                                damage: 30,
+                                exp: 400,
+                                diamonds: 30,
+                                }],
+                            waveReward: {
+                                 experience: 400,
+                                 diamonds: 40,
+                            },
+                        },
+                        {
+                           monsters: [{
+                                name: 'Рыцарь',
+                                health: 500,
+                                damage: 35,
+                                exp: 500,
+                                diamonds: 35,
+                             },
+                            {
+                               name: 'Рыцарь',
+                                health: 500,
+                                damage: 35,
+                                 exp: 500,
+                                 diamonds: 35,
+                            }],
+                            waveReward: {
+                                 experience: 500,
+                                 diamonds: 50,
+                            },
+                        },
+                       {
+                            monsters: [{
+                                name: 'Босс Рыцарей',
+                                 health: 1000,
+                                damage: 60,
+                                 exp: 1000,
+                                diamonds: 100,
+                             }],
+                            waveReward: {
+                                 experience: 600,
+                                 diamonds: 60,
+                            },
+                        },
+                    ],
+                },
             },
             'legendary': {
                  name: 'Легендарное Подземелье',
@@ -254,24 +442,64 @@ document.addEventListener('DOMContentLoaded', () => {
                         'common': [0, 1],
                      },
                 },
-                   enemies: {
-                    'dragon': {
-                       name: 'Дракон',
-                       health: 10000,
-                    },
-                     'lich': {
-                         name: 'Лич',
-                         health: 8000,
-                     },
-                   'demon': {
-                         name: 'Демон',
-                          health: 7000,
-                   },
-                    'titan': {
-                         name: 'Титан',
-                         health: 12000,
-                   },
-                }
+                  battle: {
+                    type: 'wave',
+                     waves: [
+                          {
+                            monsters: [{
+                                 name: 'Дракон',
+                                health: 800,
+                                 damage: 50,
+                                exp: 800,
+                                diamonds: 50,
+                                },
+                                 {
+                                 name: 'Дракон',
+                                health: 800,
+                                 damage: 50,
+                                exp: 800,
+                                diamonds: 50,
+                             }],
+                             waveReward: {
+                                 experience: 800,
+                                 diamonds: 80,
+                             },
+                         },
+                        {
+                            monsters: [{
+                                 name: 'Дракон',
+                                 health: 1000,
+                                damage: 70,
+                                exp: 1000,
+                                diamonds: 70,
+                             },
+                                {
+                                    name: 'Дракон',
+                                health: 1000,
+                                damage: 70,
+                                exp: 1000,
+                                diamonds: 70,
+                             }],
+                            waveReward: {
+                                 experience: 1000,
+                                 diamonds: 100,
+                            },
+                         },
+                          {
+                            monsters: [{
+                               name: 'Босс Драконов',
+                                health: 2000,
+                                damage: 100,
+                                 exp: 2000,
+                                diamonds: 200,
+                             }],
+                              waveReward: {
+                                 experience: 1200,
+                                 diamonds: 120,
+                             },
+                        },
+                    ],
+                },
            },
          },
            ABILITY_CONFIG: {
@@ -331,17 +559,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 increment: 0.1,
                 maxLevel: 5,
             },
-               'dungeon_damage': {
-                name: 'Урон в Подземельях',
-                description: 'Увеличивает урон в подземельях',
-                costPerLevel: 1,
-                baseValue: 1,
-                increment: 0.5,
-                 maxLevel: 100,
-             },
         },
     };
-
     // 2. Состояние игры
     let gameState = {
         clickCount: 0,
@@ -381,14 +600,12 @@ document.addEventListener('DOMContentLoaded', () => {
               'luck_bonus': 0,
                'dungeon_speed': 0,
                'dungeon_luck': 0,
-                'dungeon_damage': 0,
            },
            activeDungeon: null,
+           currentBattle: null, // Добавляем состояние для текущего боя
             dungeonStartTime: null,
              dungeonDuration: 0,
              dungeonRewards: null,
-             dungeonEnemies: null,
-             currentEnemyIndex: 0,
     };
 
     // 3. Объекты DOM элементов
@@ -431,6 +648,8 @@ document.addEventListener('DOMContentLoaded', () => {
          dungeon: {
             dungeonContainer: document.getElementById('dungeon-container'),
             dungeonProgressDisplay: document.getElementById('dungeon-progress'),
+            dungeonBattleContainer: document.getElementById('dungeon-battle-container'),
+            attackButton: document.getElementById('attack-button'), // Добавляем кнопку атаки
         },
         inventory: {
             inventoryContainer: document.getElementById('inventory-container'),
@@ -511,14 +730,13 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.dungeon.dungeonProgressDisplay.textContent = '';
             return;
         }
-        const elapsed = Date.now() - gameState.dungeonStartTime;
+         const elapsed = Date.now() - gameState.dungeonStartTime;
         const remaining = Math.max(0, gameState.dungeonDuration - elapsed);
         const progress = Math.min(100, Math.round((elapsed / gameState.dungeonDuration) * 100));
         const remainingSeconds = Math.ceil(remaining / 1000);
          elements.dungeon.dungeonProgressDisplay.textContent = `Подземелье ${gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].name}: ${progress}%  (${remainingSeconds} сек. осталось)`;
-
-        if (remaining <= 0) {
-            //finishDungeon();  <--- Removed, бой будет продолжаться в startDungeonFight
+         if (remaining <= 0) {
+            finishDungeon();
         }
     };
 
@@ -533,7 +751,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateChestDisplay();
         updateExpeditionProgressBar();
         updateExpeditionButtonInfo();
-        updateDungeonProgressBar();
+          updateDungeonProgressBar();
         updateDungeonButtonInfo();
     };
 
@@ -676,14 +894,12 @@ document.addEventListener('DOMContentLoaded', () => {
                  'luck_bonus': 0,
                  'dungeon_speed': 0,
                  'dungeon_luck': 0,
-                  'dungeon_damage': 0,
             },
              activeDungeon: null,
             dungeonStartTime: null,
              dungeonDuration: 0,
              dungeonRewards: null,
-              dungeonEnemies: null,
-             currentEnemyIndex: 0,
+            currentBattle: null,
         };
         clearAllTimeouts();
         updateDisplay();
@@ -712,6 +928,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem(gameConfig.SAVE_KEY);
         }
     };
+
 
     const saveData = () => {
         try {
@@ -756,7 +973,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                  if (gameState.activeDungeon) {
                     startDungeonTimer();
-                     startDungeonFight()
                 }
                 updateDisplay();
             } catch (e) {
@@ -786,6 +1002,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
     elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
       elements.dungeon.dungeonContainer.style.display = tabId === 'dungeon' ? 'block' : 'none';
+      elements.dungeon.dungeonBattleContainer.style.display = 'none'; // Скрываем контейнер боя
     elements.inventory.inventoryContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
 
     // Добавляем логику для переключения табов внутри профиля
@@ -904,87 +1121,52 @@ document.addEventListener('DOMContentLoaded', () => {
         saveData();
     };
 
-  const startDungeon = (type) => {
-       if (gameState.activeDungeon) {
-          displayMessage('Уже есть активное подземелье', 'red');
+    const startDungeon = (type) => {
+        if (gameState.activeDungeon) {
+            displayMessage('Уже есть активное подземелье', 'red');
             return;
-       }
+        }
         const dungeonConfig = gameConfig.DUNGEON_CONFIG[type];
         if (!dungeonConfig) {
-           displayMessage(`Подземелье "${type}" не найдено`, 'red');
+            displayMessage(`Подземелье "${type}" не найдено`, 'red');
             return;
-       }
-       if(gameState.diamonds < dungeonConfig.cost){
-          const needed = dungeonConfig.cost - gameState.diamonds;
+        }
+        if (gameState.diamonds < dungeonConfig.cost) {
+            const needed = dungeonConfig.cost - gameState.diamonds;
             displayMessage(`Не хватает ${needed} алмазов для этого подземелья`, 'red');
             return;
-       }
-
+        }
         gameState.diamonds -= dungeonConfig.cost;
         gameState.activeDungeon = type;
-        gameState.dungeonStartTime = Date.now();
-         gameState.dungeonDuration = dungeonConfig.duration / calculateAbilityBonus('dungeon_speed', gameState.abilities.dungeon_speed);
         gameState.dungeonRewards = dungeonConfig.rewards;
-        gameState.dungeonEnemies = Object.values(dungeonConfig.enemies); // Получаем список врагов
-        gameState.currentEnemyIndex = 0;
-          startDungeonFight();
-        startDungeonTimer();
+        startBattle(type); // Начинаем бой вместо таймера
         updateDisplay();
         displayMessage(`Подземелье "${dungeonConfig.name}" началось!`, 'green');
     };
-    
-   const startDungeonFight = () => {
-    if (!gameState.activeDungeon || !gameState.dungeonEnemies || gameState.currentEnemyIndex >= gameState.dungeonEnemies.length) {
-        return;
-    }
 
-      const currentEnemy = gameState.dungeonEnemies[gameState.currentEnemyIndex];
-    //  console.log(currentEnemy)
-      let dungeonDamage = calculateAbilityBonus('dungeon_damage', gameState.abilities.dungeon_damage) * gameState.clickUpgradeLevel;
-       let clickDamage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier;
-         let totalDamage = dungeonDamage + clickDamage;
-    //  console.log(dungeonDamage, clickDamage, totalDamage);
-        currentEnemy.health -= totalDamage;
-    
-     const dungeonProgress = elements.dungeon.dungeonProgressDisplay;
-        if (dungeonProgress) {
-            const progress = Math.max(0, Math.min(100, (1 - currentEnemy.health / gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].enemies[Object.keys(gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].enemies)[gameState.currentEnemyIndex]].health ) * 100));
-             dungeonProgress.textContent = `Подземелье ${gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].name}: Враг: ${currentEnemy.name} ${progress.toFixed(0)}% `;
+    const updateDungeonButtonInfo = () => {
+    elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
+       const type = button.dataset.type;
+       const dungeonConfig = gameConfig.DUNGEON_CONFIG[type];
+        if (dungeonConfig) {
+            button.textContent = `${dungeonConfig.name} (Стоимость: ${dungeonConfig.cost}💎)`;
+            if(gameState.diamonds < dungeonConfig.cost){
+                 button.classList.add('disabled');
+                button.disabled = true
+              } else {
+                button.classList.remove('disabled');
+                button.disabled = false
+              }
         }
-   // Проверка если враг побежден
-    if(currentEnemy.health <= 0){
-        gameState.currentEnemyIndex++;
-        if(gameState.currentEnemyIndex >= gameState.dungeonEnemies.length){
-              finishDungeon();
-        } else {
-           startDungeonFight()
-        }
-     } else {
-         setTimeout(startDungeonFight, 100); // Бой продолжается
-     }
+   });
 };
 
-   const updateDungeonButtonInfo = () => {
-        elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
-            const type = button.dataset.type;
-            const cost = gameConfig.DUNGEON_CONFIG[type].cost;
-            button.textContent = `${gameConfig.DUNGEON_CONFIG[type].name} (Стоимость: ${cost}💎)`;
-            if (gameState.diamonds < cost) {
-                button.classList.add('disabled');
-                  button.disabled = true
-            } else {
-                button.classList.remove('disabled');
-                 button.disabled = false
-            }
-        });
-    };
+ const startDungeonTimer = () => {
+    gameState.dungeonInterval = setInterval(updateDungeonProgressBar, 1000);
+};
 
-    const startDungeonTimer = () => {
-        gameState.dungeonInterval = setInterval(updateDungeonProgressBar, 1000);
-    };
-
-    const finishDungeon = () => {
-    clearInterval(gameState.dungeonInterval);
+const finishDungeon = () => {
+     clearInterval(gameState.dungeonInterval);
      gameState.dungeonInterval = null;
 
     const dungeonType = gameState.activeDungeon;
@@ -993,8 +1175,6 @@ document.addEventListener('DOMContentLoaded', () => {
      gameState.dungeonStartTime = null;
       gameState.dungeonDuration = 0;
     gameState.dungeonRewards = null;
-     gameState.dungeonEnemies = null;
-     gameState.currentEnemyIndex = 0;
 
    let gainedDiamonds = 0;
     let gainedKeys = 0;
@@ -1067,312 +1247,412 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDisplay();
     saveData();
 };
-    const applyRarity = (min, names, type) => {
-        const randomValue = Math.random();
-        let rarity;
 
-        if (type === 'skins') {
-            if (randomValue < gameConfig.SKIN_RARITY_CHANCE.common) rarity = 'common';
-            else if (randomValue < gameConfig.SKIN_RARITY_CHANCE.common + gameConfig.SKIN_RARITY_CHANCE.uncommon) rarity = 'uncommon';
-            else if (randomValue < gameConfig.SKIN_RARITY_CHANCE.common + gameConfig.SKIN_RARITY_CHANCE.uncommon + gameConfig.SKIN_RARITY_CHANCE.rare) rarity = 'rare';
-             else rarity = 'epic';
-        } else {
-            if (randomValue < gameConfig.ARTIFACT_RARITY_CHANCE.common) rarity = 'common';
-            else if (randomValue < gameConfig.ARTIFACT_RARITY_CHANCE.common + gameConfig.ARTIFACT_RARITY_CHANCE.uncommon) rarity = 'uncommon';
-           else if (randomValue < gameConfig.ARTIFACT_RARITY_CHANCE.common + gameConfig.ARTIFACT_RARITY_CHANCE.uncommon + gameConfig.ARTIFACT_RARITY_CHANCE.rare) rarity = 'rare';
-            else  rarity = 'epic';
-        }
-         const filteredNames = Object.keys(names).filter(key => {
-            const checkRarity = type === 'skins' ? gameConfig.SKIN_RARITY[key] : gameConfig.ARTIFACT_RARITY[key];
-            return checkRarity === rarity;
-        });
-         if(filteredNames.length === 0) {
-          return null;
-        }
-        const randomIndex = Math.floor(Math.random() * filteredNames.length);
-        return filteredNames[randomIndex];
+const startBattle = (type) => {
+    const dungeonConfig = gameConfig.DUNGEON_CONFIG[type];
+    const battleConfig = dungeonConfig.battle;
+    gameState.currentBattle = {
+        type: battleConfig.type,
+        waves: [...battleConfig.waves], // Копируем массив волн
+        currentWaveIndex: 0,
+        currentMonsterIndex: 0,
+        playerHealth: 1000000000,
+        waveReward: battleConfig.waves.waveReward,
     };
+    elements.dungeon.dungeonContainer.style.display = 'none';
+    const battleContainer = document.getElementById('dungeon-battle-container');
+    battleContainer.style.display = 'block';
+    updateBattleDisplay();
+};
 
-    const buyUpgrade = (type) => {
-        let cost;
-        if (type === 'click') {
-            cost = gameState.clickUpgradeCost;
-        } else if (type === 'auto') {
-            cost = gameState.autoUpgradeCost;
-        } else if (type === 'clickLevel') {
-             cost = gameState.clickUpgradeLevelCost;
-        }
+const updateBattleDisplay = () => {
+    const battleLog = document.getElementById('battle-log');
+    const monsterInfo = document.getElementById('monster-info');
 
-        if (gameState.clickCount >= cost) {
-            if (type === 'click') {
-                gameState.clickCount -= cost;
-                gameState.clickValue *= 1.25;
-                gameState.clickUpgradeCost = Math.round(gameState.clickUpgradeCost * 1.5);
-            } else if (type === 'auto') {
-                gameState.clickCount -= cost;
-                gameState.autoClickerValue += 1;
-                gameState.autoUpgradeCost = Math.round(gameState.autoUpgradeCost * 1.5);
-                startAutoClicker();
-            } else if (type === 'clickLevel') {
-                gameState.clickCount -= cost;
-                gameState.clickUpgradeLevel++;
-                gameState.clickUpgradeLevelCost = Math.round(gameState.clickUpgradeLevelCost * 1.5);
-           }
-            updateDisplay();
-            saveData();
-        } else {
-            displayMessage('Недостаточно кликов', 'red');
-        }
-    };
+    if (!gameState.currentBattle) {
+      battleLog.textContent = 'Бой закончен.';
+      monsterInfo.textContent = 'Бой закончен.';
+        return;
+    }
+    if (gameState.currentBattle.waves.length === 0) {
+         battleLog.textContent = 'Бой закончен.';
+         monsterInfo.textContent = 'Бой закончен.';
+        return;
+    }
+   const currentWave = gameState.currentBattle.waves[gameState.currentBattle.currentWaveIndex];
+        if (!currentWave) {
+        battleLog.textContent = 'Бой закончен.';
+        monsterInfo.textContent = 'Бой закончен.';
+            return;
+    }
+   if (currentWave.monsters.length === 0) {
+      battleLog.textContent = 'Бой закончен.';
+      monsterInfo.textContent = 'Бой закончен.';
+      return;
+    }
+    const currentMonster = currentWave.monsters[gameState.currentBattle.currentMonsterIndex];
+    if (!currentMonster) {
+      battleLog.textContent = 'Бой закончен.';
+      monsterInfo.textContent = 'Бой закончен.';
+      return;
+    }
+        battleLog.textContent = `Волна ${gameState.currentBattle.currentWaveIndex + 1}. Бой против ${currentMonster.name}. Здоровье: ${currentMonster.health}`;
+    monsterInfo.textContent = '';
+};
 
-    const buyKey = () => {
-        if (gameState.diamonds >= 5) {
-            gameState.diamonds -= 5;
-            gameState.keys += 1;
-            updateDisplay();
-            saveData();
-        } else {
-            displayMessage('Недостаточно алмазов', 'red');
-        }
-    };
+const attack = () => {
+   if (!gameState.currentBattle) return;
+    const currentWave = gameState.currentBattle.waves[gameState.currentBattle.currentWaveIndex];
+    if (!currentWave || currentWave.monsters.length === 0) return;
+    const currentMonster = currentWave.monsters[gameState.currentBattle.currentMonsterIndex];
+    if (!currentMonster) return;
 
-    const buyChest = (rarity) => {
-        const cost = rarity === 'common' ? 1 : rarity === 'rare' ? 5 : 10;
-        if (gameState.keys >= cost) {
-            gameState.keys -= cost;
-            gameState.chests[rarity] += 1;
-            updateDisplay();
-            saveData();
-        } else {
-            displayMessage('Недостаточно ключей', 'red');
-        }
-    };
+    const clickValue = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
+    const damage = clickValue; // Вычислить урон
+    currentMonster.health -= damage;
+    document.getElementById('battle-log').textContent = `Вы нанесли ${damage} урона!`;
 
-     const openChest = () => {
-        elements.shop.chestContainer.style.display = 'block';
-        elements.shop.chestItemsDisplay.innerHTML = '';
-        const chestRarityToOpen = ['epic', 'rare', 'common'].find(rarity => gameState.chests[rarity] > 0);
-          if(chestRarityToOpen) {
-            gameState.chests[chestRarityToOpen]--;
-             const items = openChestItem(chestRarityToOpen);
-          let message = `Выпали предметы:`;
-           if (Object.keys(items.skins).length > 0) {
-          message += ` ${Object.keys(items.skins).map(skin => `${skin} x${items.skins[skin]}`).join(', ')}`;
+    if (currentMonster.health <= 0) {
+        document.getElementById('battle-log').textContent = `${currentMonster.name} повержен!`;
+        gameState.experience += currentMonster.exp;
+        gameState.diamonds += currentMonster.diamonds;
+          gameState.currentBattle.currentMonsterIndex++;
+        if (gameState.currentBattle.currentMonsterIndex >= currentWave.monsters.length) {
+            gameState.currentBattle.currentMonsterIndex = 0;
+            gameState.currentBattle.currentWaveIndex++;
+            if (gameState.currentBattle.currentWaveIndex >= gameState.currentBattle.waves.length) {
+                finishBattle();
+                 return;
+            }
+             displayMessage(`Волна ${gameState.currentBattle.currentWaveIndex} начинается`, 'green');
        }
-        if (Object.keys(items.artifacts).length > 0) {
-          message += ` ${Object.keys(items.artifacts).map(artifact => `${artifact} x${items.artifacts[artifact]}`).join(', ')}`;
-       }
-         elements.shop.chestItemsDisplay.textContent = message;
-           updateDisplay();
-           saveData();
-        } else {
-             elements.shop.chestContainer.style.display = 'none';
-            displayMessage('Нет сундуков для открытия', 'red');
-        }
+    }
+    updateBattleDisplay();
+};
 
-    };
+ const finishBattle = () => {
+    const battleContainer = document.getElementById('dungeon-battle-container');
+    battleContainer.style.display = 'none';
+    elements.dungeon.dungeonContainer.style.display = 'block';
+    displayMessage('Битва окончена!');
+    finishDungeon();
+    checkLevelUp();
+    updateDisplay();
+    saveData();
+};
 
-   const openChestItem = (rarity) => {
-        let skinCount = 0;
-         let artifactCount = 0;
-            const items = {
-               skins: {},
-               artifacts: {}
+    const checkLevelUp = () => {
+        while (gameState.experience >= gameConfig.LEVEL_UP_BASE_EXP * gameState.level) {
+            gameState.experience -= gameConfig.LEVEL_UP_BASE_EXP * gameState.level;
+            gameState.level++;
+             gameState.levelPoints += 2;
+            displayMessage(`Уровень повышен до ${gameState.level}!`, 'green', '1.2em');
+            updateProfile();
+             saveData();
         }
-        if (rarity === 'common') {
-             skinCount = 1;
-         } else if (rarity === 'rare') {
-            skinCount = 1;
-            artifactCount = 1;
-        } else {
-             skinCount = 2;
-             artifactCount = 2;
-        }
-         for(let i = 0; i < skinCount; i++) {
-             const skin = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
-               if(skin) {
-                   items.skins[skin] = (items.skins[skin] || 0) + 1
-                   gameState.skins[skin] = (gameState.skins[skin] || 0) + 1;
-                }
-         }
-          for(let i = 0; i < artifactCount; i++) {
-              const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
-               if(artifact) {
-                  items.artifacts[artifact] = (items.artifacts[artifact] || 0) + 1
-                   gameState.artifacts[artifact] = (gameState.artifacts[artifact] || 0) + 1;
-               }
-        }
-       return items;
-    };
-
-
-    const closeChest = () => {
-        elements.shop.chestContainer.style.display = 'none';
     };
 
     const prestige = () => {
-        if (gameState.clickCount >= gameState.prestigeCost) {
-            gameState.clickCount = 0;
-            gameState.prestigeLevel++;
-            gameState.prestigeMultiplier = calculatePrestigeBonus(gameState.artifacts);
-            gameState.clickUpgradeCost = 10;
-           gameState.clickUpgradeLevel = 1;
-             gameState.clickUpgradeLevelCost = 100;
-            gameState.autoUpgradeCost = 50;
-             gameState.autoClickerValue = 0;
-              clearInterval(gameState.autoClickerInterval);
-             gameState.autoClickerInterval = null;
-            gameState.prestigeCost = Math.round(gameState.prestigeCost * 10);
-              gameState.abilities = {
-               'diamond_bonus': 0,
-                'exp_bonus': 0,
-                 'click_bonus': 0,
-                 'expedition_speed': 0,
-                  'luck_bonus': 0,
-                  'dungeon_speed': 0,
-                  'dungeon_luck': 0,
-                   'dungeon_damage': 0,
-            };
-            updateDisplay();
-            saveData();
-             displayMessage('Престиж активирован! Игра началась заново.', 'gold');
-        } else {
-            displayMessage('Недостаточно кликов для престижа', 'red');
-        }
-    };
-
-    const updateInventoryDisplay = () => {
-       elements.inventory.skinsDisplay.innerHTML = '';
-        for (const skin in gameState.skins) {
-             const skinDiv = document.createElement('div');
-            skinDiv.classList.add('inventory-item');
-              const skinName = gameConfig.SKIN_NAMES[skin];
-             skinDiv.textContent = `${skinName} x${gameState.skins[skin]}`;
-            elements.inventory.skinsDisplay.appendChild(skinDiv);
+       if (gameState.clickCount < gameState.prestigeCost) {
+           displayMessage('Недостаточно кликов для престижа', 'red');
+           return;
        }
-        elements.inventory.artifactsDisplay.innerHTML = '';
-        for (const artifact in gameState.artifacts) {
-           const artifactDiv = document.createElement('div');
-            artifactDiv.classList.add('inventory-item');
-             const artifactName = gameConfig.ARTIFACT_NAMES[artifact];
-             artifactDiv.textContent = `${artifactName} x${gameState.artifacts[artifact]}`;
-             elements.inventory.artifactsDisplay.appendChild(artifactDiv);
+
+         if (gameState.activeExpedition) {
+              displayMessage('Невозможно сделать престиж во время экспедиции', 'red');
+            return;
+          }
+         if (gameState.activeDungeon) {
+            displayMessage('Невозможно сделать престиж во время подземелья', 'red');
+           return;
         }
-    };
+        gameState.prestigeLevel++;
+          gameState.prestigeMultiplier = calculatePrestigeBonus(gameState.artifacts); // Престиж множитель
+        gameState.clickCount = 0;
+         gameState.autoClickerValue = 0;
+         gameState.autoClickerInterval = null;
+         gameState.clickUpgradeCost = 10;
+        gameState.autoUpgradeCost = 50;
+        gameState.clickUpgradeLevel = 1;
+         gameState.clickUpgradeLevelCost = 100;
+         gameState.prestigeCost *= 2;
+         displayMessage('Престиж выполнен!', 'gold', '1.2em');
+         updateDisplay();
+         clearAllTimeouts();
+        saveData();
+      };
 
-    const checkLevelUp = () => {
-        const levelUpExp = gameConfig.LEVEL_UP_BASE_EXP * (gameState.level * gameState.level + gameState.level);
-            if(gameState.experience >= levelUpExp) {
-                 gameState.level++;
-                gameState.experience -= levelUpExp;
-                gameState.levelPoints++;
-              displayMessage(`Вы достигли ${gameState.level} уровня`, 'green', '1.2em');
-            checkLevelUp()
-        }
-    };
 
-     const updateProfile = () => {
-       const levelDisplay = document.getElementById('profile-level');
-         const levelPointsDisplay = document.getElementById('profile-level-points');
-          const expDisplay = document.getElementById('profile-exp');
-      levelDisplay.textContent = `Уровень: ${gameState.level}`;
-       levelPointsDisplay.textContent = `Очки умений: ${gameState.levelPoints}`;
-        const levelUpExp = gameConfig.LEVEL_UP_BASE_EXP * (gameState.level * gameState.level + gameState.level);
-     expDisplay.textContent = `Опыт: ${gameState.experience} / ${levelUpExp}`;
-    };
+       const updateProfile = () => {
+         document.getElementById('profile-level').textContent = `Уровень: ${gameState.level}`;
+         document.getElementById('profile-points').textContent = `Очки Уровня: ${gameState.levelPoints}`;
+       };
 
-     const updateAbilitiesDisplay = () => {
-         const abilityList = document.getElementById('abilities-list');
-          abilityList.innerHTML = '';
-        for (const abilityKey in gameConfig.ABILITY_CONFIG) {
-             const ability = gameConfig.ABILITY_CONFIG[abilityKey];
-             const abilityDiv = document.createElement('div');
-             abilityDiv.classList.add('ability-item');
-             const level = gameState.abilities[abilityKey];
-           abilityDiv.innerHTML = `
-                 <p><strong>${ability.name} (Ур. ${level})</strong></p>
-                 <p>${ability.description}</p>
-                 <p>Стоимость: ${ability.costPerLevel} очков умений</p>
-                 <button class="upgrade-ability-button" data-ability="${abilityKey}">Улучшить</button>
-                 `;
-             abilityList.appendChild(abilityDiv);
-        }
-    };
-
-     const upgradeAbility = (abilityKey) => {
-        if (gameState.levelPoints > 0) {
-          const ability =  gameConfig.ABILITY_CONFIG[abilityKey];
-             if (gameState.abilities[abilityKey] >= ability.maxLevel) {
-                 displayMessage('Максимальный уровень', 'red');
+       const buyAbility = (ability) => {
+           const config = gameConfig.ABILITY_CONFIG[ability];
+           if (!config) return;
+             if (gameState.levelPoints <= 0) {
+                 displayMessage('Недостаточно очков уровня', 'red');
                  return;
             }
-           gameState.abilities[abilityKey]++;
-           gameState.levelPoints--;
-             updateAbilitiesDisplay();
-            updateProfile();
-           updateDisplay();
-            saveData();
-          displayMessage(`Умение "${ability.name}" улучшено`, 'green');
-        } else {
-            displayMessage('Недостаточно очков умений', 'red');
-        }
-   };
 
-    // 8. Инициализация
-    const init = () => {
-        elements.clicker.clickButton.addEventListener('click', applyClick);
-        elements.clicker.upgradeClickButton.addEventListener('click', () => buyUpgrade('click'));
-        elements.clicker.upgradeAutoButton.addEventListener('click', () => buyUpgrade('auto'));
-        elements.clicker.upgradeClickLevelButton.addEventListener('click', () => buyUpgrade('clickLevel'));
-        elements.shop.prestigeButton.addEventListener('click', prestige);
-        elements.shop.buyKeyButton.addEventListener('click', buyKey);
-        elements.shop.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
-        elements.shop.buyRareChestButton.addEventListener('click', () => buyChest('rare'));
-        elements.shop.buyEpicChestButton.addEventListener('click', () => buyChest('epic'));
-         elements.shop.openChestButton.addEventListener('click', openChest);
-         elements.shop.closeChestButton.addEventListener('click', closeChest);
-        elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
-            button.addEventListener('click', () => startExpedition(button.dataset.type));
-        });
-          elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
-            button.addEventListener('click', () => startDungeon(button.dataset.type));
-        });
+           if (gameState.abilities[ability] >= config.maxLevel) {
+              displayMessage(`Максимальный уровень для ${config.name}`, 'red');
+               return;
+             }
 
-       elements.inventory.inventoryContainer.addEventListener('click', function (event) {
-           if (event.target && event.target.classList.contains('upgrade-ability-button')) {
-              const abilityKey = event.target.dataset.ability;
-               upgradeAbility(abilityKey);
+         gameState.levelPoints -= config.costPerLevel;
+          gameState.abilities[ability]++;
+        updateProfile();
+        updateAbilitiesDisplay();
+         updateDisplay();
+        saveData();
+        displayMessage(`Улучшен навык "${config.name}"!`, 'green');
+        };
+
+      const updateAbilitiesDisplay = () => {
+        const abilityContainer = document.getElementById('abilities-display');
+        if (!abilityContainer) return;
+        abilityContainer.innerHTML = '';
+
+        for (const abilityKey in gameConfig.ABILITY_CONFIG) {
+          const config = gameConfig.ABILITY_CONFIG[abilityKey];
+          const currentLevel = gameState.abilities[abilityKey] || 0;
+            const button = document.createElement('button');
+              button.className = 'buy-ability-button';
+              button.textContent = `${config.name} (Ур. ${currentLevel}/${config.maxLevel})`;
+              button.title = config.description;
+            if (gameState.levelPoints <= 0 || currentLevel >= config.maxLevel ) {
+                button.classList.add('disabled');
+                button.disabled = true
+            } else {
+                 button.classList.remove('disabled');
+               button.disabled = false
+            }
+              button.addEventListener('click', () => buyAbility(abilityKey));
+              abilityContainer.appendChild(button);
+      }
+};
+
+
+    const applyRarity = (rarity, names, type) => {
+        const itemsRarity = type === 'skins' ? gameConfig.SKIN_RARITY_CHANCE : gameConfig.ARTIFACT_RARITY_CHANCE;
+        const itemsRarityNames = type === 'skins' ? gameConfig.SKIN_RARITY : gameConfig.ARTIFACT_RARITY;
+        const randomValue = Math.random();
+        let cumulativeProbability = 0;
+        let selectedRarity = rarity;
+        if(!selectedRarity){
+            for (const itemRarity in itemsRarity) {
+                 cumulativeProbability += itemsRarity[itemRarity];
+                 if (randomValue <= cumulativeProbability) {
+                      selectedRarity = itemRarity
+                    break;
+                   }
+               }
           }
-        });
-
-      elements.menu.menuItems.forEach(item => {
-            item.addEventListener('click', () => switchTab(item.dataset.tab));
-        });
-        elements.menu.menuButton.addEventListener('click', () => {
-            elements.menu.menu.classList.toggle('open');
-        });
-
-         elements.menu.resetButton.addEventListener('click', resetGame);
-        loadGame();
-        startAutoSave();
-        switchTab('clicker');
-         elements.menu.menu.classList.remove('open'); // Скрываем меню после инициализации
+          if (selectedRarity) {
+              const itemsWithRarity = Object.keys(names).filter(item => itemsRarityNames[item] == selectedRarity);
+            if(itemsWithRarity.length > 0) {
+              const randomItem = itemsWithRarity[Math.floor(Math.random() * itemsWithRarity.length)];
+             if (type === 'skins') {
+                    gameState.skins[randomItem] = (gameState.skins[randomItem] || 0) + 1;
+              }
+              if (type === 'artifacts') {
+                  gameState.artifacts[randomItem] = (gameState.artifacts[randomItem] || 0) + 1;
+                }
+                return randomItem;
+           }
+      }
+       return null;
     };
 
-     const autoSaveInterval = 60000; // 60 seconds
-    let autoSaveTimer = null;
 
-    const startAutoSave = () => {
-        autoSaveTimer = setInterval(() => {
-            saveData();
-            displayMessage('Игра автоматически сохранена', 'green');
-        }, autoSaveInterval);
+      const updateInventoryDisplay = () => {
+        const skinsDisplay = document.getElementById('skins-display');
+        const artifactsDisplay = document.getElementById('artifacts-display');
+        if (!skinsDisplay || !artifactsDisplay) {
+            return;
+        }
+        skinsDisplay.innerHTML = '';
+        artifactsDisplay.innerHTML = '';
+
+        // Для скинов
+        for (const skin in gameState.skins) {
+            const skinCount = gameState.skins[skin];
+           if (skinCount > 0) {
+             const skinName = gameConfig.SKIN_NAMES[skin]
+             const skinRarity = gameConfig.SKIN_RARITY[skin]
+            const skinElement = document.createElement('div');
+            skinElement.classList.add('inventory-item');
+            skinElement.classList.add(skinRarity);
+            skinElement.textContent = `${skinName} x${skinCount}`;
+           skinsDisplay.appendChild(skinElement);
+           }
+        }
+       // Для артефактов
+        for (const artifact in gameState.artifacts) {
+              const artifactCount = gameState.artifacts[artifact];
+            if (artifactCount > 0) {
+                const artifactName = gameConfig.ARTIFACT_NAMES[artifact]
+                const artifactRarity = gameConfig.ARTIFACT_RARITY[artifact]
+                 const artifactElement = document.createElement('div');
+                artifactElement.classList.add('inventory-item');
+                 artifactElement.classList.add(artifactRarity);
+                artifactElement.textContent = `${artifactName} x${artifactCount}`;
+                artifactsDisplay.appendChild(artifactElement);
+            }
+      }
+    };
+
+     const buyKey = () => {
+        if (gameState.diamonds < 10) {
+            displayMessage('Недостаточно алмазов', 'red');
+            return;
+        }
+        gameState.diamonds -= 10;
+        gameState.keys++;
+        updateDisplay();
+        saveData();
+        displayMessage('Ключ куплен!', 'green');
+    };
+
+    const buyChest = (rarity) => {
+       const chestCost = rarity === 'common' ? 1 : rarity === 'rare' ? 3 : 5;
+         if (gameState.keys < chestCost) {
+            displayMessage('Недостаточно ключей', 'red');
+            return;
+       }
+        gameState.keys -= chestCost;
+         gameState.chests[rarity]++;
+        updateDisplay();
+         saveData();
+        displayMessage(`${gameConfig.CHEST_RARITY_CHANCE[rarity] * 100}% шанс на ${rarity} предмет`, 'green');
+    };
+
+   const openChest = () => {
+         if (gameState.chests.common <= 0 && gameState.chests.rare <= 0 && gameState.chests.epic <= 0) {
+                displayMessage('Нет сундуков', 'red');
+                return;
+             }
+       elements.shop.chestContainer.style.display = 'block';
+         elements.shop.chestItemsDisplay.innerHTML = '';
+         const chestItems = [];
+            if(gameState.chests.common > 0) {
+                const item = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
+                if (item) {
+                  chestItems.push(`${item}`);
+                   gameState.chests.common--;
+              }
+           }
+        if(gameState.chests.rare > 0) {
+              const item = applyRarity('uncommon', gameConfig.SKIN_NAMES, 'skins');
+              if (item) {
+                chestItems.push(`${item}`);
+                gameState.chests.rare--;
+           }
+        }
+        if(gameState.chests.epic > 0) {
+            const item = applyRarity('epic', gameConfig.SKIN_NAMES, 'skins');
+            if (item) {
+                  chestItems.push(`${item}`);
+                  gameState.chests.epic--;
+            }
+       }
+         if(chestItems.length > 0){
+            elements.shop.chestItemsDisplay.innerHTML = `Выпали предметы: ${chestItems.join(', ')}`
+         } else {
+                elements.shop.chestItemsDisplay.textContent = 'Пусто'
+         }
+        updateDisplay();
+        saveData();
+    };
+
+    const closeChest = () => {
+       elements.shop.chestContainer.style.display = 'none';
     };
 
     const clearAutoSave = () => {
-        clearInterval(autoSaveTimer);
-        autoSaveTimer = null;
+        clearInterval(autoSaveInterval);
     };
 
-    init();
+
+    // 8. События
+    elements.clicker.clickButton.addEventListener('click', applyClick);
+    elements.clicker.upgradeClickButton.addEventListener('click', () => {
+        if (gameState.clickCount >= gameState.clickUpgradeCost) {
+           gameState.clickCount -= gameState.clickUpgradeCost;
+           gameState.clickValue++;
+           gameState.clickUpgradeCost = Math.round(gameState.clickUpgradeCost * 1.5);
+          updateDisplay();
+            saveData();
+           displayMessage('Улучшение клика куплено!', 'green');
+      } else {
+            displayMessage('Недостаточно кликов', 'red');
+        }
+    });
+     elements.clicker.upgradeAutoButton.addEventListener('click', () => {
+         if (gameState.clickCount >= gameState.autoUpgradeCost) {
+            gameState.clickCount -= gameState.autoUpgradeCost;
+           gameState.autoClickerValue++;
+           gameState.autoUpgradeCost = Math.round(gameState.autoUpgradeCost * 1.5);
+           startAutoClicker();
+           updateDisplay();
+             saveData();
+            displayMessage('Автокликер куплен!', 'green');
+        } else {
+            displayMessage('Недостаточно кликов', 'red');
+        }
+    });
+     elements.clicker.upgradeClickLevelButton.addEventListener('click', () => {
+       if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
+             gameState.clickCount -= gameState.clickUpgradeLevelCost;
+             gameState.clickUpgradeLevel++;
+             gameState.clickUpgradeLevelCost = Math.round(gameState.clickUpgradeLevelCost * 2);
+              updateDisplay();
+               saveData();
+            displayMessage('Улучшение уровня клика куплено!', 'green');
+         } else {
+            displayMessage('Недостаточно кликов', 'red');
+        }
+   });
+
+     elements.shop.prestigeButton.addEventListener('click', prestige);
+     elements.shop.buyKeyButton.addEventListener('click', buyKey);
+     elements.shop.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
+     elements.shop.buyRareChestButton.addEventListener('click', () => buyChest('rare'));
+     elements.shop.buyEpicChestButton.addEventListener('click', () => buyChest('epic'));
+    elements.shop.openChestButton.addEventListener('click', openChest);
+     elements.shop.closeChestButton.addEventListener('click', closeChest);
+     elements.dungeon.attackButton.addEventListener('click', attack); // Кнопка атаки
+
+   elements.menu.menuButton.addEventListener('click', () => {
+            elements.menu.menu.classList.toggle('open');
+        });
+    elements.menu.menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+              switchTab(item.dataset.tab);
+                 elements.menu.menu.classList.remove('open');
+            });
+        });
+    elements.menu.resetButton.addEventListener('click', () => {
+       if (confirm('Вы уверены, что хотите сбросить прогресс?')) {
+            resetGame();
+        }
+    });
+    elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
+        button.addEventListener('click', () => {
+            startExpedition(button.dataset.type);
+        });
+    });
+      elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
+        button.addEventListener('click', () => {
+            startDungeon(button.dataset.type);
+        });
+    });
+
+
+    // 9. Инициализация
+    let autoSaveInterval = setInterval(saveData, 5000);
+     loadGame();
+     switchTab('clicker');
 });
