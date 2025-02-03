@@ -1501,7 +1501,7 @@ const updateInventoryDisplay = () => {
             elements.menu.menu.classList.remove('open');
         });
     });
-    
+   
      elements.shop.prestigeButton.addEventListener('click', prestige);
     elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
         button.addEventListener('click', () => {
