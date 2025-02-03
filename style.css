@@ -253,12 +253,13 @@ main.game-container {
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 8px;
     opacity: 0;
-    transform: translateY(20px); /* Начальное смещение вниз */
-    transition: opacity 0.3s ease, transform 0.3s ease;
+     /* transform: translateY(20px); Удаляем начальную трансформацию */
+    transition: opacity 0.3s ease; /* Упростили переходы */
     position: absolute;
     top: 40px;
     left: 0;
     z-index: 1002;
+     display: none; /* Теперь скрываем меню через display:none; */
 }
 
 
@@ -269,7 +270,7 @@ main.game-container {
     border: none;
     border-radius: 0;
     cursor: pointer;
-     background-color: rgba(52, 152, 219, 0.8);
+    background-color: rgba(52, 152, 219, 0.8);
     color: white;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -287,9 +288,9 @@ main.game-container {
 
 /* Анимация открытия меню */
 #menu-items.open {
-    display: block;
+    display: block; /* Добавили display:block; */
     opacity: 1;
-     transform: translateY(0); /* конечное состояние для трансформации */
+    /*  transform: translateY(0); Удаляем трансформацию  */
 }
 
 /* Изменение стиля для disabled */
