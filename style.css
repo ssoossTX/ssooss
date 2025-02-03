@@ -264,7 +264,7 @@ main.game-container {
     top: 40px;
     left: 0;
     z-index: 1002;
-    display: block; /* Оставляем display:block; */
+    display: block;
 }
 
 #menu-items li button {
@@ -297,6 +297,7 @@ main.game-container {
     opacity: 1;
      transform: translateY(0);
 }
+
 /* Делаем кнопки меню видимыми и кликабельными */
 #menu-items.open li button {
     opacity: 1;
