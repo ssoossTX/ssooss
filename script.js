@@ -1500,9 +1500,9 @@ elements.menu.menuButton.addEventListener('click', () => {
     console.log('menuButton Clicked');
 
     if (elements.menu.menu.classList.contains('open')) {
-        elements.menu.menuItems.forEach(item => item.disabled = true);
+         elements.menu.menuItems.forEach(item => item.disabled = true);
         elements.menu.menu.classList.remove('open');
-         elements.menu.menuButton.classList.remove('active');
+        elements.menu.menuButton.classList.remove('active');
         console.log('Меню закрыто');
     } else {
          elements.menu.menu.classList.add('open');
@@ -1516,9 +1516,9 @@ elements.menu.menuItems.forEach(item => {
     item.addEventListener('click', (event) => {
         console.log('menuItem Clicked', event.target.dataset.tab);
         switchTab(event.target.dataset.tab);
-          elements.menu.menuItems.forEach(item => item.disabled = true);
-         elements.menu.menu.classList.remove('open');
-           elements.menu.menuButton.classList.remove('active');
+        elements.menu.menuItems.forEach(item => item.disabled = true);
+        elements.menu.menu.classList.remove('open');
+         elements.menu.menuButton.classList.remove('active');
     });
 });
      elements.shop.prestigeButton.addEventListener('click', prestige);
