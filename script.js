@@ -475,15 +475,15 @@ document.addEventListener('DOMContentLoaded', () => {
              playerHealthDisplay: document.getElementById('player-health'),
             enemyHealthDisplay: document.getElementById('enemy-health'),
         },
-        inventory: {
+         inventory: {
             inventoryContainer: document.getElementById('inventory-container'),
             skinsDisplay: document.getElementById('skins-display'),
             artifactsDisplay: document.getElementById('artifacts-display'),
         },
         global: {
-            messageDisplay: document.getElementById('message'),
-            globalMessageDisplay: document.getElementById('global-message'),
-        },
+          messageDisplay: document.getElementById('message'),
+          globalMessageDisplay: document.getElementById('global-message'),
+      },
         menu: {
             menuButton: document.querySelector('.menu-toggle'),
             menu: document.getElementById('menu-items'),
@@ -491,9 +491,11 @@ document.addEventListener('DOMContentLoaded', () => {
             clickerContent: document.getElementById('clicker-content'),
             gameContent: document.getElementById('game-content'),
             resetButton: document.getElementById('reset-button'),
+            profileContent: document.getElementById('profile-container')
         }
     };
-   const profileModule = {
+    
+    const profileModule = {
     elements: {
        profileInfo: document.getElementById('profile-info'),
        profileInventory: document.getElementById('profile-inventory'),
@@ -664,7 +666,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tWebApp) {
         tWebApp.ready();
     }
+     // 9. Сохранение и загрузка
+    const saveData = () => {
+        localStorage.setItem(gameConfig.SAVE_KEY, JSON.stringify(gameState));
+    };
 
+    const loadData = () => {
+        const savedData = localStorage.getItem(gameConfig.SAVE_KEY);
+        if (savedData) {
+            gameState = JSON.parse(savedData);
+           //Устраняем проблему, когда у нас нет autoClickerInterval
+            if (gameState.autoClickerValue > 0 && !gameState.autoClickerInterval) {
+                gameState.autoClickerInterval = setInterval(autoClick, gameConfig.AUTO_CLICK_INTERVAL);
+            }
+           updateDisplay();
+            profileModule.updateDisplay();
+         }
+    };
+        loadData();
     // 4. Обновление дисплея
     const updateClickCountDisplay = () => {
         elements.clicker.clickCountDisplay.textContent = Math.round(gameState.clickCount);
@@ -682,25 +701,23 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.shop.prestigeCostDisplay.textContent = `Стоимость: ${gameState.prestigeCost}`;
     };
 
-    const updateAchievementsDisplay = () => {
+     const updateAchievementsDisplay = () => {
         elements.global.messageDisplay.textContent = `Достижения: ${gameState.achievementCount}`;
     };
 
     const updateDiamondDisplay = () => {
-        elements.shop.diamondDisplay.textContent = `Алмазы: ${gameState.diamonds}`;
+         elements.shop.diamondDisplay.textContent = `Алмазы: ${gameState.diamonds}`;
     };
 
     const updateKeyDisplay = () => {
         elements.shop.keyDisplay.textContent = `Ключи: ${gameState.keys}`;
     };
-
-    const updateChestDisplay = () => {
-        elements.shop.chestDisplay.common.textContent = `Обычные: ${gameState.chests.common}`;
-        elements.shop.chestDisplay.rare.textContent = `Редкие: ${gameState.chests.rare}`;
-        elements.shop.chestDisplay.epic.textContent = `Эпические: ${gameState.chests.epic}`;
-    };
-
-    const updateExpeditionProgressBar = () => {
+ const updateChestDisplay = () => {
+      elements.shop.chestDisplay.common.textContent = `Обычные: ${gameState.chests.common}`;
+      elements.shop.chestDisplay.rare.textContent = `Редкие: ${gameState.chests.rare}`;
+      elements.shop.chestDisplay.epic.textContent = `Эпические: ${gameState.chests.epic}`;
+  };
+     const updateExpeditionProgressBar = () => {
         if (!gameState.activeExpedition) {
             elements.map.expeditionProgressDisplay.textContent = '';
             return;
@@ -714,25 +731,23 @@ document.addEventListener('DOMContentLoaded', () => {
             finishExpedition();
         }
     };
-
     const updateDungeonProgressBar = () => {
-        if (!gameState.activeDungeon) {
+          if (!gameState.activeDungeon) {
             elements.dungeon.dungeonProgressDisplay.textContent = '';
             elements.dungeon.dungeonBattleArea.style.display = 'none';
             return;
         }
-       elements.dungeon.dungeonBattleArea.style.display = 'block';
+        elements.dungeon.dungeonBattleArea.style.display = 'block';
           const elapsed = Date.now() - gameState.dungeonStartTime;
           const remaining = Math.max(0, gameState.dungeonDuration - elapsed);
          const progress = Math.min(100, Math.round((elapsed / gameState.dungeonDuration) * 100));
-        const remainingSeconds = Math.ceil(remaining / 1000);
+         const remainingSeconds = Math.ceil(remaining / 1000);
          elements.dungeon.dungeonProgressDisplay.textContent = `Подземелье ${gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].name}: ${progress}%  (${remainingSeconds} сек. осталось)`;
            updateDungeonBattleUI();
         if (remaining <= 0) {
             finishDungeon();
         }
     };
-
 
     const updateDisplay = () => {
         updateClickCountDisplay();
@@ -742,12 +757,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDiamondDisplay();
         updateKeyDisplay();
         updateChestDisplay();
-        updateExpeditionProgressBar();
+       updateExpeditionProgressBar();
         updateExpeditionButtonInfo();
-          updateDungeonProgressBar();
+         updateDungeonProgressBar();
         updateDungeonButtonInfo();
     };
-
     // 5. Сообщения
     const displayMessage = (msg, color = 'white', fontSize = '1em') => {
         elements.global.globalMessageDisplay.textContent = msg;
@@ -758,12 +772,11 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.global.globalMessageDisplay.style.display = 'none';
                     }, gameConfig.MESSAGE_DURATION);
     };
-
-    // 6. Обработчики событий
+        // 6. Обработчики событий
     elements.clicker.clickButton.addEventListener('click', () => {
         const clickValue = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
         gameState.clickCount += clickValue;
-         gainExperience(clickValue);
+        gainExperience(clickValue);
         updateClickCountDisplay();
         saveData();
     });
@@ -837,7 +850,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameState.chests.common += 1;
             updateDisplay();
             saveData();
-             displayMessage('Куплен обычный сундук!', 'green');
+            displayMessage('Куплен обычный сундук!', 'green');
         } else {
              displayMessage('Недостаточно ключей!', 'red');
         }
@@ -876,20 +889,26 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
     elements.menu.menuButton.addEventListener('click', () => {
-        elements.menu.menu.style.display = elements.menu.menu.style.display === 'block' ? 'none' : 'block';
+        if (elements.menu.menu.classList.contains('open')) {
+             elements.menu.menu.classList.remove('open');
+              elements.menu.menuButton.classList.remove('active');
+        } else {
+             elements.menu.menu.classList.add('open');
+              elements.menu.menuButton.classList.add('active');
+        }
     });
-     elements.menu.menuItems.forEach(button => {
-        button.addEventListener('click', (event) => {
-             const tab = event.target.dataset.tab;
-            switchTab(tab);
-            elements.menu.menu.style.display = 'none';
-       });
-     });
+
+    elements.menu.menuItems.forEach(item => {
+        item.addEventListener('click', (event) => {
+            switchTab(event.target.dataset.tab);
+              elements.menu.menu.classList.remove('open');
+               elements.menu.menuButton.classList.remove('active');
+        });
+    });
 
      elements.menu.resetButton.addEventListener('click', () => {
         resetGame();
     });
-    
     // 7. Игровой цикл
     const autoClick = () => {
         const autoClickValue = gameState.autoClickerValue * calculateAutoClickerBonus(gameState.skins) * calculateAbilityBonus('auto_clicker_bonus', gameState.abilities.auto_clicker_bonus);
@@ -898,31 +917,26 @@ document.addEventListener('DOMContentLoaded', () => {
          updateClickCountDisplay();
         saveData();
     };
-  
     const gameLoop = () => {
-        updateDisplay();
+       updateDisplay();
        profileModule.updateDisplay();
         requestAnimationFrame(gameLoop);
     };
-
     // 8. Функции игрового процесса
-
     const switchTab = (tab) => {
-       elements.menu.menuItems.forEach(btn => btn.classList.remove('active'));
+        elements.menu.menuItems.forEach(btn => btn.classList.remove('active'));
         document.querySelector(`.menu-items li button[data-tab="${tab}"]`).classList.add('active');
-         elements.clicker.clickerContent.style.display = tab === 'clicker' ? 'block' : 'none';
-        elements.gameContent.style.display = tab === 'game' ? 'block' : 'none';
-         elements.inventory.inventoryContainer.style.display = tab === 'inventory' ? 'block' : 'none';
+        elements.clicker.clickerContent.style.display = tab === 'clicker' ? 'block' : 'none';
+        elements.gameContent.style.display = tab === 'shop' ? 'block' : 'none';
+        elements.inventory.inventoryContainer.style.display = tab === 'profile' ? 'none' : 'none';
         elements.map.mapContainer.style.display = tab === 'map' ? 'block' : 'none';
          elements.dungeon.dungeonContainer.style.display = tab === 'dungeon' ? 'block' : 'none';
-        if (tab === 'profile') {
+         if (tab === 'profile') {
              profileModule.showProfile();
          } else {
              profileModule.hideProfile();
-         }
-
+        }
     };
-
     const prestigeGame = () => {
         gameState.prestigeLevel += 1;
         gameState.prestigeMultiplier += 0.5;
@@ -968,8 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         saveData();
     };
-
-     const getRandomItem = (rarityType) => {
+    const getRandomItem = (rarityType) => {
          const rarityChance = gameConfig[`${rarityType.toUpperCase()}_RARITY_CHANCE`];
         const rand = Math.random();
         let cumulativeChance = 0;
@@ -981,8 +994,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return 'common'; // Возвращает common, если ничего не выпало (может быть из-за ошибок конфигурации)
     };
-
-
     const openChest = () => {
          let chestType = null;
         if (gameState.chests.epic > 0) {
@@ -1013,7 +1024,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameState.artifacts[artifact] = 1;
             }
               displayMessage(`${gameConfig.SKIN_NAMES[skin] || skin} ${gameConfig.ARTIFACT_NAMES[artifact] || artifact}`, 'blue', '0.9em');
-
             const skinElement = document.createElement('div');
             const artifactElement = document.createElement('div');
             const imagePathSkin = `${skin}.jpg`;
@@ -1026,7 +1036,6 @@ document.addEventListener('DOMContentLoaded', () => {
            saveData();
        }
     };
-
      const startExpedition = (type) => {
          if (gameState.activeExpedition) {
              displayMessage('Экспедиция уже в пути!', 'red');
@@ -1075,11 +1084,9 @@ document.addEventListener('DOMContentLoaded', () => {
             popup.remove();
         });
     };
-
-    const getImageTag = (itemId, imagePath, name) => {
-    return  `<img src="${imagePath}" alt="${name}" class="item-image">`
+        const getImageTag = (itemId, imagePath, name) => {
+       return  `<img src="${imagePath}" alt="${name}" class="item-image">`
      };
-
      const calculateClickBonus = (skins) => {
           let bonus = 1;
          for (const skin in skins) {
@@ -1089,7 +1096,6 @@ document.addEventListener('DOMContentLoaded', () => {
          }
           return bonus;
     };
-
       const calculateAutoClickerBonus = (skins) => {
         let bonus = 1;
        for (const skin in skins) {
@@ -1099,14 +1105,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
          return bonus;
     };
-
-      const calculateAbilityBonus = (ability, level) => {
+       const calculateAbilityBonus = (ability, level) => {
        const config = gameConfig.ABILITY_CONFIG[ability];
         if (!config) return 1;
       return config.baseValue + (config.increment * level);
        };
-
-      const updateExpeditionButtonInfo = () => {
+     const updateExpeditionButtonInfo = () => {
          const expeditionButtons = document.querySelectorAll('.expedition-button');
         expeditionButtons.forEach(button => {
             const type = button.dataset.expedition;
@@ -1123,8 +1127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     };
-    
-      const updateDungeonButtonInfo = () => {
+    const updateDungeonButtonInfo = () => {
          const dungeonButtons = document.querySelectorAll('.dungeon-button');
         dungeonButtons.forEach(button => {
              const type = button.dataset.dungeon;
@@ -1141,8 +1144,7 @@ document.addEventListener('DOMContentLoaded', () => {
              });
         });
     };
-
-    const startDungeon = (type) => {
+   const startDungeon = (type) => {
         if (gameState.activeDungeon) {
             displayMessage('Подземелье уже в процессе!', 'red');
            return;
@@ -1164,20 +1166,19 @@ document.addEventListener('DOMContentLoaded', () => {
           updateDisplay();
         saveData();
     };
-     const startNextWave = () => {
+    const startNextWave = () => {
             if (gameState.dungeonState.currentWave < gameState.dungeonState.waves.length) {
                 const wave = gameState.dungeonState.waves[gameState.dungeonState.currentWave];
                   gameState.dungeonState.enemyName = wave.enemyName;
                    gameState.dungeonState.enemyHealth = wave.enemyHealth;
             }
      };
-       const updateDungeonBattleUI = () => {
+      const updateDungeonBattleUI = () => {
            if (!gameState.activeDungeon) return;
             elements.dungeon.enemyNameDisplay.textContent = `Враг: ${gameState.dungeonState.enemyName}`;
            elements.dungeon.playerHealthDisplay.textContent = `Игрок: ${gameState.dungeonState.playerHealth} HP`;
            elements.dungeon.enemyHealthDisplay.textContent = `Враг: ${gameState.dungeonState.enemyHealth} HP`;
     };
-
         const handleDungeonBattle = () => {
           if (!gameState.activeDungeon) return;
             const playerDamage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
@@ -1202,7 +1203,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDungeonBattleUI();
             saveData();
       };
-
       elements.dungeon.dungeonBattleArea.addEventListener('click', () => {
          handleDungeonBattle();
       });
@@ -1248,25 +1248,8 @@ document.addEventListener('DOMContentLoaded', () => {
         saveData();
    };
     // 9. Сохранение и загрузка
-    const saveData = () => {
-        localStorage.setItem(gameConfig.SAVE_KEY, JSON.stringify(gameState));
-    };
-
-    const loadData = () => {
-        const savedData = localStorage.getItem(gameConfig.SAVE_KEY);
-        if (savedData) {
-            gameState = JSON.parse(savedData);
-            //Устраняем проблему, когда у нас нет autoClickerInterval
-            if (gameState.autoClickerValue > 0 && !gameState.autoClickerInterval) {
-                gameState.autoClickerInterval = setInterval(autoClick, gameConfig.AUTO_CLICK_INTERVAL);
-            }
-            updateDisplay();
-            profileModule.updateDisplay();
-        }
-    };
-
     const resetGame = () => {
-         if (confirm('Вы уверены, что хотите сбросить игру?')) {
+        if (confirm('Вы уверены, что хотите сбросить игру?')) {
             localStorage.removeItem(gameConfig.SAVE_KEY);
             gameState = {
                 clickCount: 0,
@@ -1321,40 +1304,22 @@ document.addEventListener('DOMContentLoaded', () => {
              };
               updateDisplay();
             profileModule.updateDisplay();
-           displayMessage('Игра сброшена!', 'green');
+             displayMessage('Игра сброшена!', 'green');
         }
      };
-
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const menuItems = document.getElementById('menu-items');
-
-    menuToggle.addEventListener('click', function() {
-        menuItems.classList.toggle('open');
-        menuToggle.classList.toggle('active');
-         menuToggle.setAttribute('aria-expanded', menuItems.classList.contains('open'));
-
-    });
-
-    // Закрытие меню при клике вне его (необязательно, но полезно)
-     document.addEventListener('click', function(event) {
-        if (!menuItems.contains(event.target) && !menuToggle.contains(event.target)) {
-            menuItems.classList.remove('open');
-            menuToggle.classList.remove('active');
-            menuToggle.setAttribute('aria-expanded', 'false');
-
-        }
-    });
-     
-});
-
-
-    // 10. Инициализация
-    loadData();
-    gameLoop();
-    profileModule.init();
+        // 10. Инициализация
+        document.querySelectorAll('.game-content, #clicker-content, .map-container, #profile-container, .dungeon-container, .inventory-container').forEach(el => el.classList.add('fade-in'));
+    
+   gameLoop();
+  profileModule.init();
     updateDisplay();
     updateExpeditionButtonInfo();
     updateDungeonButtonInfo();
-      switchTab('clicker'); // начальная вкладка
+    switchTab('clicker');
+});
+  const tWebApp = window.Telegram && window.Telegram.WebApp;
+
+    if (tWebApp) {
+        tWebApp.ready();
+    }
 });
