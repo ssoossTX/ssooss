@@ -252,7 +252,7 @@ main.game-container {
     margin: 0;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 8px;
-    display: none;
+    /* display: none;  Удаляем эту строку! */
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -261,6 +261,13 @@ main.game-container {
     left: 0;
     z-index: 1002;
 }
+
+#menu-items.active {
+    display: block; /* Оставляем эту строку */
+    opacity: 1;
+    transform: translateY(0);
+}
+
 
 #menu-items li button {
     display: block;
@@ -283,12 +290,6 @@ main.game-container {
 
 #menu-items li button:hover {
     background-color: #2c3e50;
-}
-
-#menu-items.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
 }
 
 .diamonds-menu {
