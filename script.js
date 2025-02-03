@@ -1491,16 +1491,22 @@ const updateInventoryDisplay = () => {
        }
     });
 
+document.addEventListener('DOMContentLoaded', () => {
+    // При загрузке страницы делаем все кнопки меню неактивными
+    elements.menu.menuItems.forEach(item => item.disabled = true);
+});
+
+
 elements.menu.menuButton.addEventListener('click', () => {
     console.log('menuButton Clicked');
 
     if (elements.menu.menu.classList.contains('open')) {
-        elements.menu.menu.classList.remove('open');
-        elements.menu.menuItems.forEach(item => item.disabled = true); // Отключаем кнопки при закрытии
+        elements.menu.menuItems.forEach(item => item.disabled = true); // 1. Отключаем кнопки
+        elements.menu.menu.classList.remove('open'); // 2. Закрываем меню
         console.log('Меню закрыто');
     } else {
-        elements.menu.menu.classList.add('open');
-        elements.menu.menuItems.forEach(item => item.disabled = false); // Включаем кнопки при открытии
+        elements.menu.menuItems.forEach(item => item.disabled = false); // 1. Включаем кнопки
+        elements.menu.menu.classList.add('open'); // 2. Открываем меню
         console.log('Меню открыто');
     }
 });
@@ -1509,11 +1515,10 @@ elements.menu.menuItems.forEach(item => {
     item.addEventListener('click', (event) => {
         console.log('menuItem Clicked', event.target.dataset.tab);
         switchTab(event.target.dataset.tab);
-        elements.menu.menu.classList.remove('open');
-        elements.menu.menuItems.forEach(item => item.disabled = true); // Отключаем при переходе
+        elements.menu.menuItems.forEach(item => item.disabled = true); // 1. Отключаем кнопки
+        elements.menu.menu.classList.remove('open'); // 2. Закрываем меню
     });
 });
-   
      elements.shop.prestigeButton.addEventListener('click', prestige);
     elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
         button.addEventListener('click', () => {
