@@ -15,6 +15,7 @@ body {
     color: white;
     transition: background-color 0.3s ease;
     overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 /* Добавление плавного появления элементов при загрузке страницы */
@@ -70,6 +71,7 @@ main.game-container {
     grid-template-columns: 1fr;
     gap: 20px;
     animation: slideIn 0.5s ease;
+    box-sizing: border-box;
 }
 
 @keyframes slideIn {
@@ -94,9 +96,9 @@ main.game-container {
     .map-container {
         grid-column: 1 / 3;
     }
-       .dungeon-container {
-           grid-column: 1 / 3;
-       }
+    .dungeon-container {
+        grid-column: 1 / 3;
+    }
 }
 
 #game-title {
@@ -128,6 +130,7 @@ main.game-container {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background-image: linear-gradient(to bottom, #3498db, #2980b9);
     color: white;
+    box-sizing: border-box;
 }
 
 .game-button:hover,
@@ -181,6 +184,7 @@ main.game-container {
     align-items: center;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     transition: background-color 0.2s ease;
+    box-sizing: border-box;
 }
 
 .upgrade-item:hover {
@@ -200,6 +204,7 @@ main.game-container {
     cursor: pointer;
     transition: background-color 0.3s ease;
     background-image: linear-gradient(to bottom, #2ecc71, #27ae60);
+    box-sizing: border-box;
 }
 
 .buy-upgrade:hover {
@@ -259,7 +264,7 @@ main.game-container {
     top: 40px;
     left: 0;
     z-index: 1002;
-    display: block; /* Оставляем display:block; */
+    display: block;
 }
 
 #menu-items li button {
@@ -274,8 +279,9 @@ main.game-container {
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: background-color 0.2s ease;
-    opacity: 0; /* Скрываем кнопки */
-    pointer-events: none; /* Отключаем клики */
+    opacity: 0;
+    pointer-events: none;
+    box-sizing: border-box;
 }
 
 #menu-items li button.active {
@@ -290,8 +296,9 @@ main.game-container {
 /* Анимация открытия меню */
 #menu-items.open {
     opacity: 1;
-     transform: translateY(0);
+    transform: translateY(0);
 }
+
 /* Делаем кнопки меню видимыми и кликабельными */
 #menu-items.open li button {
     opacity: 1;
@@ -372,6 +379,7 @@ main.game-container {
     justify-content: space-between;
     align-items: center;
     transition: background-color 0.2s ease;
+    box-sizing: border-box;
 }
 
 .chest-item:hover {
@@ -396,11 +404,13 @@ main.game-container {
     background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
 /* Подземелья */
 .dungeon-container {
     text-align: center;
+    box-sizing: border-box;
 }
 
 .dungeon-button {
@@ -420,19 +430,24 @@ main.game-container {
     background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     border-radius: 5px;
+    box-sizing: border-box;
 }
+
 #dungeon-battle-area {
     text-align: center;
-     margin-top: 10px;
-     background-color: rgba(255, 255, 255, 0.1);
-     padding: 10px;
+    margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
     border-radius: 5px;
+    box-sizing: border-box;
 }
+
 .attack-button {
     margin: 5px;
     padding: 10px 20px;
-     background-image: linear-gradient(to bottom right, #e74c3c, #c0392b);
+    background-image: linear-gradient(to bottom right, #e74c3c, #c0392b);
 }
+
 /* Инвентарь */
 .inventory-container {
     display: none;
@@ -477,10 +492,12 @@ main.game-container {
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 20px;
-    animation: slideInUp 0.5s ease; /* Анимация появления сверху */
+    animation: slideInUp 0.5s ease;
+    box-sizing: border-box;
 }
-#profile-container.active{
-   display: block;
+
+#profile-container.active {
+    display: block;
 }
 
 @keyframes slideInUp {
@@ -614,6 +631,7 @@ main.game-container {
     max-height: 80vh;
     overflow: auto;
     animation: fadeIn 0.3s ease;
+    box-sizing: border-box;
 }
 
 .chest-content {
@@ -635,6 +653,7 @@ main.game-container {
     text-align: center;
     display: none;
     animation: fadeIn 0.3s ease;
+    box-sizing: border-box;
 }
 
 /* Всплывающие окна */
@@ -654,6 +673,7 @@ main.game-container {
     max-width: 80%;
     max-height: 80vh;
     overflow: auto;
+    box-sizing: border-box;
 }
 
 .item-popup-close-button {
@@ -712,6 +732,7 @@ main.game-container {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.8);
     animation: fadeInModal 0.4s ease forwards;
+    box-sizing: border-box;
 }
 
 @keyframes fadeInModal {
@@ -738,6 +759,7 @@ main.game-container {
     border-radius: 10px;
     position: relative;
     animation: zoomIn 0.3s ease;
+    box-sizing: border-box;
 }
 
 @keyframes zoomIn {
@@ -796,6 +818,7 @@ main.game-container {
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
 .profile-tabs {
@@ -824,6 +847,7 @@ main.game-container {
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    box-sizing: border-box;
 }
 
 .profile-tab-button:hover {
@@ -840,6 +864,7 @@ main.game-container {
 
 .profile-tab-content {
     padding: 10px;
+    box-sizing: border-box;
 }
 
 #abilities-list {
@@ -847,6 +872,7 @@ main.game-container {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    box-sizing: border-box;
 }
 
 .ability-item {
@@ -861,6 +887,7 @@ main.game-container {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     transition: background-color 0.2s ease;
     width: 250px;
+    box-sizing: border-box;
 }
 
 .ability-item:hover {
@@ -870,6 +897,7 @@ main.game-container {
 .ability-item button {
     margin-top: 10px;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .ability-item button.disabled {
@@ -887,7 +915,7 @@ main.game-container {
 .map-container.active,
 .inventory-container.active,
 #profile-container.active,
-.dungeon-container.active{
+.dungeon-container.active {
     display: block;
     animation: fadeInContent 0.4s ease;
 }
