@@ -252,6 +252,7 @@ main.game-container {
     margin: 0;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 8px;
+    display: none;
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
