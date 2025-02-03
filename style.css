@@ -268,7 +268,7 @@ main.game-container {
     border: none;
     border-radius: 0;
     cursor: pointer;
-    background-color: transparent;
+    background-color: rgba(52, 152, 219, 0.8); /* Добавил фон */
     color: white;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -284,7 +284,8 @@ main.game-container {
     background-color: #2c3e50;
 }
 
-#menu-items.active {
+
+#menu-items.open { /* Изменил селектор для анимации на open */
     display: block;
     opacity: 1;
     transform: translateY(0);
