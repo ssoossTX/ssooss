@@ -264,7 +264,7 @@ main.game-container {
     top: 40px;
     left: 0;
     z-index: 1002;
-    display: block;
+    display: block; /* Оставляем display:block; */
 }
 
 #menu-items li button {
@@ -279,9 +279,8 @@ main.game-container {
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: background-color 0.2s ease;
-    opacity: 0;
-    pointer-events: none;
-    box-sizing: border-box;
+    opacity: 0; /* Скрываем кнопки */
+    pointer-events: none; /* Отключаем клики */
 }
 
 #menu-items li button.active {
@@ -296,9 +295,8 @@ main.game-container {
 /* Анимация открытия меню */
 #menu-items.open {
     opacity: 1;
-    transform: translateY(0);
+     transform: translateY(0);
 }
-
 /* Делаем кнопки меню видимыми и кликабельными */
 #menu-items.open li button {
     opacity: 1;
