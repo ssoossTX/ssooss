@@ -575,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
         achievements: [],
         achievementCount: 0,
         autoClickerInterval: null,
-        diamonds: 0,
+        diamonds: 500,
         activeExpedition: null,
         expeditionStartTime: null,
         expeditionDuration: 0,
