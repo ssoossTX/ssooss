@@ -1491,26 +1491,28 @@ const updateInventoryDisplay = () => {
        }
     });
 
-  elements.menu.menuButton.addEventListener('click', () => {
-        console.log('menuButton Clicked');
+elements.menu.menuButton.addEventListener('click', () => {
+    console.log('menuButton Clicked');
 
-        if (elements.menu.menu.classList.contains('open')) {
-            elements.menu.menu.classList.remove('open');
-             console.log('Меню закрыто');
-         } else {
-            elements.menu.menu.classList.add('open');
-             console.log('Меню открыто');
-        }
+    if (elements.menu.menu.classList.contains('open')) {
+        elements.menu.menu.classList.remove('open');
+        elements.menu.menuItems.forEach(item => item.disabled = true); // Отключаем кнопки при закрытии
+        console.log('Меню закрыто');
+    } else {
+        elements.menu.menu.classList.add('open');
+        elements.menu.menuItems.forEach(item => item.disabled = false); // Включаем кнопки при открытии
+        console.log('Меню открыто');
+    }
+});
+
+elements.menu.menuItems.forEach(item => {
+    item.addEventListener('click', (event) => {
+        console.log('menuItem Clicked', event.target.dataset.tab);
+        switchTab(event.target.dataset.tab);
+        elements.menu.menu.classList.remove('open');
+        elements.menu.menuItems.forEach(item => item.disabled = true); // Отключаем при переходе
     });
-
-    elements.menu.menuItems.forEach(item => {
-       item.addEventListener('click', (event) => {
-             console.log('menuItem Clicked', event.target.dataset.tab);
-            switchTab(event.target.dataset.tab);
-            elements.menu.menu.classList.remove('open');
-
-        });
-    });
+});
    
      elements.shop.prestigeButton.addEventListener('click', prestige);
     elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
