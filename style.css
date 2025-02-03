@@ -268,7 +268,7 @@ main.game-container {
     border: none;
     border-radius: 0;
     cursor: pointer;
-    background-color: rgba(52, 152, 219, 0.8); /* Добавил фон */
+    background-color: rgba(52, 152, 219, 0.8);
     color: white;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -285,10 +285,16 @@ main.game-container {
 }
 
 
-#menu-items.open { /* Изменил селектор для анимации на open */
+#menu-items.open {
     display: block;
     opacity: 1;
     transform: translateY(0);
+}
+/* Изменение стиля для disabled */
+#menu-items li button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: gray;
 }
 
 .diamonds-menu {
