@@ -1,4 +1,4 @@
-1document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     // 1. gameConfig (все константы и настройки)
     const gameConfig = {
         SAVE_KEY: 'clickerData',
@@ -144,6 +144,28 @@
                 name: 'Обучение',
                 cost: 0,
                 duration: 60000,
+                waves: [
+                    {
+                        enemyName: 'Слабый гоблин',
+                        enemyHealth: 30,
+                        attackDamage: 3,
+                    },
+                     {
+                        enemyName: 'Слабый гоблин',
+                        enemyHealth: 30,
+                         attackDamage: 3,
+                     },
+                     {
+                        enemyName: 'Слабый гоблин',
+                        enemyHealth: 30,
+                         attackDamage: 3,
+                     },
+                    {
+                     enemyName: 'Слабый гоблин',
+                        enemyHealth: 50,
+                         attackDamage: 3,
+                      },
+                ],
                 rewards: {
                     diamonds: [10, 20],
                     keys: [1, 2],
@@ -152,30 +174,28 @@
                         'common': [0, 1],
                     },
                 },
-                 waves: [
-                    {
-                        mobCount: 5,
-                        mobHealth: 100,
-                        mobDamage: 5,
-                        rewardMultiplier: 1,
-                    },
-                    {
-                       mobCount: 10,
-                        mobHealth: 120,
-                        mobDamage: 8,
-                         rewardMultiplier: 1.5,
-                   },
-                ],
-                boss: {
-                   health: 500,
-                   damage: 20,
-                    rewardMultiplier: 2,
-                   }
             },
            'easy': {
                 name: 'Легкое Подземелье',
                 cost: 50,
                 duration: 120000,
+                waves: [
+                    {
+                        enemyName: 'Слабый гоблин',
+                        enemyHealth: 50,
+                        attackDamage: 5,
+                    },
+                    {
+                        enemyName: 'Гоблин-лучник',
+                        enemyHealth: 70,
+                        attackDamage: 7,
+                    },
+                    {
+                        enemyName: 'Злой гоблин',
+                        enemyHealth: 100,
+                        attackDamage: 10,
+                    },
+                ],
                 rewards: {
                     diamonds: [50, 100],
                     keys: [1, 3],
@@ -184,36 +204,33 @@
                         'common': [0, 1],
                     },
                 },
-                 waves: [
-                    {
-                        mobCount: 10,
-                        mobHealth: 200,
-                        mobDamage: 10,
-                         rewardMultiplier: 1,
-                    },
-                    {
-                       mobCount: 15,
-                        mobHealth: 250,
-                        mobDamage: 12,
-                         rewardMultiplier: 1.5,
-                   },
-                    {
-                       mobCount: 20,
-                        mobHealth: 300,
-                       mobDamage: 15,
-                         rewardMultiplier: 2,
-                   },
-                ],
-                 boss: {
-                   health: 1000,
-                   damage: 30,
-                    rewardMultiplier: 3,
-                   }
             },
              'medium': {
                 name: 'Среднее Подземелье',
                 cost: 200,
                 duration: 300000,
+                 waves: [
+                    {
+                        enemyName: 'Гоблин-воин',
+                        enemyHealth: 100,
+                        attackDamage: 10,
+                    },
+                    {
+                        enemyName: 'Гоблин-маг',
+                        enemyHealth: 80,
+                        attackDamage: 15,
+                    },
+                    {
+                        enemyName: 'Элитный гоблин',
+                        enemyHealth: 150,
+                        attackDamage: 20,
+                    },
+                      {
+                        enemyName: 'Гоблин-шаман',
+                        enemyHealth: 120,
+                        attackDamage: 15,
+                    },
+                ],
                 rewards: {
                    diamonds: [150, 300],
                     keys: [2, 4],
@@ -223,42 +240,33 @@
                         'common': [0, 1],
                      },
                 },
-               waves: [
-                    {
-                       mobCount: 20,
-                        mobHealth: 400,
-                        mobDamage: 15,
-                         rewardMultiplier: 1,
-                    },
-                    {
-                       mobCount: 25,
-                        mobHealth: 450,
-                        mobDamage: 18,
-                         rewardMultiplier: 1.5,
-                   },
-                    {
-                       mobCount: 30,
-                        mobHealth: 500,
-                       mobDamage: 20,
-                         rewardMultiplier: 2,
-                   },
-                    {
-                       mobCount: 35,
-                        mobHealth: 600,
-                       mobDamage: 25,
-                         rewardMultiplier: 2.5,
-                   },
-                ],
-                boss: {
-                   health: 2000,
-                   damage: 50,
-                    rewardMultiplier: 4,
-                   }
             },
            'hard': {
                 name: 'Сложное Подземелье',
                 cost: 500,
                 duration: 600000,
+                   waves: [
+                    {
+                        enemyName: 'Гоблин-берсерк',
+                        enemyHealth: 150,
+                        attackDamage: 15,
+                    },
+                    {
+                        enemyName: 'Гоблин-рыцарь',
+                        enemyHealth: 200,
+                        attackDamage: 25,
+                    },
+                    {
+                        enemyName: 'Гоблин-палач',
+                        enemyHealth: 180,
+                        attackDamage: 20,
+                    },
+                       {
+                        enemyName: 'Гоблин-босс',
+                        enemyHealth: 300,
+                           attackDamage: 30,
+                    },
+                ],
                 rewards: {
                     diamonds: [400, 700],
                      keys: [3, 5],
@@ -269,48 +277,33 @@
                         'common': [0, 1],
                      },
                 },
-                waves: [
-                    {
-                       mobCount: 30,
-                        mobHealth: 600,
-                        mobDamage: 20,
-                         rewardMultiplier: 1,
-                    },
-                    {
-                       mobCount: 40,
-                        mobHealth: 700,
-                        mobDamage: 25,
-                         rewardMultiplier: 1.5,
-                   },
-                    {
-                       mobCount: 50,
-                        mobHealth: 800,
-                        mobDamage: 30,
-                         rewardMultiplier: 2,
-                   },
-                    {
-                       mobCount: 60,
-                        mobHealth: 1000,
-                       mobDamage: 40,
-                        rewardMultiplier: 2.5,
-                   },
-                    {
-                       mobCount: 70,
-                        mobHealth: 1200,
-                       mobDamage: 45,
-                         rewardMultiplier: 3,
-                   },
-                ],
-               boss: {
-                   health: 3500,
-                   damage: 80,
-                    rewardMultiplier: 6,
-                   }
             },
             'legendary': {
                  name: 'Легендарное Подземелье',
                 cost: 1000,
                 duration: 1200000,
+                  waves: [
+                    {
+                        enemyName: 'Минотавр',
+                        enemyHealth: 250,
+                        attackDamage: 30,
+                    },
+                    {
+                        enemyName: 'Гарпия',
+                         enemyHealth: 200,
+                        attackDamage: 35,
+                    },
+                    {
+                       enemyName: 'Дракон',
+                        enemyHealth: 350,
+                        attackDamage: 50,
+                    },
+                      {
+                       enemyName: 'Король Лич',
+                        enemyHealth: 500,
+                        attackDamage: 70,
+                    },
+                ],
                 rewards: {
                     diamonds: [800, 1200],
                     keys: [4, 6],
@@ -322,49 +315,6 @@
                         'common': [0, 1],
                      },
                 },
-                 waves: [
-                    {
-                        mobCount: 50,
-                       mobHealth: 1000,
-                       mobDamage: 40,
-                         rewardMultiplier: 1,
-                    },
-                    {
-                       mobCount: 60,
-                       mobHealth: 1200,
-                        mobDamage: 50,
-                         rewardMultiplier: 1.5,
-                   },
-                    {
-                       mobCount: 70,
-                        mobHealth: 1400,
-                       mobDamage: 60,
-                        rewardMultiplier: 2,
-                   },
-                    {
-                       mobCount: 80,
-                        mobHealth: 1600,
-                       mobDamage: 70,
-                        rewardMultiplier: 2.5,
-                   },
-                    {
-                       mobCount: 90,
-                       mobHealth: 1800,
-                       mobDamage: 80,
-                         rewardMultiplier: 3,
-                   },
-                      {
-                       mobCount: 100,
-                       mobHealth: 2000,
-                       mobDamage: 90,
-                         rewardMultiplier: 3.5,
-                   },
-                ],
-                boss: {
-                   health: 5000,
-                   damage: 120,
-                    rewardMultiplier: 8,
-                   }
            },
          },
            ABILITY_CONFIG: {
@@ -425,13 +375,8 @@
                 maxLevel: 5,
             },
         },
-        MOB_CONFIG: {
-           mob: {
-             health: 100,
-                damage: 10
-           }
-        },
     };
+
     // 2. Состояние игры
     let gameState = {
         clickCount: 0,
@@ -476,10 +421,13 @@
             dungeonStartTime: null,
              dungeonDuration: 0,
              dungeonRewards: null,
-             currentWave: 0,
-              mobsInWave: [],
-              bossFight: false,
-              bossHealth: 0,
+              dungeonState: {
+                currentWave: 0,
+                playerHealth: 100,
+                enemyHealth: 100,
+                 enemyName: null,
+                waves: [],
+                }
     };
 
     // 3. Объекты DOM элементов
@@ -522,7 +470,10 @@
          dungeon: {
             dungeonContainer: document.getElementById('dungeon-container'),
             dungeonProgressDisplay: document.getElementById('dungeon-progress'),
-               dungeonCombatLog: document.getElementById('dungeon-combat-log'),
+             dungeonBattleArea: document.getElementById('dungeon-battle-area'),
+            enemyNameDisplay: document.getElementById('enemy-name'),
+             playerHealthDisplay: document.getElementById('player-health'),
+            enemyHealthDisplay: document.getElementById('enemy-health'),
         },
         inventory: {
             inventoryContainer: document.getElementById('inventory-container'),
@@ -601,14 +552,16 @@
      const updateDungeonProgressBar = () => {
         if (!gameState.activeDungeon) {
             elements.dungeon.dungeonProgressDisplay.textContent = '';
+            elements.dungeon.dungeonBattleArea.style.display = 'none';
             return;
         }
-        const elapsed = Date.now() - gameState.dungeonStartTime;
-        const remaining = Math.max(0, gameState.dungeonDuration - elapsed);
-        const progress = Math.min(100, Math.round((elapsed / gameState.dungeonDuration) * 100));
+       elements.dungeon.dungeonBattleArea.style.display = 'block';
+          const elapsed = Date.now() - gameState.dungeonStartTime;
+          const remaining = Math.max(0, gameState.dungeonDuration - elapsed);
+         const progress = Math.min(100, Math.round((elapsed / gameState.dungeonDuration) * 100));
         const remainingSeconds = Math.ceil(remaining / 1000);
          elements.dungeon.dungeonProgressDisplay.textContent = `Подземелье ${gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].name}: ${progress}%  (${remainingSeconds} сек. осталось)`;
-
+           updateDungeonBattleUI();
         if (remaining <= 0) {
             finishDungeon();
         }
@@ -640,7 +593,6 @@
             elements.global.globalMessageDisplay.style.fontSize = '1em';
         }, gameConfig.MESSAGE_DURATION);
     };
-
     // 6. Функции для расчета бонусов
     const calculateClickBonus = (skins) => {
         let clickBonus = 1;
@@ -773,10 +725,13 @@
             dungeonStartTime: null,
              dungeonDuration: 0,
              dungeonRewards: null,
-             currentWave: 0,
-              mobsInWave: [],
-             bossFight: false,
-            bossHealth: 0,
+                dungeonState: {
+                currentWave: 0,
+                playerHealth: 100,
+                 enemyHealth: 100,
+                    enemyName: null,
+                waves: [],
+                }
         };
         clearAllTimeouts();
         updateDisplay();
@@ -849,6 +804,7 @@
                 }
                  if (gameState.activeDungeon) {
                     startDungeonTimer();
+                      updateDungeonBattleUI();
                 }
                 updateDisplay();
             } catch (e) {
@@ -1011,20 +967,19 @@
             displayMessage(`Не хватает ${needed} алмазов для этого подземелья`, 'red');
             return;
        }
-
+        gameState.dungeonState.waves = dungeonConfig.waves;
         gameState.diamonds -= dungeonConfig.cost;
         gameState.activeDungeon = type;
         gameState.dungeonStartTime = Date.now();
          gameState.dungeonDuration = dungeonConfig.duration / calculateAbilityBonus('dungeon_speed', gameState.abilities.dungeon_speed);
         gameState.dungeonRewards = dungeonConfig.rewards;
-        gameState.currentWave = 0;
-        gameState.mobsInWave = [];
-       gameState.bossFight = false;
-       gameState.bossHealth = 0;
-       startDungeonWave(dungeonConfig);
+           gameState.dungeonState.currentWave = 0; // Устанавливаем первую волну
+           gameState.dungeonState.playerHealth = 100;
+        // Запускаем таймер подземелья
         startDungeonTimer();
         updateDisplay();
-        displayMessage(`Подземелье "${dungeonConfig.name}" началось!`, 'green');
+         displayMessage(`Началось подземелье "${dungeonConfig.name}".`, 'green');
+        startDungeonWave();
     };
 
 const updateDungeonButtonInfo = () => {
@@ -1058,13 +1013,9 @@ const finishDungeon = () => {
      gameState.dungeonStartTime = null;
       gameState.dungeonDuration = 0;
     gameState.dungeonRewards = null;
-     gameState.currentWave = 0;
-     gameState.mobsInWave = [];
-     gameState.bossFight = false;
-      gameState.bossHealth = 0;
-
-
-   let gainedDiamonds = 0;
+      gameState.dungeonState.waves = [];
+      gameState.dungeonState.enemyName = null;
+    let gainedDiamonds = 0;
     let gainedKeys = 0;
     let gainedExp = 0;
     const gainedSkins = {};
@@ -1135,6 +1086,50 @@ const finishDungeon = () => {
     updateDisplay();
     saveData();
 };
+  const startDungeonWave = () => {
+        const currentWave = gameState.dungeonState.waves[gameState.dungeonState.currentWave];
+         gameState.dungeonState.enemyName = currentWave.enemyName;
+        gameState.dungeonState.enemyHealth = currentWave.enemyHealth;
+        displayMessage(`Волна ${gameState.dungeonState.currentWave + 1}. Враг: ${currentWave.enemyName}`, 'blue');
+       setTimeout(enemyAttack, 1000);
+    };
+    const playerAttack = () => {
+        const clickDamage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
+        gameState.dungeonState.enemyHealth -= clickDamage;
+          displayMessage(`Вы нанесли ${clickDamage.toFixed(2)} урона!`, 'lime');
+        checkBattleState();
+    };
+    const enemyAttack = () => {
+        const enemyDamage = gameState.dungeonState.waves[gameState.dungeonState.currentWave].attackDamage;
+        gameState.dungeonState.playerHealth -= enemyDamage;
+        displayMessage(`Враг нанес ${enemyDamage} урона!`, 'red');
+         checkBattleState();
+    };
+    const checkBattleState = () => {
+        if (gameState.dungeonState.enemyHealth <= 0) {
+           displayMessage(`Победа над ${gameState.dungeonState.enemyName}`, 'green');
+            if (gameState.dungeonState.currentWave < gameState.dungeonState.waves.length - 1) {
+                gameState.dungeonState.currentWave++;
+               setTimeout(startDungeonWave, 2000);
+            } else {
+              finishDungeon();
+            }
+        } else if (gameState.dungeonState.playerHealth <= 0) {
+               displayMessage(`Вы проиграли`, 'red');
+             finishDungeon();
+         }
+    };
+   const updateDungeonBattleUI = () => {
+       if (gameState.activeDungeon) {
+           if (gameState.dungeonState.enemyName) {
+               elements.dungeon.enemyNameDisplay.textContent =  `Враг: ${gameState.dungeonState.enemyName}`;
+           } else {
+                elements.dungeon.enemyNameDisplay.textContent =  '';
+          }
+          elements.dungeon.playerHealthDisplay.textContent =  `Здоровье: ${gameState.dungeonState.playerHealth.toFixed(0)}`;
+          elements.dungeon.enemyHealthDisplay.textContent =  `Здоровье врага: ${gameState.dungeonState.enemyHealth.toFixed(0)}`;
+     }
+    };
 
     const checkLevelUp = () => {
       const requiredExp =  gameConfig.LEVEL_UP_BASE_EXP * Math.pow(1.5, gameState.level - 1);
@@ -1353,135 +1348,117 @@ const updateInventoryDisplay = () => {
         profileInfo.appendChild(clickCountInfo);
 
         const levelInfo = document.createElement('p');
-        levelInfo.textContent = `Уровень: ${gameState.level}`;
+        levelInfo.textContent = `Уровень: ${gameState.level} (${gameState.experience}/${gameConfig.LEVEL_UP_BASE_EXP * Math.pow(1.5, gameState.level - 1)})`;
         profileInfo.appendChild(levelInfo);
-
-        const experienceInfo = document.createElement('p');
-        experienceInfo.textContent = `Опыт: ${gameState.experience}/${Math.round(gameConfig.LEVEL_UP_BASE_EXP * Math.pow(1.5, gameState.level - 1))}`;
-        profileInfo.appendChild(experienceInfo);
-      
-        const levelPointsInfo = document.createElement('p');
-        levelPointsInfo.textContent = `Очки уровня: ${gameState.levelPoints}`;
+    
+       const levelPointsInfo = document.createElement('p');
+        levelPointsInfo.textContent = `Очки способностей: ${gameState.levelPoints}`;
          profileInfo.appendChild(levelPointsInfo);
-
-        const diamondsInfo = document.createElement('p');
-        diamondsInfo.textContent = `Алмазов: ${gameState.diamonds}`;
-        profileInfo.appendChild(diamondsInfo);
-
-
         const prestigeLevelInfo = document.createElement('p');
         prestigeLevelInfo.textContent = `Уровень престижа: ${gameState.prestigeLevel}`;
         profileInfo.appendChild(prestigeLevelInfo);
-
-        const autoClickerInfo = document.createElement('p');
-        autoClickerInfo.textContent = `Автокликеров: ${gameState.autoClickerValue}`;
-        profileInfo.appendChild(autoClickerInfo);
-
-        const autoClickerBonusInfo = document.createElement('p');
-            autoClickerBonusInfo.textContent = `Бонус автокликеров: x${calculateAutoClickBonus(gameState.skins).toFixed(2)}`;
-            profileInfo.appendChild(autoClickerBonusInfo);
-
-
         const prestigeBonusInfo = document.createElement('p');
-        prestigeBonusInfo.textContent = `Бонус престижа: x${calculatePrestigeBonus(gameState.artifacts).toFixed(2)}`;
-        profileInfo.appendChild(prestigeBonusInfo);
-
-        const diamondBonusInfo = document.createElement('p');
-        diamondBonusInfo.textContent = `Бонус алмазов: x${calculateDiamondBonus(gameState.artifacts).toFixed(2)}`;
-        profileInfo.appendChild(diamondBonusInfo);
-        
-        const expeditionSpeedBonusInfo = document.createElement('p');
-          expeditionSpeedBonusInfo.textContent = `Скорость экспедиций: x${calculateAbilityBonus('expedition_speed', gameState.abilities.expedition_speed).toFixed(2)}`;
-        profileInfo.appendChild(expeditionSpeedBonusInfo);
-
-        const skinsAndArtifacts = document.createElement('div');
-         skinsAndArtifacts.innerHTML = '<h3>Скины и Артефакты</h3>';
-         profileInfo.appendChild(skinsAndArtifacts);
-
-         const ownedSkins = document.createElement('div');
-        ownedSkins.innerHTML = '<h4>Скины</h4>';
-        for (const skin in gameState.skins) {
-          if (gameState.skins.hasOwnProperty(skin) && gameState.skins[skin] > 0) {
-            ownedSkins.innerHTML += `<p>${gameConfig.SKIN_NAMES[skin] || skin} (x${gameState.skins[skin]})</p>`;
-           }
-         }
-        profileInfo.appendChild(ownedSkins);
-
-        const ownedArtifacts = document.createElement('div');
-            ownedArtifacts.innerHTML = '<h4>Артефакты</h4>';
-            for (const artifact in gameState.artifacts) {
-                if (gameState.artifacts.hasOwnProperty(artifact) && gameState.artifacts[artifact] > 0) {
-                ownedArtifacts.innerHTML += `<p>${gameConfig.ARTIFACT_NAMES[artifact] || artifact} (x${gameState.artifacts[artifact]})</p>`;
-               }
-             }
-        profileInfo.appendChild(ownedArtifacts);
+         prestigeBonusInfo.textContent = `Множитель престижа: ${gameState.prestigeMultiplier.toFixed(2)}`;
+         profileInfo.appendChild(prestigeBonusInfo);
     };
-    
-    
- const updateAbilitiesDisplay = () => {
-        const abilitiesList = document.getElementById('abilities-list');
-        abilitiesList.innerHTML = '';
-    
-         for (const abilityId in gameConfig.ABILITY_CONFIG) {
-             if (gameConfig.ABILITY_CONFIG.hasOwnProperty(abilityId)) {
-               const ability = gameConfig.ABILITY_CONFIG[abilityId];
-              const abilityItem = document.createElement('div');
-                abilityItem.classList.add('ability-item');
-
-            const currentLevel = gameState.abilities[abilityId] || 0;
-            const maxLevel = ability.maxLevel;
-             let buttonText = `Улучшить (уровень ${currentLevel}/${maxLevel})`;
-           if(currentLevel >= maxLevel) {
-             buttonText = 'Макс. Уровень';
+    const updateAbilitiesDisplay = () => {
+        const abilityContainer = document.getElementById('abilities-list');
+         abilityContainer.innerHTML = '';
+          for (const abilityKey in gameConfig.ABILITY_CONFIG) {
+                const config = gameConfig.ABILITY_CONFIG[abilityKey];
+                const currentLevel = gameState.abilities[abilityKey] || 0;
+                const nextLevel = currentLevel + 1;
+                const cost = config.costPerLevel * nextLevel;
+                const abilityDiv = document.createElement('div');
+                 abilityDiv.classList.add('ability-item');
+                 abilityDiv.innerHTML = `
+                    <div class="ability-info">
+                        <h3>${config.name}</h3>
+                        <p>${config.description}</p>
+                        <p>Текущий уровень: ${currentLevel} / ${config.maxLevel}</p>
+                          <p>Бонус: ${(calculateAbilityBonus(abilityKey, currentLevel)-1).toFixed(2)}</p>
+                         </div>
+                      <div class="ability-upgrade">
+                        <button data-ability="${abilityKey}" data-cost="${cost}" class="upgrade-ability-button" ${gameState.levelPoints < cost || currentLevel === config.maxLevel ? 'disabled' : ''}>
+                            Улучшить (${cost} очков)
+                        </button>
+                        </div>
+                 `;
+               abilityContainer.appendChild(abilityDiv);
            }
-              abilityItem.innerHTML = `
-                  <p>${ability.name} (${currentLevel}/${maxLevel})<br><small>${ability.description}</small></p>
-                  <button data-ability="${abilityId}" ${currentLevel >= maxLevel ? 'class="disabled" disabled' : ''}>${buttonText}</button>
-                `;
-                
-                
-             const buyButton = abilityItem.querySelector('button');
-               buyButton.addEventListener('click', () => {
-                    buyAbility(abilityId);
-                });
-                abilitiesList.appendChild(abilityItem);
-          }
+           const abilityButtons = document.querySelectorAll('.upgrade-ability-button');
+        abilityButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const ability = button.dataset.ability;
+               const cost = parseInt(button.dataset.cost);
+                if (gameState.levelPoints >= cost) {
+                    gameState.levelPoints -= cost;
+                      gameState.abilities[ability] = (gameState.abilities[ability] || 0) + 1;
+                  updateDisplay();
+                    displayMessage(`${gameConfig.ABILITY_CONFIG[ability].name} улучшен!`, 'green');
+                   updateAbilitiesDisplay();
+                   updateProfile();
+                 saveData();
+               } else {
+                     displayMessage('Недостаточно очков способностей!', 'red');
+                }
+            });
+         });
+    };
+    const prestige = () => {
+        if (gameState.clickCount >= gameState.prestigeCost) {
+            gameState.clickCount = 0;
+            gameState.autoClickerValue = 0;
+            gameState.diamonds += 10 + (10 * gameState.prestigeLevel);
+           gameState.prestigeLevel++;
+           gameState.prestigeMultiplier += calculatePrestigeBonus(gameState.artifacts) / 10;
+           gameState.prestigeCost =  gameConfig.PRESTIGE_BASE_COST * Math.pow(2, gameState.prestigeLevel);
+           clearAllTimeouts();
+             gameState.levelPoints = Math.floor(gameState.levelPoints / 2);
+           gameState.level = 1;
+           gameState.experience = 0;
+            gameState.abilities = {
+             'diamond_bonus': 0,
+             'exp_bonus': 0,
+              'click_bonus': 0,
+             'expedition_speed': 0,
+             'luck_bonus': 0,
+             'dungeon_speed': 0,
+             'dungeon_luck': 0,
+            };
+          saveData();
+            updateDisplay();
+            displayMessage('Престиж выполнен!', 'gold', '1.2em');
+             checkAchievements();
+             updateAbilitiesDisplay();
+        } else {
+            displayMessage(`Нужно ${gameState.prestigeCost - gameState.clickCount} кликов!`, 'red');
         }
     };
     
-     const buyAbility = (abilityId) => {
-    const ability = gameConfig.ABILITY_CONFIG[abilityId];
-    if (!ability) return;
-
-        const currentLevel = gameState.abilities[abilityId] || 0;
-           const maxLevel = ability.maxLevel;
-
-        if(currentLevel >= maxLevel) {
-         displayMessage('Максимальный уровень!', 'red');
-          return;
-       }
-
-    if (gameState.levelPoints >= ability.costPerLevel) {
-        gameState.levelPoints -= ability.costPerLevel;
-        gameState.abilities[abilityId] = currentLevel + 1;
-          displayMessage(`Улучшена способность ${ability.name}!`, 'green');
-          updateAbilitiesDisplay();
-          updateProfile();
-        saveData();
-    } else {
-        displayMessage(`Недостаточно очков уровня для улучшения ${ability.name}`, 'red');
-       }
+    const autoSave = () => {
+       saveData();
+       displayMessage('Игра сохранена', 'blue');
     };
-// 8. Обработчики событий
-elements.clicker.clickButton.addEventListener('click', applyClick);
+
+    const startAutoSave = () => {
+        autoSave();
+      gameState.autoSaveInterval = setInterval(autoSave, 60000);
+    };
+    const clearAutoSave = () => {
+         clearInterval(gameState.autoSaveInterval);
+        gameState.autoSaveInterval = null;
+    };
+    // 8. Обработчики событий
+    elements.clicker.clickButton.addEventListener('click', applyClick);
     elements.clicker.upgradeClickButton.addEventListener('click', () => {
         if (gameState.clickCount >= gameState.clickUpgradeCost) {
             gameState.clickCount -= gameState.clickUpgradeCost;
-            gameState.clickValue++;
-            gameState.clickUpgradeCost = Math.round(gameState.clickUpgradeCost * 1.1);
+            gameState.clickUpgradeCost = Math.floor(gameState.clickUpgradeCost * 1.5);
+            gameState.clickValue += 1;
             updateDisplay();
-              displayMessage('Улучшение силы клика куплено', 'green');
             saveData();
+             displayMessage('Улучшение клика куплено', 'green');
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
@@ -1490,12 +1467,12 @@ elements.clicker.clickButton.addEventListener('click', applyClick);
     elements.clicker.upgradeAutoButton.addEventListener('click', () => {
         if (gameState.clickCount >= gameState.autoUpgradeCost) {
             gameState.clickCount -= gameState.autoUpgradeCost;
-            gameState.autoClickerValue++;
-            gameState.autoUpgradeCost = Math.round(gameState.autoUpgradeCost * 1.2);
-              displayMessage('Куплен автокликер!', 'green');
-             startAutoClicker();
-            updateDisplay();
-            saveData();
+            gameState.autoUpgradeCost = Math.floor(gameState.autoUpgradeCost * 1.7);
+            gameState.autoClickerValue += 1;
+            startAutoClicker();
+             updateDisplay();
+              saveData();
+            displayMessage('Автокликер куплен', 'green');
         } else {
             displayMessage('Недостаточно кликов!', 'red');
         }
@@ -1504,207 +1481,52 @@ elements.clicker.clickButton.addEventListener('click', applyClick);
      elements.clicker.upgradeClickLevelButton.addEventListener('click', () => {
         if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
             gameState.clickCount -= gameState.clickUpgradeLevelCost;
-            gameState.clickUpgradeLevel++;
-            gameState.clickUpgradeLevelCost = Math.round(gameState.clickUpgradeLevelCost * 1.3);
-            updateDisplay();
-              displayMessage('Повышен уровень кликов!', 'green');
+            gameState.clickUpgradeLevelCost = Math.floor(gameState.clickUpgradeLevelCost * 1.5);
+            gameState.clickUpgradeLevel += 1;
+           updateDisplay();
             saveData();
+            displayMessage('Уровень клика повышен', 'green');
         } else {
-            displayMessage('Недостаточно кликов!', 'red');
-        }
+           displayMessage('Недостаточно кликов!', 'red');
+       }
     });
 
-    elements.shop.prestigeButton.addEventListener('click', () => {
-        if (gameState.clickCount >= gameState.prestigeCost) {
-             gameState.clickCount -= gameState.prestigeCost;
-            gameState.prestigeLevel++;
-            gameState.prestigeMultiplier = calculatePrestigeBonus(gameState.artifacts);
-            gameState.prestigeCost = Math.round(gameConfig.PRESTIGE_BASE_COST * Math.pow(1.3, gameState.prestigeLevel));
-            gameState.clickValue = 1;
-            gameState.autoClickerValue = 0;
-            gameState.clickUpgradeCost = 10;
-            gameState.autoUpgradeCost = 50;
-            clearInterval(gameState.autoClickerInterval);
-              gameState.autoClickerInterval = null;
-            updateDisplay();
-            checkAchievements();
-            displayMessage('Сделан престиж!', 'gold', '1.2em');
-           saveData();
-        } else {
-            displayMessage(`Необходимо ${gameState.prestigeCost} кликов для престижа`, 'red');
-        }
+    elements.menu.menuButton.addEventListener('click', () => {
+        elements.menu.menu.classList.toggle('open');
     });
 
+    elements.menu.menuItems.forEach(item => {
+       item.addEventListener('click', (event) => {
+            switchTab(event.target.dataset.tab);
+            elements.menu.menu.classList.remove('open');
+        });
+    });
+    
+     elements.shop.prestigeButton.addEventListener('click', prestige);
+    elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
+        button.addEventListener('click', () => {
+           startExpedition(button.dataset.type);
+        });
+    });
+     elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
+      button.addEventListener('click', () => {
+        startDungeon(button.dataset.type);
+      });
+     });
+     elements.dungeon.dungeonContainer.addEventListener('click', (event) => {
+        if(event.target && event.target.id === 'player-attack'){
+            playerAttack();
+        }
+    });
     elements.shop.buyKeyButton.addEventListener('click', buyKey);
     elements.shop.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
     elements.shop.buyRareChestButton.addEventListener('click', () => buyChest('rare'));
     elements.shop.buyEpicChestButton.addEventListener('click', () => buyChest('epic'));
     elements.shop.openChestButton.addEventListener('click', openChest);
     elements.shop.closeChestButton.addEventListener('click', closeChest);
-
-    elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
-        button.addEventListener('click', () => {
-            startExpedition(button.dataset.type);
-        });
-    });
-    
-    elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
-       button.addEventListener('click', () => {
-            startDungeon(button.dataset.type);
-        });
-    });
-
-
-  elements.menu.menuButton.addEventListener('click', () => {
-      elements.menu.menu.classList.toggle('active');
-  });
-
-  elements.menu.menuItems.forEach(item => {
-      item.addEventListener('click', (event) => {
-           const tabId = event.target.dataset.tab;
-           switchTab(tabId);
-             elements.menu.menu.classList.remove('active'); // Закрываем меню после выбора таба
-        });
-   });
-
-
-   elements.menu.resetButton.addEventListener('click', () => {
-        const confirmation = confirm('Вы уверены, что хотите сбросить прогресс?');
-        if (confirmation) {
-            resetGame();
-        }
-    });
-    
-    const startDungeonWave = (dungeonConfig) => {
-            const currentWaveConfig = dungeonConfig.waves[gameState.currentWave];
-            if (!currentWaveConfig) {
-              if(dungeonConfig.boss) {
-                 startBossFight(dungeonConfig);
-              } else {
-                   finishDungeon();
-                  }
-              return;
-            }
-        gameState.mobsInWave = [];
-            for (let i = 0; i < currentWaveConfig.mobCount; i++) {
-               const mob =  {
-                    health: currentWaveConfig.mobHealth,
-                     maxHealth: currentWaveConfig.mobHealth,
-                     damage: currentWaveConfig.mobDamage,
-                     rewardMultiplier: currentWaveConfig.rewardMultiplier,
-                    };
-                 gameState.mobsInWave.push(mob);
-             }
-          updateDungeonCombatLog(`Волна ${gameState.currentWave + 1} начинается!`)
-   }
-  const startBossFight = (dungeonConfig) => {
-          gameState.bossFight = true;
-          gameState.bossHealth = dungeonConfig.boss.health;
-          gameState.bossMaxHealth = dungeonConfig.boss.health;
-          gameState.bossDamage = dungeonConfig.boss.damage;
-          gameState.bossRewardMultiplier = dungeonConfig.boss.rewardMultiplier;
-         updateDungeonCombatLog(`Начался бой с боссом!`)
-     }
-
-
-const attackMob = () => {
-    if (gameState.bossFight) {
-          attackBoss();
-           return;
-        }
-
-    if (gameState.mobsInWave.length === 0) {
-            gameState.currentWave++;
-            const dungeonConfig = gameConfig.DUNGEON_CONFIG[gameState.activeDungeon];
-            startDungeonWave(dungeonConfig);
-            return;
-       }
-     const mob = gameState.mobsInWave[0];
-     const damage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
-     mob.health -= damage;
-   if (mob.health <= 0) {
-      const mobReward = (mob.rewardMultiplier * Math.floor(Math.random() * (100 - 50 + 1)) + 50) ;
-            updateDungeonCombatLog(`Вы нанесли ${damage.toFixed(2)} урона и убили моба, получено ${mobReward.toFixed(2)} опыта.`);
-            gameState.experience += mobReward;
-            checkLevelUp();
-         gameState.mobsInWave.shift();
-       } else {
-            updateDungeonCombatLog(`Вы нанесли ${damage.toFixed(2)} урона, у моба осталось ${mob.health.toFixed(2)} здоровья.`);
-       }
-
-      mobAttack();
-  };
-  const attackBoss = () => {
-     if (gameState.bossHealth <= 0) {
-        finishDungeon();
-          return;
-     }
-
-       const damage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
-       gameState.bossHealth -= damage;
-      if (gameState.bossHealth <= 0) {
-           const bossReward = (gameState.bossRewardMultiplier * Math.floor(Math.random() * (1000 - 500 + 1)) + 500) ;
-           updateDungeonCombatLog(`Вы нанесли ${damage.toFixed(2)} урона и убили босса, получено ${bossReward.toFixed(2)} опыта!`);
-            gameState.experience += bossReward;
-            checkLevelUp();
-             finishDungeon();
-         } else {
-           updateDungeonCombatLog(`Вы нанесли ${damage.toFixed(2)} урона, у босса осталось ${gameState.bossHealth.toFixed(2)} здоровья.`);
-         }
-       bossAttack();
-  }
-
-  const mobAttack = () => {
-   if (gameState.mobsInWave.length === 0) return;
-     const mob = gameState.mobsInWave[0];
-     const damage = mob.damage;
-       gameState.clickCount -= damage;
-      updateDungeonCombatLog(`Моб нанес ${damage.toFixed(2)} урона, у вас осталось ${gameState.clickCount.toFixed(2)} кликов`);
-      if (gameState.clickCount <= 0) {
-         finishDungeon();
-          gameState.clickCount = 0;
-       }
-   };
-     const bossAttack = () => {
-       if (gameState.bossHealth <= 0) return;
-        const damage = gameState.bossDamage;
-      gameState.clickCount -= damage;
-      updateDungeonCombatLog(`Босс нанес ${damage.toFixed(2)} урона, у вас осталось ${gameState.clickCount.toFixed(2)} кликов`);
-      if (gameState.clickCount <= 0) {
-         finishDungeon();
-          gameState.clickCount = 0;
-       }
-     }
-
-   const updateDungeonCombatLog = (message) => {
-      const logEntry = document.createElement('p');
-      logEntry.textContent = message;
-      elements.dungeon.dungeonCombatLog.appendChild(logEntry);
-       elements.dungeon.dungeonCombatLog.scrollTop = elements.dungeon.dungeonCombatLog.scrollHeight;
-    };
-
-    elements.clicker.clickButton.addEventListener('click', () => {
-        if (gameState.activeDungeon) {
-            attackMob();
-        } else {
-         applyClick();
-        }
-    });
-
-    let autoSaveInterval = null;
-    const startAutoSave = () => {
-        if (autoSaveInterval) {
-            clearInterval(autoSaveInterval);
-        }
-        autoSaveInterval = setInterval(saveData, 60000); // Каждые 60 секунд
-    };
-     const clearAutoSave = () => {
-        if (autoSaveInterval) {
-            clearInterval(autoSaveInterval);
-            autoSaveInterval = null;
-         }
-    };
-
-    startAutoSave();
-    loadGame();
+    elements.menu.resetButton.addEventListener('click', resetGame);
+    // 9. Запуск игры
+   loadGame();
+  startAutoSave();
+    switchTab('clicker');
 });
