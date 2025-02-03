@@ -861,6 +861,34 @@ document.addEventListener('DOMContentLoaded', () => {
             saveData();
               displayMessage('Куплен эпический сундук!', 'green');
         } else {
+           displayMessage('Недостаточно ключей!', 'red');
+        }
+    });
+
+    elements.shop.openChestButton.addEventListener('click', () => {
+        elements.shop.chestContainer.style.display = 'block';
+         elements.shop.chestItemsDisplay.innerHTML = '';
+        openChest();
+    });
+
+    elements.shop.closeChestButton.addEventListener('click', () => {
+      elements.shop.chestContainer.style.display = 'none';
+      });
+
+    elements.menu.menuButton.addEventListener('click', () => {
+        elements.menu.menu.style.display = elements.menu.menu.style.display === 'block' ? 'none' : 'block';
+    });
+     elements.menu.menuItems.forEach(button => {
+        button.addEventListener('click', (event) => {
+             const tab = event.target.dataset.tab;
+            switchTab(tab);
+            elements.menu.menu.style.display = 'none';
+       });
+     });
+
+     elements.menu.resetButton.addEventListener('click', () => {
+        resetGame();
+    });
     
     // 7. Игровой цикл
     const autoClick = () => {
