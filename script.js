@@ -1511,15 +1511,6 @@ const updateInventoryDisplay = () => {
 
         });
     });
-
-    elements.menu.menuItems.forEach(item => {
-       item.addEventListener('click', (event) => {
-             console.log('menuItem Clicked', event.target.dataset.tab);
-            switchTab(event.target.dataset.tab);
-            elements.menu.menu.classList.remove('open');
-
-        });
-    });
    
      elements.shop.prestigeButton.addEventListener('click', prestige);
     elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
