@@ -1325,6 +1325,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
      };
 
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const menuItems = document.getElementById('menu-items');
+
+    menuToggle.addEventListener('click', function() {
+        menuItems.classList.toggle('open');
+        menuToggle.classList.toggle('active');
+         menuToggle.setAttribute('aria-expanded', menuItems.classList.contains('open'));
+
+    });
+
+    // Закрытие меню при клике вне его (необязательно, но полезно)
+     document.addEventListener('click', function(event) {
+        if (!menuItems.contains(event.target) && !menuToggle.contains(event.target)) {
+            menuItems.classList.remove('open');
+            menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+
+        }
+    });
+     
+});
+
 
     // 10. Инициализация
     loadData();
