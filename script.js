@@ -1491,7 +1491,9 @@ const updateInventoryDisplay = () => {
        }
     });
 
-    elements.menu.menuButton.addEventListener('click', () => {
+  elements.menu.menuButton.addEventListener('click', () => {
+        console.log('menuButton Clicked');
+
         if (elements.menu.menu.classList.contains('open')) {
             elements.menu.menu.classList.remove('open');
              console.log('Меню закрыто');
@@ -1499,6 +1501,15 @@ const updateInventoryDisplay = () => {
             elements.menu.menu.classList.add('open');
              console.log('Меню открыто');
         }
+    });
+
+    elements.menu.menuItems.forEach(item => {
+       item.addEventListener('click', (event) => {
+             console.log('menuItem Clicked', event.target.dataset.tab);
+            switchTab(event.target.dataset.tab);
+            elements.menu.menu.classList.remove('open');
+
+        });
     });
 
     elements.menu.menuItems.forEach(item => {
