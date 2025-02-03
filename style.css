@@ -253,13 +253,13 @@ main.game-container {
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 8px;
     opacity: 0;
-     /* transform: translateY(20px); Удаляем начальную трансформацию */
-    transition: opacity 0.3s ease; /* Упростили переходы */
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
     position: absolute;
     top: 40px;
     left: 0;
     z-index: 1002;
-     display: none; /* Теперь скрываем меню через display:none; */
+     display: block; /* Оставляем display:block;*/
 }
 
 
@@ -270,7 +270,7 @@ main.game-container {
     border: none;
     border-radius: 0;
     cursor: pointer;
-    background-color: rgba(52, 152, 219, 0.8);
+      background-color: rgba(52, 152, 219, 0.8);
     color: white;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -288,18 +288,16 @@ main.game-container {
 
 /* Анимация открытия меню */
 #menu-items.open {
-    display: block; /* Добавили display:block; */
     opacity: 1;
-    /*  transform: translateY(0); Удаляем трансформацию  */
+     transform: translateY(0); /* трансформация для эффекта движения */
 }
 
 /* Изменение стиля для disabled */
 #menu-items li button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-     background-color: gray;
+    background-color: gray;
 }
-
 
 .diamonds-menu {
     margin-left: 10px;
