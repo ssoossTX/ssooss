@@ -238,12 +238,12 @@ main.game-container {
     cursor: pointer;
     padding: 5px;
     display: inline-block;
-    transition: transform 0.3s ease; /* Добавили transition */
+    transition: transform 0.3s ease;
     margin-right: 10px;
 }
 
 .menu-toggle.active {
-    transform: rotate(90deg); /* Применяем поворот */
+    transform: rotate(90deg);
 }
 
 #menu-items {
@@ -259,9 +259,8 @@ main.game-container {
     top: 40px;
     left: 0;
     z-index: 1002;
-     display: block;
+    display: block; /* Оставляем display:block; */
 }
-
 
 #menu-items li button {
     display: block;
@@ -275,6 +274,8 @@ main.game-container {
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: background-color 0.2s ease;
+    opacity: 0; /* Скрываем кнопки */
+    pointer-events: none; /* Отключаем клики */
 }
 
 #menu-items li button.active {
@@ -289,7 +290,12 @@ main.game-container {
 /* Анимация открытия меню */
 #menu-items.open {
     opacity: 1;
-      transform: translateY(0); /* трансформация для эффекта движения */
+     transform: translateY(0);
+}
+/* Делаем кнопки меню видимыми и кликабельными */
+#menu-items.open li button {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* Изменение стиля для disabled */
