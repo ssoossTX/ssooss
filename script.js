@@ -1325,29 +1325,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
      };
 
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const menuItems = document.getElementById('menu-items');
-
-    menuToggle.addEventListener('click', function() {
-        menuItems.classList.toggle('open');
-        menuToggle.classList.toggle('active');
-         menuToggle.setAttribute('aria-expanded', menuItems.classList.contains('open'));
-
-    });
-
-    // Закрытие меню при клике вне его (необязательно, но полезно)
-     document.addEventListener('click', function(event) {
-        if (!menuItems.contains(event.target) && !menuToggle.contains(event.target)) {
-            menuItems.classList.remove('open');
-            menuToggle.classList.remove('active');
-            menuToggle.setAttribute('aria-expanded', 'false');
-
-        }
-    });
-     
+document.addEventListener('DOMContentLoaded', () => {
+    // При загрузке страницы делаем все кнопки меню неактивными
+   // elements.menu.menuItems.forEach(item => item.disabled = true); Убираем disabled
 });
 
+elements.menu.menuButton.addEventListener('click', () => {
+    console.log('menuButton Clicked');
+
+    if (elements.menu.menu.classList.contains('open')) {
+        //  elements.menu.menuItems.forEach(item => item.disabled = true); Убираем disabled
+        elements.menu.menu.classList.remove('open');
+        elements.menu.menuButton.classList.remove('active');
+        console.log('Меню закрыто');
+    } else {
+        elements.menu.menu.classList.add('open');
+        // elements.menu.menuItems.forEach(item => item.disabled = false);  Убираем disabled
+        elements.menu.menuButton.classList.add('active');
+        console.log('Меню открыто');
+    }
+});
+
+elements.menu.menuItems.forEach(item => {
+    item.addEventListener('click', (event) => {
+        console.log('menuItem Clicked', event.target.dataset.tab);
+        switchTab(event.target.dataset.tab);
+      //    elements.menu.menuItems.forEach(item => item.disabled = true);  Убираем disabled
+        elements.menu.menu.classList.remove('open');
+        elements.menu.menuButton.classList.remove('active');
+    });
+});
 
     // 10. Инициализация
     loadData();
