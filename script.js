@@ -499,34 +499,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tWebApp.ready();
     }
 
-   // Добавляем логику для переключения табов внутри профиля
-        const profileInfo = document.getElementById('profile-info');
-        const profileInventory = document.getElementById('profile-inventory');
-        const profileAbilities = document.getElementById('profile-abilities');
-         const profileTabButtons = document.querySelectorAll('.profile-tab-button');
-         // Функция для активации таба
-        const activateTab = (tab) => {
-            profileInfo.style.display = (tab === 'profile-info') ? 'block' : 'none';
-            profileInventory.style.display = (tab === 'profile-inventory') ? 'block' : 'none';
-            profileAbilities.style.display = (tab === 'profile-abilities') ? 'block' : 'none';
-            profileTabButtons.forEach(btn => btn.classList.remove('active'));
-            profileTabButtons.forEach(btn => {
-               if (btn.dataset.tab === tab) {
-                   btn.classList.add('active');
-               }
-            });
-         };
-
-        profileTabButtons.forEach(button => {
-            button.addEventListener('click', (event) => {
-                const tab = event.target.dataset.tab;
-                  activateTab(tab);
-            });
-        });
-updateAbilitiesDisplay();
-updateProfile();
-updateInventoryDisplay();
-
     // 4. Обновление дисплея
     const updateClickCountDisplay = () => {
         elements.clicker.clickCountDisplay.textContent = Math.round(gameState.clickCount);
@@ -857,7 +829,7 @@ updateInventoryDisplay();
         }
     };
 
-    const switchTab = (tabId) => {
+ const switchTab = (tabId) => {
     elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
     elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
     elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
@@ -865,36 +837,40 @@ updateInventoryDisplay();
     elements.inventory.inventoryContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
 
     // Добавляем логику для переключения табов внутри профиля
+    const profileInfo = document.getElementById('profile-info');
+    const profileInventory = document.getElementById('profile-inventory');
+    const profileAbilities = document.getElementById('profile-abilities');
+    const profileContainer = document.getElementById('profile-container'); // Получаем контейнер профиля
+    const profileTabButtons = document.querySelectorAll('.profile-tab-button');
+
+    // Функция для активации таба
+    const activateTab = (tab) => {
+        profileInfo.style.display = (tab === 'profile-info') ? 'block' : 'none';
+        profileInventory.style.display = (tab === 'profile-inventory') ? 'block' : 'none';
+        profileAbilities.style.display = (tab === 'profile-abilities') ? 'block' : 'none';
+        profileTabButtons.forEach(btn => btn.classList.remove('active'));
+        profileTabButtons.forEach(btn => {
+            if (btn.dataset.tab === tab) {
+                btn.classList.add('active');
+            }
+        });
+    };
+
+    // Показываем контейнер профиля и вкладку "Профиль" по умолчанию
     if (tabId === 'profile') {
-        const profileInfo = document.getElementById('profile-info');
-        const profileInventory = document.getElementById('profile-inventory');
-        const profileAbilities = document.getElementById('profile-abilities');
-        const profileContainer = document.getElementById('profile-container'); // Получаем контейнер профиля
-         const profileTabButtons = document.querySelectorAll('.profile-tab-button');
-         // Функция для активации таба
-        const activateTab = (tab) => {
-            profileInfo.style.display = (tab === 'profile-info') ? 'block' : 'none';
-            profileInventory.style.display = (tab === 'profile-inventory') ? 'block' : 'none';
-            profileAbilities.style.display = (tab === 'profile-abilities') ? 'block' : 'none';
-            profileTabButtons.forEach(btn => btn.classList.remove('active'));
-            profileTabButtons.forEach(btn => {
-               if (btn.dataset.tab === tab) {
-                   btn.classList.add('active');
-               }
-            });
-         };
-
-        // Показываем контейнер профиля и вкладку "Профиль" по умолчанию
         profileContainer.style.display = 'block';
-         activateTab('profile-info');
-
     } else {
-        // Скрываем контейнер профиля, если открыта другая вкладка
-        const profileContainer = document.getElementById('profile-container');
-        if (profileContainer) {
-            profileContainer.style.display = 'none';
-        }
+        profileContainer.style.display = 'none';
     }
+    activateTab('profile-info'); // Активируем вкладку "Профиль" по умолчанию
+
+    // Вешаем обработчики событий на кнопки табов профиля
+    profileTabButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const tab = event.target.dataset.tab;
+            activateTab(tab);
+        });
+    });
 
     elements.menu.menuItems.forEach(item => {
         item.classList.remove('active');
@@ -908,6 +884,11 @@ updateInventoryDisplay();
     if (profileModal) {
         profileModal.style.display = 'none';
     }
+
+    updateAbilitiesDisplay();
+    updateProfile();
+    updateInventoryDisplay();
+
 };
 
    const startExpedition = (type) => {
