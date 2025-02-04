@@ -562,16 +562,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const remainingSeconds = Math.ceil(remaining / 1000);
     elements.dungeon.dungeonProgressDisplay.textContent = `Подземелье ${gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].name}: ${progress}%  (${remainingSeconds} сек. осталось)`;
     updateDungeonBattleUI();
-    
+
     if (remaining <= 0) {
-        if(gameState.dungeonState.playerHealth > 0 && gameState.dungeonState.currentWave < gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].waves.length){
-           displayMessage('Время вышло! Вы не успели завершить подземелье!', 'red');
-            finishDungeon(); // Завершаем подземелье с проигрышем
-        }
-       else
-       {
-           finishDungeon();
-       }
+        finishDungeon(); // Завершаем подземелье
     }
 };
 
