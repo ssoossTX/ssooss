@@ -575,7 +575,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 };
 
-
     const updateDisplay = () => {
         updateClickCountDisplay();
         updateUpgradeCostDisplay();
