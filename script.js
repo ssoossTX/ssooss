@@ -934,28 +934,109 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.expeditionInterval = setInterval(updateExpeditionProgressBar, 1000);
     };
 
-    const finishExpedition = () => {
-        clearInterval(gameState.expeditionInterval);
-        gameState.expeditionInterval = null;
-        const reward = gameState.expeditionReward;
-         let diamondGain = Math.round(reward * calculateDiamondBonus(gameState.artifacts)); // Алмазы с бонусом
-        diamondGain = Math.round(diamondGain * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
-        gameState.diamonds += diamondGain;
-        const expeditionType = gameState.activeExpedition;
-        gameState.activeExpedition = null;
-        gameState.expeditionStartTime = null;
-        gameState.expeditionDuration = 0;
-        gameState.expeditionReward = 0;
-    
-        // Расчет опыта, зависимого от количества полученных алмазов
-       let expGain = Math.round(diamondGain * 0.25 * (gameState.level + 1)); // Модификатор * уровень (можно изменить)
-       expGain = Math.round(expGain * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
-        gameState.experience += expGain;
-        displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[expeditionType]}" завершена! Получено ${diamondGain} алмазов и ${expGain} опыта`, 'gold', '1.2em');
-        checkLevelUp();
-        updateDisplay();
-        saveData();
-    };
+    const finishDungeon = () => {
+    clearInterval(gameState.dungeonInterval);
+    gameState.dungeonInterval = null;
+
+    const dungeonType = gameState.activeDungeon;
+    const dungeonConfig = gameConfig.DUNGEON_CONFIG[dungeonType];
+    const rewards = gameState.dungeonRewards;
+
+    gameState.activeDungeon = null;
+    gameState.dungeonStartTime = null;
+    gameState.dungeonDuration = 0;
+    gameState.dungeonRewards = null;
+    //gameState.dungeonState.waves = [];
+    gameState.dungeonState.enemyName = null;
+
+    let gainedDiamonds = 0;
+    let gainedKeys = 0;
+    let gainedExp = 0;
+    const gainedSkins = {};
+    const gainedArtifacts = {};
+
+    let message = `Подземелье "${dungeonConfig.name}" `;
+
+    // Проверяем, выполнил ли игрок условия победы: жив и все волны пройдены
+    const playerWon = (gameState.dungeonState.playerHealth > 0 && gameState.dungeonState.currentWave >= dungeonConfig.waves.length);
+
+    if (playerWon) {
+        message += 'успешно завершено!'; // Все волны пройдены
+        if (rewards) {
+            if (rewards.diamonds) {
+                const [minDiamonds, maxDiamonds] = rewards.diamonds;
+                gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
+                gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
+                gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
+                gameState.diamonds += gainedDiamonds;
+            }
+            if (rewards.keys) {
+                const [minKeys, maxKeys] = rewards.keys;
+                gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
+                gameState.keys += gainedKeys;
+            }
+            if (rewards.experience) {
+                const [minExp, maxExp] = rewards.experience;
+                gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
+                gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
+                gameState.experience += gainedExp;
+            }
+            if (rewards.skins) {
+                for (const skinRarity in rewards.skins) {
+                    const [minSkins, maxSkins] = rewards.skins[skinRarity];
+                    const numSkins = Math.floor(Math.random() * (maxSkins - minSkins + 1)) + minSkins;
+                    for (let i = 0; i < numSkins; i++) {
+                        const skin = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
+                        if (skin) {
+                            gainedSkins[skin] = (gainedSkins[skin] || 0) + 1
+                        }
+                    }
+                }
+            }
+            if (rewards.artifacts) {
+                for (const artifactRarity in rewards.artifacts) {
+                    const [minArtifacts, maxArtifacts] = rewards.artifacts[artifactRarity];
+                    const numArtifacts = Math.floor(Math.random() * (maxArtifacts - minArtifacts + 1)) + minArtifacts;
+                    for (let i = 0; i < numArtifacts; i++) {
+                        const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
+                        if (artifact) {
+                            gainedArtifacts[artifact] = (gainedArtifacts[artifact] || 0) + 1
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        message = `Провал! Вы не успели завершить подземелье "${dungeonConfig.name}"!`;
+    }
+      gameState.dungeonState= {
+                currentWave: 0,
+                playerHealth: 100,
+                enemyHealth: 100,
+                 enemyName: null,
+                waves: [],
+                };
+    if (gainedDiamonds > 0) {
+        message += ` Получено ${gainedDiamonds} алмазов.`;
+    }
+    if (gainedKeys > 0) {
+        message += ` Получено ${gainedKeys} ключей.`;
+    }
+    if (gainedExp > 0) {
+        message += ` Получено ${gainedExp} опыта.`;
+    }
+    if (Object.keys(gainedSkins).length > 0) {
+        message += ` Выпали предметы: ${Object.keys(gainedSkins).map(skin => `${skin} x${gainedSkins[skin]}`).join(', ')}.`;
+    }
+    if (Object.keys(gainedArtifacts).length > 0) {
+        message += ` Выпали предметы: ${Object.keys(gainedArtifacts).map(artifact => `${artifact} x${gainedArtifacts[artifact]}`).join(', ')}.`;
+    }
+
+    displayMessage(message, 'gold', '1.2em');
+    checkLevelUp();
+    updateDisplay();
+    saveData();
+};
 
   const startDungeon = (type) => {
        if (gameState.activeDungeon) {
