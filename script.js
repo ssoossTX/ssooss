@@ -829,7 +829,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
- const switchTab = (tabId) => {
+    const switchTab = (tabId) => {
     elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
     elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
     elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
