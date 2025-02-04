@@ -1452,7 +1452,6 @@ const updateProfile = () => {
     
     const autoSave = () => {
        saveData();
-       displayMessage('Игра сохранена', 'blue');
     };
 
     const startAutoSave = () => {
