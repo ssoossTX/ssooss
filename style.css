@@ -472,7 +472,7 @@ main.game-container {
 
 /* Профиль */
 #profile-container {
-    display: none;
+    display: block;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     padding: 10px;
