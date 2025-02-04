@@ -1444,6 +1444,8 @@ const updateProfile = () => {
       gameState.clickCount = 0;
       gameState.autoClickerValue = 0;
       gameState.clickValue = 1; // Возвращаем базовое значение
+
+        // Сбрасываем цену улучшений до базовых значений
       gameState.clickUpgradeCost = 10;
       gameState.autoUpgradeCost = 50;
       gameState.clickUpgradeLevel = 1;
@@ -1459,7 +1461,7 @@ const updateProfile = () => {
       clearAllTimeouts();
 
       // Сбрасываем уровень и опыт (но сохраняем половину очков способностей)
-      gameState.levelPoints = Math.floor(gameState.levelPoints / 2);
+      // gameState.levelPoints = Math.floor(gameState.levelPoints / 2); // Убираем сброс очков способностей
       gameState.level = 1;
       gameState.experience = 0;
 
@@ -1481,16 +1483,26 @@ const updateProfile = () => {
       };
       gameState.dungeonFinished = false;
 
-        // Сбрасываем способности
-        gameState.abilities = {
-            'diamond_bonus': 0,
-            'exp_bonus': 0,
-            'click_bonus': 0,
-            'expedition_speed': 0,
-            'luck_bonus': 0,
-            'dungeon_speed': 0,
-            'dungeon_luck': 0,
-        };
+        // Сбрасываем способности - Убираем сброс способностей
+       // gameState.abilities = {
+       //     'diamond_bonus': 0,
+       //     'exp_bonus': 0,
+       //     'click_bonus': 0,
+       //     'expedition_speed': 0,
+       //     'luck_bonus': 0,
+       //     'dungeon_speed': 0,
+       //     'dungeon_luck': 0,
+       // };
+
+      saveData();
+      updateDisplay();
+      displayMessage('Престиж выполнен!', 'gold', '1.2em');
+      checkAchievements();
+      updateAbilitiesDisplay();
+    } else {
+      displayMessage(`Нужно ${gameState.prestigeCost - gameState.clickCount} кликов!`, 'red');
+    }
+  };
 
       saveData();
       updateDisplay();
