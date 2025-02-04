@@ -830,78 +830,59 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const switchTab = (tabId) => {
-    const clickerContent = document.getElementById('clicker-content');
-    const gameContent = document.getElementById('game-content');
-    const mapContainer = document.getElementById('map-container');
-    const dungeonContainer = document.getElementById('dungeon-container');
-    const profileContainer = document.getElementById('profile-container');
+    elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
+    elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
+    elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
+    elements.dungeon.dungeonContainer.style.display = tabId === 'dungeon' ? 'block' : 'none';
+    elements.inventory.inventoryContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
 
-    // Скрываем все основные контейнеры
-    clickerContent.classList.remove('active');
-    gameContent.classList.remove('active');
-    mapContainer.classList.remove('active');
-    dungeonContainer.classList.remove('active');
-    profileContainer.classList.remove('active');
-
-    // Показываем выбранный контейнер
-    switch (tabId) {
-        case 'clicker':
-            clickerContent.classList.add('active');
-            break;
-        case 'shop':
-            gameContent.classList.add('active');
-            break;
-        case 'map':
-            mapContainer.classList.add('active');
-            break;
-        case 'dungeon':
-            dungeonContainer.classList.add('active');
-            break;
-        case 'profile':
-            profileContainer.classList.add('active');
-            const profileInfo = document.getElementById('profile-info');
-            const profileInventory = document.getElementById('profile-inventory');
-            const profileAbilities = document.getElementById('profile-abilities');
-            const profileTabButtons = document.querySelectorAll('.profile-tab-button');
-
-            // Функция для активации таба внутри профиля
-            const activateTab = (tab) => {
-                profileInfo.style.display = (tab === 'profile-info') ? 'block' : 'none';
-                profileInventory.style.display = (tab === 'profile-inventory') ? 'block' : 'none';
-                profileAbilities.style.display = (tab === 'profile-abilities') ? 'block' : 'none';
-
-                profileTabButtons.forEach(btn => btn.classList.remove('active'));
-                profileTabButtons.forEach(btn => {
-                    if (btn.dataset.tab === tab) {
-                        btn.classList.add('active');
-                    }
-                });
-            };
-
-            activateTab('profile-info'); // Активируем таб "Профиль" по умолчанию
-
-            profileTabButtons.forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const tab = event.target.dataset.tab;
-                    activateTab(tab);
-                });
+    // Добавляем логику для переключения табов внутри профиля
+    if (tabId === 'profile') {
+        const profileInfo = document.getElementById('profile-info');
+        const profileInventory = document.getElementById('profile-inventory');
+        const profileAbilities = document.getElementById('profile-abilities');
+        const profileContainer = document.getElementById('profile-container'); // Получаем контейнер профиля
+         const profileTabButtons = document.querySelectorAll('.profile-tab-button');
+         // Функция для активации таба
+        const activateTab = (tab) => {
+            profileInfo.style.display = (tab === 'profile-info') ? 'block' : 'none';
+            profileInventory.style.display = (tab === 'profile-inventory') ? 'block' : 'none';
+            profileAbilities.style.display = (tab === 'profile-abilities') ? 'block' : 'none';
+            profileTabButtons.forEach(btn => btn.classList.remove('active'));
+            profileTabButtons.forEach(btn => {
+               if (btn.dataset.tab === tab) {
+                   btn.classList.add('active');
+               }
             });
+         };
 
-            updateAbilitiesDisplay();
-            updateProfile();
-            updateInventoryDisplay();
+        // Показываем контейнер профиля и вкладку "Профиль" по умолчанию
+        profileContainer.style.display = 'block';
+         activateTab('profile-info');
 
-            break;
+        profileTabButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const tab = event.target.dataset.tab;
+                  activateTab(tab);
+            });
+        });
+        updateAbilitiesDisplay();
+        updateProfile();
+        updateInventoryDisplay();
+    } else {
+        // Скрываем контейнер профиля, если открыта другая вкладка
+        const profileContainer = document.getElementById('profile-container');
+        if (profileContainer) {
+            profileContainer.style.display = 'none';
+        }
     }
 
-    // Убираем класс 'active' у всех пунктов меню и добавляем к выбранному
-    elements.menu.menuItems.forEach(item => item.classList.remove('active'));
     elements.menu.menuItems.forEach(item => {
+        item.classList.remove('active');
         if (item.dataset.tab === tabId) {
             item.classList.add('active');
         }
     });
-};
 
 
     // Скрываем модальное окно профиля при переключении вкладок (уже не нужно, но оставим на всякий случай)
