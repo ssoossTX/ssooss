@@ -846,6 +846,36 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage('Улучшение клика куплено!', 'green');
         } else {
             displayMessage('Недостаточно кликов!', 'red');
+        }
+    };
+
+    const buyAutoClicker = () => {
+        if (gameState.clickCount >= gameState.autoUpgradeCost) {
+            gameState.clickCount -= gameState.autoUpgradeCost;
+            gameState.autoClickerValue += 0.1;
+            gameState.autoUpgradeCost = Math.ceil(gameState.autoUpgradeCost * 1.1);
+            updateClickCountDisplay();
+            updateUpgradeCostDisplay();
+            saveData();
+            displayMessage('Авто-кликер куплен!', 'green');
+        } else {
+            displayMessage('Недостаточно кликов!', 'red');
+        }
+    };
+
+    const buyClickLevelUpgrade = () => {
+        if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
+            gameState.clickCount -= gameState.clickUpgradeLevelCost;
+            gameState.clickUpgradeLevel += 1;
+            gameState.clickUpgradeLevelCost = Math.ceil(gameState.clickUpgradeLevelCost * 1.2);
+            updateClickCountDisplay();
+            updateUpgradeCostDisplay();
+            saveData();
+            displayMessage('Уровень клика повышен!', 'green');
+        } else {
+            displayMessage('Недостаточно кликов!', 'red');
+        }
+    };
 
 
     // 9. Престиж
