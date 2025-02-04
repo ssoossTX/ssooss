@@ -499,6 +499,34 @@ document.addEventListener('DOMContentLoaded', () => {
         tWebApp.ready();
     }
 
+   // Добавляем логику для переключения табов внутри профиля
+        const profileInfo = document.getElementById('profile-info');
+        const profileInventory = document.getElementById('profile-inventory');
+        const profileAbilities = document.getElementById('profile-abilities');
+         const profileTabButtons = document.querySelectorAll('.profile-tab-button');
+         // Функция для активации таба
+        const activateTab = (tab) => {
+            profileInfo.style.display = (tab === 'profile-info') ? 'block' : 'none';
+            profileInventory.style.display = (tab === 'profile-inventory') ? 'block' : 'none';
+            profileAbilities.style.display = (tab === 'profile-abilities') ? 'block' : 'none';
+            profileTabButtons.forEach(btn => btn.classList.remove('active'));
+            profileTabButtons.forEach(btn => {
+               if (btn.dataset.tab === tab) {
+                   btn.classList.add('active');
+               }
+            });
+         };
+
+        profileTabButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const tab = event.target.dataset.tab;
+                  activateTab(tab);
+            });
+        });
+updateAbilitiesDisplay();
+updateProfile();
+updateInventoryDisplay();
+
     // 4. Обновление дисплея
     const updateClickCountDisplay = () => {
         elements.clicker.clickCountDisplay.textContent = Math.round(gameState.clickCount);
@@ -860,15 +888,6 @@ document.addEventListener('DOMContentLoaded', () => {
         profileContainer.style.display = 'block';
          activateTab('profile-info');
 
-        profileTabButtons.forEach(button => {
-            button.addEventListener('click', (event) => {
-                const tab = event.target.dataset.tab;
-                  activateTab(tab);
-            });
-        });
-        updateAbilitiesDisplay();
-        updateProfile();
-        updateInventoryDisplay();
     } else {
         // Скрываем контейнер профиля, если открыта другая вкладка
         const profileContainer = document.getElementById('profile-container');
