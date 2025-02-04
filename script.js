@@ -884,7 +884,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
     // Скрываем модальное окно профиля при переключении вкладок (уже не нужно, но оставим на всякий случай)
     const profileModal = document.getElementById('profile-modal'); // Получаем модальное окно
     if (profileModal) {
