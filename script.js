@@ -499,32 +499,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tWebApp.ready();
     }
 
-    const profileInfo = document.getElementById('profile-info');
-    const profileInventory = document.getElementById('profile-inventory');
-    const profileAbilities = document.getElementById('profile-abilities');
-    const profileContainer = document.getElementById('profile-container'); // Получаем контейнер профиля
-    const profileTabButtons = document.querySelectorAll('.profile-tab-button');
-
-    // Функция для активации таба внутри профиля
-    const activateTab = (tab) => {
-        profileInfo.style.display = (tab === 'profile-info') ? 'block' : 'none';
-        profileInventory.style.display = (tab === 'profile-inventory') ? 'block' : 'none';
-        profileAbilities.style.display = (tab === 'profile-abilities') ? 'block' : 'none';
-        profileTabButtons.forEach(btn => btn.classList.remove('active'));
-        profileTabButtons.forEach(btn => {
-           if (btn.dataset.tab === tab) {
-               btn.classList.add('active');
-           }
-        });
-    };
-
-    profileTabButtons.forEach(button => {
-        button.addEventListener('click', (event) => {
-            const tab = event.target.dataset.tab;
-              activateTab(tab);
-        });
-    });
-
     // 4. Обновление дисплея
     const updateClickCountDisplay = () => {
         elements.clicker.clickCountDisplay.textContent = Math.round(gameState.clickCount);
@@ -857,31 +831,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     const switchTab = (tabId) => {
-      elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
-      elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
-      elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
-      elements.dungeon.dungeonContainer.style.display = tabId === 'dungeon' ? 'block' : 'none';
-      elements.inventory.inventoryContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
+    elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
+    elements.menu.gameContent.style.display = tabId === 'shop' ? 'block' : 'none';
+    elements.map.mapContainer.style.display = tabId === 'map' ? 'block' : 'none';
+    elements.dungeon.dungeonContainer.style.display = tabId === 'dungeon' ? 'block' : 'none';
+    elements.inventory.inventoryContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
 
-      // Показываем контейнер профиля, если выбрана вкладка профиля, иначе скрываем
-      const profileContainer = document.getElementById('profile-container');
-      if (profileContainer) {
-          profileContainer.style.display = (tabId === 'profile') ? 'block' : 'none';
-            if (tabId === 'profile') {
-                activateTab('profile-info'); // Активируем вкладку "profile-info"
-                updateAbilitiesDisplay();
-                updateProfile();
-                updateInventoryDisplay();
-            }
-      }
+    // Добавляем логику для переключения табов внутри профиля
+    if (tabId === 'profile') {
+        const profileInfo = document.getElementById('profile-info');
+        const profileInventory = document.getElementById('profile-inventory');
+        const profileAbilities = document.getElementById('profile-abilities');
+        const profileContainer = document.getElementById('profile-container'); // Получаем контейнер профиля
+         const profileTabButtons = document.querySelectorAll('.profile-tab-button');
+         // Функция для активации таба
+        const activateTab = (tab) => {
+            profileInfo.style.display = (tab === 'profile-info') ? 'block' : 'none';
+            profileInventory.style.display = (tab === 'profile-inventory') ? 'block' : 'none';
+            profileAbilities.style.display = (tab === 'profile-abilities') ? 'block' : 'none';
+            profileTabButtons.forEach(btn => btn.classList.remove('active'));
+            profileTabButtons.forEach(btn => {
+               if (btn.dataset.tab === tab) {
+                   btn.classList.add('active');
+               }
+            });
+         };
 
-      elements.menu.menuItems.forEach(item => {
-          item.classList.remove('active');
-          if (item.dataset.tab === tabId) {
-              item.classList.add('active');
-          }
-      });
-    };
+        // Показываем контейнер профиля и вкладку "Профиль" по умолчанию
+        profileContainer.style.display = 'block';
+         activateTab('profile-info');
+
+        profileTabButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const tab = event.target.dataset.tab;
+                  activateTab(tab);
+            });
+        });
+        updateAbilitiesDisplay();
+        updateProfile();
+        updateInventoryDisplay();
+    } else {
+        // Скрываем контейнер профиля, если открыта другая вкладка
+        const profileContainer = document.getElementById('profile-container');
+        if (profileContainer) {
+            profileContainer.style.display = 'none';
+        }
+    }
+
+    elements.menu.menuItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.tab === tabId) {
+            item.classList.add('active');
+        }
+    });
 
     // Скрываем модальное окно профиля при переключении вкладок (уже не нужно, но оставим на всякий случай)
     const profileModal = document.getElementById('profile-modal'); // Получаем модальное окно
