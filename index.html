@@ -8,21 +8,19 @@
 </head>
 <body>
     <div class="container">
-        <header class="menu-bar">
+        <div class="menu-bar">
             <button class="menu-toggle" aria-label="Открыть меню" aria-controls="menu-items" aria-expanded="false">☰</button>
-            <nav>
-                <ul class="menu-items" id="menu-items">
-                    <li><button class="active" data-tab="clicker">Кликер</button></li>
-                    <li><button data-tab="shop">Магазин</button></li>
-                    <li><button data-tab="map">Карта</button></li>
-                    <li><button data-tab="dungeon">Подземелье</button></li>
-                    <li><button data-tab="profile">Профиль</button></li>
-                </ul>
-            </nav>
+            <ul class="menu-items" id="menu-items">
+                <li><button class="active" data-tab="clicker">Кликер</button></li>
+                <li><button data-tab="shop">Магазин</button></li>
+                 <li><button data-tab="map">Карта</button></li>
+                 <li><button data-tab="dungeon">Подземелье</button></li>
+                 <li><button data-tab="profile">Профиль</button></li>
+            </ul>
              <div class="diamonds-menu" id="diamonds-menu">Алмазы: 0</div>
-        </header>
+        </div>
         <main class="game-container">
-            <section id="clicker-content" role="region" aria-label="Кликер" style="display:block;">
+            <div id="clicker-content" role="region" aria-label="Кликер">
                 <h1 id="game-title">Кликер</h1>
                 <div class="counter">
                     <p id="click-count">0</p>
@@ -54,8 +52,8 @@
                  <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
                 <div id="achievements">Достижения: 0</div>
                   <button id="reset-button" class="game-button" aria-label="Сбросить прогресс игры и начать заново">Сбросить прогресс</button>
-            </section>
-             <section id="game-content" role="region" aria-label="Магазин" style="display:none;">
+            </div>
+             <div id="game-content" role="region" aria-label="Магазин">
                  <h2>Магазин</h2>
                   <section class="chests">
                     <h2>Ящики</h2>
@@ -77,41 +75,37 @@
                     </div>
                    <button id="open-chest-button" class="game-button">Открыть сундук</button>
                 </section>
-                 <div class="chest-container" id="chest-container" style="display:none;">
+                 <div class="chest-container" id="chest-container">
                     <div class="chest-content">
                        <h2>Выпавшие предметы:</h2>
                        <div id="chest-items" class="chest-items"></div>
                                                 <button id="close-chest-button" class="game-button">Закрыть</button>
                    </div>
                </div>
-           </section>
-            <section class="map-container" id="map-container" role="region" aria-label="Карта" style="display:none;">
+           </div>
+            <div class="map-container" id="map-container">
                 <h2>Экспедиции</h2>
-                 <div class="expedition-buttons">
-                       <button class="expedition-button" data-expedition="easy">Лёгкая (1 мин)</button>
-                      <button class="expedition-button" data-expedition="medium">Средняя (5 мин)</button>
-                     <button class="expedition-button" data-expedition="hard">Сложная (10 мин)</button>
-                 </div>
+                <button class="expedition-button" data-type="easy">Лёгкая (1 мин)</button>
+                <button class="expedition-button" data-type="medium">Средняя (5 мин)</button>
+                <button class="expedition-button" data-type="hard">Сложная (10 мин)</button>
                 <div id="expedition-progress" class="expedition-progress"></div>
-           </section>
-            <section class="dungeon-container" id="dungeon-container" role="region" aria-label="Подземелье" style="display:none;">
+           </div>
+            <div class="dungeon-container" id="dungeon-container">
                  <h2>Подземелья</h2>
-                <div class="dungeon-buttons">
-                 <button class="dungeon-button" data-dungeon="tutorial">Обучение</button>
-                    <button class="dungeon-button" data-dungeon="easy">Легкое</button>
-                    <button class="dungeon-button" data-dungeon="medium">Среднее</button>
-                     <button class="dungeon-button" data-dungeon="hard">Сложное</button>
-                  <button class="dungeon-button" data-dungeon="legendary">Легендарное</button>
-                </div>
+                <button class="dungeon-button" data-type="tutorial">Обучение</button>
+                <button class="dungeon-button" data-type="easy">Легкое</button>
+                <button class="dungeon-button" data-type="medium">Среднее</button>
+                <button class="dungeon-button" data-type="hard">Сложное</button>
+                   <button class="dungeon-button" data-type="legendary">Легендарное</button>
                <div id="dungeon-progress"></div>
-                <div id="dungeon-battle-area" style="display: none;">
+             <div id="dungeon-battle-area" style="display: none;">
                     <button class="attack-button"  id="player-attack">Атаковать</button>
-                     <p id="enemy-name"></p>
+                      <p id="enemy-name"></p>
                        <p id="player-health"></p>
-                      <p id="enemy-health"></p>
-               </div>
-           </section>
-            <section id="profile-container" role="region" aria-label="Профиль" style="display:none;">
+                       <p id="enemy-health"></p>
+                    </div>
+           </div>
+            <div id="profile-container">
                 <div class="profile-tabs">
                     <button class="profile-tab-button active" data-tab="profile-info">Профиль</button>
                     <button class="profile-tab-button" data-tab="profile-inventory">Инвентарь</button>
@@ -144,7 +138,7 @@
                           <!-- Сюда добавятся способности -->
                      </div>
                </div>
-           </section>
+           </div>
         </main>
     </div>
     <div id="global-message" class="global-message" style="display: none;"></div>
