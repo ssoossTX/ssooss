@@ -265,7 +265,7 @@ main.game-container {
 /* Убираем pointer-events: auto, оно больше не нужно */
 #menu-items.open li button {
     opacity: 1;
-    /* pointer-events: auto; */
+    pointer-events: auto;
 }
 
 #menu-items li button {
