@@ -1462,8 +1462,8 @@ const updateProfile = () => {
 
       // Сбрасываем уровень и опыт (но сохраняем половину очков способностей)
       // gameState.levelPoints = Math.floor(gameState.levelPoints / 2); // Убираем сброс очков способностей
-      gameState.level = 1;
-      gameState.experience = 0;
+      // gameState.level = 1;
+      // gameState.experience = 0;
 
       // Сбрасываем активные подземелья и экспедиции
       gameState.activeExpedition = null;
