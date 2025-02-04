@@ -549,23 +549,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-     const updateDungeonProgressBar = () => {
-        if (!gameState.activeDungeon) {
-            elements.dungeon.dungeonProgressDisplay.textContent = '';
-            elements.dungeon.dungeonBattleArea.style.display = 'none';
-            return;
+    const updateDungeonProgressBar = () => {
+    if (!gameState.activeDungeon) {
+        elements.dungeon.dungeonProgressDisplay.textContent = '';
+        elements.dungeon.dungeonBattleArea.style.display = 'none';
+        return;
+    }
+    elements.dungeon.dungeonBattleArea.style.display = 'block';
+    const elapsed = Date.now() - gameState.dungeonStartTime;
+    const remaining = Math.max(0, gameState.dungeonDuration - elapsed);
+    const progress = Math.min(100, Math.round((elapsed / gameState.dungeonDuration) * 100));
+    const remainingSeconds = Math.ceil(remaining / 1000);
+    elements.dungeon.dungeonProgressDisplay.textContent = `Подземелье ${gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].name}: ${progress}%  (${remainingSeconds} сек. осталось)`;
+    updateDungeonBattleUI();
+    
+    if (remaining <= 0) {
+        if(gameState.dungeonState.playerHealth > 0 && gameState.dungeonState.currentWave < gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].waves.length){
+           displayMessage('Время вышло! Вы не успели завершить подземелье!', 'red');
+            finishDungeon(); // Завершаем подземелье с проигрышем
         }
-       elements.dungeon.dungeonBattleArea.style.display = 'block';
-          const elapsed = Date.now() - gameState.dungeonStartTime;
-          const remaining = Math.max(0, gameState.dungeonDuration - elapsed);
-         const progress = Math.min(100, Math.round((elapsed / gameState.dungeonDuration) * 100));
-        const remainingSeconds = Math.ceil(remaining / 1000);
-         elements.dungeon.dungeonProgressDisplay.textContent = `Подземелье ${gameConfig.DUNGEON_CONFIG[gameState.activeDungeon].name}: ${progress}%  (${remainingSeconds} сек. осталось)`;
-           updateDungeonBattleUI();
-        if (remaining <= 0) {
-            finishDungeon();
-        }
-    };
+       else
+       {
+           finishDungeon();
+       }
+    }
+};
 
 
     const updateDisplay = () => {
@@ -1010,83 +1018,98 @@ const updateDungeonButtonInfo = () => {
 
 const finishDungeon = () => {
     clearInterval(gameState.dungeonInterval);
-     gameState.dungeonInterval = null;
+    gameState.dungeonInterval = null;
 
     const dungeonType = gameState.activeDungeon;
+    const dungeonConfig = gameConfig.DUNGEON_CONFIG[dungeonType];
     const rewards = gameState.dungeonRewards;
-     gameState.activeDungeon = null;
-     gameState.dungeonStartTime = null;
-      gameState.dungeonDuration = 0;
+
+    gameState.activeDungeon = null;
+    gameState.dungeonStartTime = null;
+    gameState.dungeonDuration = 0;
     gameState.dungeonRewards = null;
-      gameState.dungeonState.waves = [];
-      gameState.dungeonState.enemyName = null;
+    gameState.dungeonState.waves = [];
+    gameState.dungeonState.enemyName = null;
+
     let gainedDiamonds = 0;
     let gainedKeys = 0;
     let gainedExp = 0;
     const gainedSkins = {};
     const gainedArtifacts = {};
 
-   if (rewards) {
-        if (rewards.diamonds) {
-            const [minDiamonds, maxDiamonds] = rewards.diamonds;
-            gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
-             gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
-             gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
-             gameState.diamonds += gainedDiamonds;
-        }
-        if (rewards.keys) {
-           const [minKeys, maxKeys] = rewards.keys;
-            gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
-             gameState.keys += gainedKeys;
-        }
-           if (rewards.experience) {
-                const [minExp, maxExp] = rewards.experience;
-               gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
-                gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
-             gameState.experience += gainedExp;
+    let message = `Подземелье "${dungeonConfig.name}" `;
+
+    //Проверка, убиты ли все монстры
+    if (gameState.dungeonState.playerHealth > 0 && gameState.dungeonState.currentWave >= dungeonConfig.waves.length) {
+        message += 'успешно завершено!'; // Все волны пройдены
+
+        if (rewards) {
+            if (rewards.diamonds) {
+                const [minDiamonds, maxDiamonds] = rewards.diamonds;
+                gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
+                gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
+                gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
+                gameState.diamonds += gainedDiamonds;
             }
-        if (rewards.skins) {
-            for (const skinRarity in rewards.skins) {
-                const [minSkins, maxSkins] = rewards.skins[skinRarity];
-                const numSkins = Math.floor(Math.random() * (maxSkins - minSkins + 1)) + minSkins;
-                for (let i = 0; i < numSkins; i++) {
-                    const skin = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
-                   if(skin) {
-                      gainedSkins[skin] = (gainedSkins[skin] || 0) + 1
-                   }
+            if (rewards.keys) {
+                const [minKeys, maxKeys] = rewards.keys;
+                gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
+                gameState.keys += gainedKeys;
+            }
+            if (rewards.experience) {
+                const [minExp, maxExp] = rewards.experience;
+                gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
+                gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
+                gameState.experience += gainedExp;
+            }
+            if (rewards.skins) {
+                for (const skinRarity in rewards.skins) {
+                    const [minSkins, maxSkins] = rewards.skins[skinRarity];
+                    const numSkins = Math.floor(Math.random() * (maxSkins - minSkins + 1)) + minSkins;
+                    for (let i = 0; i < numSkins; i++) {
+                        const skin = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
+                        if (skin) {
+                            gainedSkins[skin] = (gainedSkins[skin] || 0) + 1
+                        }
+                    }
                 }
             }
-        }
-          if (rewards.artifacts) {
-            for (const artifactRarity in rewards.artifacts) {
-                const [minArtifacts, maxArtifacts] = rewards.artifacts[artifactRarity];
-                const numArtifacts = Math.floor(Math.random() * (maxArtifacts - minArtifacts + 1)) + minArtifacts;
-                for (let i = 0; i < numArtifacts; i++) {
-                  const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
-                    if(artifact) {
-                      gainedArtifacts[artifact] = (gainedArtifacts[artifact] || 0) + 1
-                   }
+            if (rewards.artifacts) {
+                for (const artifactRarity in rewards.artifacts) {
+                    const [minArtifacts, maxArtifacts] = rewards.artifacts[artifactRarity];
+                    const numArtifacts = Math.floor(Math.random() * (maxArtifacts - minArtifacts + 1)) + minArtifacts;
+                    for (let i = 0; i < numArtifacts; i++) {
+                        const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
+                        if (artifact) {
+                            gainedArtifacts[artifact] = (gainedArtifacts[artifact] || 0) + 1
+                        }
+                    }
                 }
             }
         }
     }
-     let message = `Подземелье "${gameConfig.DUNGEON_CONFIG[dungeonType].name}" завершено!`;
-       if (gainedDiamonds > 0) {
-          message += ` Получено ${gainedDiamonds} алмазов.`;
-         }
-          if (gainedKeys > 0) {
-            message += ` Получено ${gainedKeys} ключей.`;
-        }
-        if (gainedExp > 0) {
-             message += ` Получено ${gainedExp} опыта.`;
-        }
-         if (Object.keys(gainedSkins).length > 0) {
-          message += ` Выпали предметы: ${Object.keys(gainedSkins).map(skin => `${skin} x${gainedSkins[skin]}`).join(', ')}.`;
-       }
-           if (Object.keys(gainedArtifacts).length > 0) {
-            message += ` Выпали предметы: ${Object.keys(gainedArtifacts).map(artifact => `${artifact} x${gainedArtifacts[artifact]}`).join(', ')}.`;
-       }
-     displayMessage(message, 'gold', '1.2em');
+    else
+    {
+        message = `Время вышло! Вы не успели завершить подземелье "${dungeonConfig.name}"!`;
+    }
+
+    if (gainedDiamonds > 0) {
+        message += ` Получено ${gainedDiamonds} алмазов.`;
+    }
+    if (gainedKeys > 0) {
+        message += ` Получено ${gainedKeys} ключей.`;
+    }
+    if (gainedExp > 0) {
+        message += ` Получено ${gainedExp} опыта.`;
+    }
+    if (Object.keys(gainedSkins).length > 0) {
+        message += ` Выпали предметы: ${Object.keys(gainedSkins).map(skin => `${skin} x${gainedSkins[skin]}`).join(', ')}.`;
+    }
+    if (Object.keys(gainedArtifacts).length > 0) {
+        message += ` Выпали предметы: ${Object.keys(gainedArtifacts).map(artifact => `${artifact} x${gainedArtifacts[artifact]}`).join(', ')}.`;
+    }
+
+    displayMessage(message, 'gold', '1.2em');
     checkLevelUp();
     updateDisplay();
     saveData();
