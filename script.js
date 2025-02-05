@@ -815,68 +815,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
- const loadGame = () => {
-     const loadFromStorage = (storage) => {
-         const savedDataString = storage.getItem(gameConfig.SAVE_KEY);
-         if (!savedDataString) {
-             gameState.clickValue = 1;
-             gameState.clickUpgradeLevel = 1;
-             updateDisplay();
-             return;
-         }
-         try {
-             const savedData = JSON.parse(savedDataString);
-             if (!savedData || typeof savedData !== 'object' || !('clickCount' in savedData)) {
-                clearSaveData();
-                console.error('Invalid saved data format');
-                displayMessage('Не удалось загрузить игру, данные сброшены.', 'red');
-                return;
-             }
-             if (savedData.clickValue == undefined) {
-                savedData.clickValue = 1;
-             }
-             if (savedData.clickUpgradeLevel == undefined) {
-                savedData.clickUpgradeLevel = 1;
-             }
-             gameState = { ...gameState, ...savedData };
-             startAutoClicker();
-             if (gameState.activeExpedition) {
-                 startExpeditionTimer();
-             }
-              if (gameState.activeDungeon) {
-                    startDungeonTimer();
-                    updateDungeonBattleUI();
-                }
-             updateDisplay();
-         } catch (e) {
-             clearSaveData(); // Очистите поврежденные данные
-             console.error('Failed to load game', e);
-             displayMessage('Не удалось загрузить игру, данные сброшены.', 'red'); // Сообщите пользователю
-             return; // Прекратите дальнейшую загрузку
-         }
-     };
+const loadGame = () => {
+    const loadFromStorage = (storage) => {
+        const savedDataString = storage.getItem(gameConfig.SAVE_KEY);
+        if (!savedDataString) {
+            gameState.clickValue = 1;
+            gameState.clickUpgradeLevel = 1;
+            updateDisplay();
+            return;
+        }
+        try {
+            const savedData = JSON.parse(savedDataString);
+            gameState = { ...gameState, ...savedData };
+            if (savedData.clickValue == undefined) {
+                gameState.clickValue = 1;
+            }
+            if (savedData.clickUpgradeLevel == undefined) {
+                gameState.clickUpgradeLevel = 1;
+            }
+            startAutoClicker();
+            if (gameState.activeExpedition) {
+                startExpeditionTimer();
+            }
+            if (gameState.activeDungeon) {
+                startDungeonTimer();
+                updateDungeonBattleUI(); // Обновляем UI
+                if (!gameState.dungeonFinished) {
+                   openModal(); // Открываем модальное окно, если подземелье не завершено
+                   startDungeonWave();
+                 }
+            } else {
+               closeModal(); // Закрываем модальное окно, если подземелье не активно
+           }
+           updateDisplay();
+        } catch (e) {
+            clearSaveData();
+            console.error('Failed to load game', e);
+            displayMessage('Не удалось загрузить игру', 'red');
+        }
+    };
 
-     if (tWebApp) {
-         tWebApp.CloudStorage.getItem(gameConfig.SAVE_KEY, (err, value) => {
-             if (err) {
-                 console.error('Telegram Cloud Storage error:', err);
-                 displayMessage('Ошибка загрузки из Telegram Cloud Storage. Возможно, игра работает нестабильно.', 'red');
-                 // Попробуйте загрузить из localStorage как запасной вариант
-                 loadFromStorage(localStorage);
-                 return;
-             }
-             if (!value) {
-                 gameState.clickValue = 1;
-                 gameState.clickUpgradeLevel = 1;
-                 updateDisplay();
-                 return;
-             }
-             loadFromStorage({ getItem: () => value });
-         });
-     } else {
-         loadFromStorage(localStorage);
-     }
- };
+    if (tWebApp) {
+        tWebApp.CloudStorage.getItem(gameConfig.SAVE_KEY, (err, value) => {
+            if (!value) {
+                gameState.clickValue = 1;
+                gameState.clickUpgradeLevel = 1;
+                updateDisplay();
+                return;
+            }
+            loadFromStorage({ getItem: () => value });
+        });
+    } else {
+        loadFromStorage(localStorage);
+    }
+};
 
     const switchTab = (tabId) => {
     elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
@@ -1201,6 +1193,18 @@ const updateDungeonButtonInfo = () => {
          }
        updateDungeonUI();
     };
+
+const updateDungeonBattleUI = () => {
+    if (gameState.activeDungeon && !gameState.dungeonFinished) {
+        const currentWave = gameState.dungeonState.waves[gameState.dungeonState.currentWave];
+        elements.dungeon.modal.enemyName.textContent = `Враг: ${gameState.dungeonState.enemyName}`;
+        elements.dungeon.modal.playerHealth.textContent = `Здоровье: ${gameState.dungeonState.playerHealth}`;
+        elements.dungeon.modal.enemyHealth.textContent = `Здоровье врага: ${gameState.dungeonState.enemyHealth}`;
+    } else {
+        closeModal();
+    }
+};
+
     const updateDungeonUI = () => {
          elements.dungeon.modal.playerHealth.textContent = `Здоровье: ${gameState.dungeonState.playerHealth.toFixed(0)}`;
          elements.dungeon.modal.enemyHealth.textContent = `Здоровье врага: ${gameState.dungeonState.enemyHealth.toFixed(0)}`;
