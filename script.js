@@ -821,59 +821,54 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const loadData = () => {
-        try {
-            let savedDataString = null;
-            if (tWebApp) {
-                tWebApp.CloudStorage.getItem(gameConfig.SAVE_KEY, (data) => {
-                    savedDataString = data;
-                    if (savedDataString) {
-                        try {
-                            const savedData = JSON.parse(savedDataString);
-                            gameState = { ...gameState, ...savedData };
-                            console.log('Игра загружена из Telegram Cloud Storage');
-                        } catch (parseError) {
-                            console.error('Ошибка разбора данных из Telegram Cloud Storage:', parseError);
-                            displayMessage('Ошибка загрузки данных!', 'red');
-                        }
-                    } else {
-                        console.log('Нет сохраненных данных в Telegram Cloud Storage, начинаем новую игру');
-                        displayMessage('Новая игра!', 'green');
-                    }
-                     startAutoClicker(); // Запуск автокликера после загрузки данных
-                     updateDisplay(); // Обновление интерфейса после загрузки данных
-                });
-            } else {
-                savedDataString = localStorage.getItem(gameConfig.SAVE_KEY);
-                if (savedDataString) {
-                    try {
-                        const savedData = JSON.parse(savedDataString);
-                         gameState = { ...gameState, ...savedData };
-                        console.log('Игра загружена из localStorage');
-                    } catch (parseError) {
-                        console.error('Ошибка разбора данных из localStorage:', parseError);
-                        displayMessage('Ошибка загрузки данных!', 'red');
-                    }
-                } else {
-                    console.log('Нет сохраненных данных в localStorage, начинаем новую игру');
-                    displayMessage('Новая игра!', 'green');
+    try {
+        let savedDataString = null;
+        const loadFromStorage = (storage) => {
+            savedDataString = storage.getItem(gameConfig.SAVE_KEY);
+            if (savedDataString) {
+                try {
+                    const savedData = JSON.parse(savedDataString);
+                    gameState = { ...gameState, ...savedData };
+                    console.log('Игра успешно загружена из хранилища');
+                    displayMessage('Игра загружена!', 'lime');
+                } catch (parseError) {
+                    console.error('Ошибка разбора данных:', parseError);
+                    displayMessage('Ошибка при разборе сохраненных данных. Игра начнется заново.', 'red');
+                    // Можно добавить код для сброса gameState к дефолтному состоянию здесь
+                    resetGame();
                 }
-                startAutoClicker(); // Запуск автокликера после загрузки данных
-                updateDisplay(); // Обновление интерфейса после загрузки данных
+            } else {
+                console.log('Нет сохраненных данных, начинаем новую игру');
+                displayMessage('Новая игра!', 'green');
             }
-        } catch (error) {
-            console.error('Ошибка загрузки игры:', error);
-            displayMessage('Ошибка загрузки!', 'red');
+            startAutoClicker();
+            updateDisplay();
+        };
+
+        if (tWebApp) {
+            tWebApp.CloudStorage.getItem(gameConfig.SAVE_KEY, (data) => {
+                if (data) {
+                    savedDataString = data;
+                    loadFromStorage({
+                        getItem: () => savedDataString
+                    });
+                } else {
+                    loadFromStorage({
+                        getItem: () => null
+                    });
+                }
+            });
+        } else {
+            loadFromStorage(localStorage);
         }
-    };
 
-    let autoSaveInterval;
-    const startAutoSave = () => {
-        autoSaveInterval = setInterval(saveData, 30000); // Автосохранение каждые 30 секунд
-    };
-
-    const clearAutoSave = () => {
-        clearInterval(autoSaveInterval);
-    };
+    } catch (error) {
+        console.error('Ошибка загрузки игры:', error);
+        displayMessage('Произошла ошибка при загрузке игры. Игра начнется заново.', 'red');
+        // Можно добавить код для сброса gameState к дефолтному состоянию здесь
+        resetGame();
+    }
+};
 
     // 8. Покупка улучшений
     const upgradeClick = () => {
