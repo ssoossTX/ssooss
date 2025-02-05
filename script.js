@@ -790,56 +790,73 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const loadGame = () => {
-        resetGame();
-        const loadFromStorage = (storage) => {
-            const savedDataString = storage.getItem(gameConfig.SAVE_KEY);
-            if (!savedDataString) {
-              gameState.clickValue = 1;
-               gameState.clickUpgradeLevel = 1;
-                updateDisplay();
-                return;
+const loadGame = () => {
+    const loadFromStorage = (storage) => {
+        const savedDataString = storage.getItem(gameConfig.SAVE_KEY);
+        if (!savedDataString) {
+            gameState.clickValue = 1;
+            gameState.clickUpgradeLevel = 1;
+            initializeDungeonState(); // Добавляем инициализацию
+            updateDisplay();
+            return;
+        }
+        try {
+            const savedData = JSON.parse(savedDataString);
+            gameState = { ...gameState, ...savedData };
+            if (savedData.clickValue == undefined) {
+                gameState.clickValue = 1;
             }
-            try {
-                const savedData = JSON.parse(savedDataString);
-                gameState = { ...gameState, ...savedData };
-                  if (savedData.clickValue == undefined) {
-                    gameState.clickValue = 1;
-                }
-                 if (savedData.clickUpgradeLevel == undefined) {
-                    gameState.clickUpgradeLevel = 1;
-                }
-                startAutoClicker();
-                if (gameState.activeExpedition) {
-                    startExpeditionTimer();
-                }
-                 if (gameState.activeDungeon) {
-                    startDungeonTimer();
-                      updateDungeonBattleUI();
-                }
-                updateDisplay();
-            } catch (e) {
-                clearSaveData();
-                console.error('Failed to load game', e);
-                displayMessage('Не удалось загрузить игру', 'red');
+            if (savedData.clickUpgradeLevel == undefined) {
+                gameState.clickUpgradeLevel = 1;
             }
-        };
-
-        if (tWebApp) {
-            tWebApp.CloudStorage.getItem(gameConfig.SAVE_KEY, (err, value) => {
-                if (!value) {
-                  gameState.clickValue = 1;
-                  gameState.clickUpgradeLevel = 1;
-                    updateDisplay();
-                    return;
-                }
-                loadFromStorage({ getItem: () => value });
-            });
-        } else {
-            loadFromStorage(localStorage);
+            initializeDungeonState(); // Добавляем инициализацию
+            startAutoClicker();
+            if (gameState.activeExpedition) {
+                startExpeditionTimer();
+            }
+            if (gameState.activeDungeon) {
+                startDungeonTimer();
+                updateDungeonBattleUI();
+            }
+            updateDisplay();
+        } catch (e) {
+            clearSaveData();
+            console.error('Failed to load game', e);
+            displayMessage('Не удалось загрузить игру', 'red');
         }
     };
 
+    // Функция инициализации свойств подземелья (если их нет в сохраненных данных)
+    const initializeDungeonState = () => {
+        if (!gameState.dungeonState) {
+            gameState.dungeonState = {
+                currentWave: 0,
+                playerHealth: 100,
+                enemyHealth: 100,
+                enemyName: null,
+                waves: [],
+            };
+        }
+        if (gameState.dungeonFinished === undefined) {
+            gameState.dungeonFinished = false;
+        }
+    };
+
+    if (tWebApp) {
+        tWebApp.CloudStorage.getItem(gameConfig.SAVE_KEY, (err, value) => {
+            if (!value) {
+                gameState.clickValue = 1;
+                gameState.clickUpgradeLevel = 1;
+                initializeDungeonState(); // Добавляем инициализацию
+                updateDisplay();
+                return;
+            }
+            loadFromStorage({ getItem: () => value });
+        });
+    } else {
+        loadFromStorage(localStorage);
+    }
+};
 
     const switchTab = (tabId) => {
     elements.menu.clickerContent.style.display = tabId === 'clicker' ? 'block' : 'none';
