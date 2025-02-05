@@ -839,15 +839,9 @@ const loadGame = () => {
             }
             if (gameState.activeDungeon) {
                 startDungeonTimer();
-                updateDungeonBattleUI(); // Обновляем UI
-                if (!gameState.dungeonFinished) {
-                   openModal(); // Открываем модальное окно, если подземелье не завершено
-                   startDungeonWave();
-                 }
-            } else {
-               closeModal(); // Закрываем модальное окно, если подземелье не активно
-           }
-           updateDisplay();
+                updateDungeonBattleUI();
+            }
+            updateDisplay();
         } catch (e) {
             clearSaveData();
             console.error('Failed to load game', e);
