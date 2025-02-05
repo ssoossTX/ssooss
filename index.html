@@ -98,13 +98,7 @@
                 <button class="dungeon-button" data-type="hard">Сложное</button>
                    <button class="dungeon-button" data-type="legendary">Легендарное</button>
                <div id="dungeon-progress"></div>
-             <div id="dungeon-battle-area" style="display: none;">
-                    <button class="attack-button"  id="player-attack">Атаковать</button>
-                      <p id="enemy-name"></p>
-                       <p id="player-health"></p>
-                       <p id="enemy-health"></p>
-                    </div>
-           </div>
+            </div>
             <div id="profile-container">
                 <div class="profile-tabs">
                     <button class="profile-tab-button active" data-tab="profile-info">Профиль</button>
@@ -140,17 +134,17 @@
                </div>
            </div>
         </main>
-    <div id="dungeon-battle-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Битва в Подземелье</h2>
-            <p id="modal-enemy-name"></p>
-            <p id="modal-player-health"></p>
-            <p id="modal-enemy-health"></p>
-            <button class="game-button attack-button" id="modal-player-attack">Атаковать</button>
-            <div id="battle-log"></div>
+       <div id="dungeon-battle-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Битва в Подземелье</h2>
+                <p id="modal-enemy-name"></p>
+                <p id="modal-player-health"></p>
+                <p id="modal-enemy-health"></p>
+                <button class="game-button attack-button" id="modal-player-attack">Атаковать</button>
+                <div id="battle-log"></div>
+            </div>
         </div>
-    </div>
     </div>
     <div id="global-message" class="global-message" style="display: none;"></div>
     <script src="script.js"></script>
