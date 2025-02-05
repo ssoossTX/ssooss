@@ -1188,17 +1188,6 @@ const updateDungeonButtonInfo = () => {
        updateDungeonUI();
     };
 
-const updateDungeonBattleUI = () => {
-    if (gameState.activeDungeon && !gameState.dungeonFinished) {
-        const currentWave = gameState.dungeonState.waves[gameState.dungeonState.currentWave];
-        elements.dungeon.modal.enemyName.textContent = `Враг: ${gameState.dungeonState.enemyName}`;
-        elements.dungeon.modal.playerHealth.textContent = `Здоровье: ${gameState.dungeonState.playerHealth}`;
-        elements.dungeon.modal.enemyHealth.textContent = `Здоровье врага: ${gameState.dungeonState.enemyHealth}`;
-    } else {
-        closeModal();
-    }
-};
-
     const updateDungeonUI = () => {
          elements.dungeon.modal.playerHealth.textContent = `Здоровье: ${gameState.dungeonState.playerHealth.toFixed(0)}`;
          elements.dungeon.modal.enemyHealth.textContent = `Здоровье врага: ${gameState.dungeonState.enemyHealth.toFixed(0)}`;
@@ -1664,3 +1653,32 @@ elements.menu.menuItems.forEach(item => {
     startAutoSave();
     switchTab('clicker');
 });
+
+const updateDungeonBattleUI = () => {
+    if (!gameState.activeDungeon) {
+        return; // Ничего не делаем, если подземелье не активно
+    }
+
+    // Получаем элементы для обновления
+    const enemyNameDisplay = document.getElementById('enemy-name');
+    const playerHealthDisplay = document.getElementById('player-health');
+    const enemyHealthDisplay = document.getElementById('enemy-health');
+
+    // Проверяем, существуют ли элементы
+    if (!enemyNameDisplay || !playerHealthDisplay || !enemyHealthDisplay) {
+        console.error('Не найдены элементы для отображения информации о бое в подземелье!');
+        return; // Если какой-то элемент не найден, прекращаем выполнение
+    }
+
+    // Обновляем информацию
+    if (gameState.dungeonState && gameState.dungeonState.waves && gameState.dungeonState.waves[gameState.dungeonState.currentWave]) {
+        const currentWave = gameState.dungeonState.waves[gameState.dungeonState.currentWave];
+        enemyNameDisplay.textContent = currentWave.enemyName ? `Враг: ${currentWave.enemyName}` : 'Враг: Неизвестно';
+        enemyHealthDisplay.textContent = currentWave.enemyHealth ? `Здоровье врага: ${gameState.dungeonState.enemyHealth.toFixed(0)}` : 'Здоровье врага: Неизвестно';
+    } else {
+        enemyNameDisplay.textContent = 'Враг: Неизвестно';
+        enemyHealthDisplay.textContent = 'Здоровье врага: Неизвестно';
+    }
+
+    playerHealthDisplay.textContent = `Здоровье: ${gameState.dungeonState.playerHealth.toFixed(0)}`;
+};
