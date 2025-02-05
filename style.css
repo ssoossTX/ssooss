@@ -428,6 +428,7 @@ main.game-container {
      background-color: rgba(255, 255, 255, 0.1);
      padding: 10px;
     border-radius: 5px;
+    display:none;
 }
 .attack-button {
     margin: 5px;
@@ -739,6 +740,8 @@ main.game-container {
     border-radius: 10px;
     position: relative;
     animation: zoomIn 0.3s ease;
+    color: white;
+    text-align: center;
 }
 
 @keyframes zoomIn {
@@ -900,4 +903,87 @@ main.game-container {
     to {
         opacity: 1;
     }
+}
+
+/* Стили для модального окна */
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed; /* Фиксированное позиционирование */
+    z-index: 1005; /* Поверх всего */
+    left: 0;
+    top: 0;
+    width: 100%; /* Полная ширина */
+    height: 100%; /* Полная высота */
+    overflow: auto; /* Включить прокрутку, если контент не помещается */
+    background-color: rgba(0, 0, 0, 0.8); /* Полупрозрачный фон */
+    animation: fadeInModal 0.4s ease forwards;
+}
+
+@keyframes fadeInModal {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background-color: rgba(0, 0, 0, 0.9);
+    background-image: url('https://media.tenor.com/s6v28nK9g6AAAAAd/background-pixel.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 5% auto; /* Центрирование */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 10px;
+    position: relative;
+    animation: zoomIn 0.3s ease;
+    color: white;
+    text-align: center;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal .close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal .close-button:hover {
+    color: white;
+    text-shadow: 0 0 5px white;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#battle-log {
+    text-align: left;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    height: 150px; /* Фиксированная высота для лога */
+    overflow-y: scroll; /* Включаем прокрутку */
 }
