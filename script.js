@@ -791,6 +791,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const loadGame = () => {
+        resetGame();
         const loadFromStorage = (storage) => {
             const savedDataString = storage.getItem(gameConfig.SAVE_KEY);
             if (!savedDataString) {
