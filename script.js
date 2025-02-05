@@ -1469,7 +1469,7 @@ const prestige = () => {
         gameState.prestigeLevel = savedPrestigeLevel + 1;
         gameState.prestigeMultiplier = savedPrestigeMultiplier + calculatePrestigeBonus(gameState.artifacts) / 10;
         gameState.prestigeCost = gameConfig.PRESTIGE_BASE_COST * Math.pow(2, gameState.prestigeLevel);
-        gameState.levelPoints = Math.floor(gameState.levelPoints / 2);
+        gameState.levelPoints = gameState.levelPoints + 2;
 
         saveData();
         updateDisplay();
