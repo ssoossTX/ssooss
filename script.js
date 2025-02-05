@@ -470,13 +470,27 @@ document.addEventListener('DOMContentLoaded', () => {
             expeditionProgressDisplay: document.getElementById('expedition-progress'),
         },
          dungeon: {
-            dungeonContainer: document.getElementById('dungeon-container'),
-            dungeonProgressDisplay: document.getElementById('dungeon-progress'),
-             dungeonBattleArea: document.getElementById('dungeon-battle-area'),
-            enemyNameDisplay: document.getElementById('enemy-name'),
-             playerHealthDisplay: document.getElementById('player-health'),
-            enemyHealthDisplay: document.getElementById('enemy-health'),
-        },
+        dungeonContainer: document.getElementById('dungeon-container'),
+        dungeonProgressDisplay: document.getElementById('dungeon-progress'),
+        dungeonBattleArea: document.getElementById('dungeon-battle-area'),
+        enemyNameDisplay: document.getElementById('enemy-name'),
+        playerHealthDisplay: document.getElementById('player-health'),
+        enemyHealthDisplay: document.getElementById('enemy-health'),
+
+        dungeonBattleModal: document.getElementById('dungeon-battle-modal'),
+        modalEnemyNameDisplay: document.getElementById('modal-enemy-name'),
+        modalPlayerHealthDisplay: document.getElementById('modal-player-health'),
+        modalEnemyHealthDisplay: document.getElementById('modal-enemy-health'),
+        modalPlayerAttackButton: document.getElementById('modal-player-attack'),
+        closeButton: document.querySelector('#dungeon-battle-modal .close-button'),
+        battleLog: document.getElementById('battle-log'),
+    }
+};
+
+// Добавляем проверки на null
+if (!elements.dungeon.dungeonContainer) console.error('Не найден элемент #dungeon-container');
+if (!elements.dungeon.dungeonProgressDisplay) console.error('Не найден элемент #dungeon-progress');
+// И так далее для каждого элемента в elements.dungeon
         inventory: {
             inventoryContainer: document.getElementById('inventory-container'),
             skinsDisplay: document.getElementById('skins-display'),
