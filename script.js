@@ -495,6 +495,22 @@ document.addEventListener('DOMContentLoaded', () => {
             resetButton: document.getElementById('reset-button'),
         }
     };
+        dungeon: {
+            dungeonContainer: document.getElementById('dungeon-container'),
+            dungeonProgressDisplay: document.getElementById('dungeon-progress'),
+             dungeonBattleArea: document.getElementById('dungeon-battle-area'),
+            enemyNameDisplay: document.getElementById('enemy-name'),
+             playerHealthDisplay: document.getElementById('player-health'),
+            enemyHealthDisplay: document.getElementById('enemy-health'),
+
+            dungeonBattleModal: document.getElementById('dungeon-battle-modal'), // Модальное окно
+            modalEnemyNameDisplay: document.getElementById('modal-enemy-name'), // Имя врага в модальном окне
+            modalPlayerHealthDisplay: document.getElementById('modal-player-health'), // Здоровье игрока в модальном окне
+            modalEnemyHealthDisplay: document.getElementById('modal-enemy-health'), // Здоровье врага в модальном окне
+            modalPlayerAttackButton: document.getElementById('modal-player-attack'), // Кнопка атаки в модальном окне
+            closeButton: document.querySelector('#dungeon-battle-modal .close-button'), // Кнопка закрытия
+            battleLog: document.getElementById('battle-log'), // Лог боя
+        },
     const tWebApp = window.Telegram && window.Telegram.WebApp;
 
     if (tWebApp) {
@@ -918,6 +934,14 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[type]}" началась!`, 'green');
     };
 
+    const openDungeonBattleModal = () => {
+        elements.dungeon.dungeonBattleModal.style.display = 'block';
+    };
+
+    const closeDungeonBattleModal = () => {
+        elements.dungeon.dungeonBattleModal.style.display = 'none';
+    };
+
     const updateExpeditionButtonInfo = () => {
         elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
             const type = button.dataset.type;
@@ -960,7 +984,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
         saveData();
     };
-  const startDungeon = (type) => {
+
+ const startDungeon = (type) => {
        if (gameState.activeDungeon) {
           displayMessage('Уже есть активное подземелье', 'red');
             return;
@@ -979,11 +1004,12 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.diamonds -= dungeonConfig.cost;
         gameState.activeDungeon = type;
         gameState.dungeonStartTime = Date.now();
-         gameState.dungeonDuration = dungeonConfig.duration * calculateAbilityBonus('dungeon_speed', gameState.abilities.dungeon_speed);
+         gameState.dungeonDuration = dungeonConfig.duration / calculateAbilityBonus('dungeon_speed', gameState.abilities.dungeon_speed);
         gameState.dungeonRewards = dungeonConfig.rewards;
            gameState.dungeonState.currentWave = 0; // Устанавливаем первую волну
            gameState.dungeonState.playerHealth = 100;
            gameState.dungeonFinished = false; // Сбрасываем флаг завершения
+           elements.dungeon.battleLog.innerHTML = ''; // Очищаем лог
 
         // Запускаем таймер подземелья
         startDungeonTimer();
@@ -1105,22 +1131,32 @@ const finishDungeon = (success = true) => {
 };
   const startDungeonWave = () => {
         const currentWave = gameState.dungeonState.waves[gameState.dungeonState.currentWave];
-         gameState.dungeonState.enemyName = currentWave.enemyName;
+        gameState.dungeonState.enemyName = currentWave.enemyName;
         gameState.dungeonState.enemyHealth = currentWave.enemyHealth;
-        displayMessage(`Волна ${gameState.dungeonState.currentWave + 1}. Враг: ${currentWave.enemyName}`, 'blue');
-       setTimeout(enemyAttack, 1000);
+        const message = `Волна ${gameState.dungeonState.currentWave + 1}. Враг: ${currentWave.enemyName}`;
+        addToBattleLog(message);
+        updateDungeonBattleUI(); // Обновляем UI сразу после начала волны
+        setTimeout(enemyAttack, 1000);
     };
-    const playerAttack = () => {
+   const addToBattleLog = (message) => {
+        const logEntry = document.createElement('p');
+        logEntry.textContent = message;
+        elements.dungeon.battleLog.appendChild(logEntry);
+        elements.dungeon.battleLog.scrollTop = elements.dungeon.battleLog.scrollHeight; // Автопрокрутка вниз
+    };
+   const playerAttack = () => {
         const clickDamage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
         gameState.dungeonState.enemyHealth -= clickDamage;
-          displayMessage(`Вы нанесли ${clickDamage.toFixed(2)} урона!`, 'lime');
+        const message = `Вы нанесли ${clickDamage.toFixed(2)} урона!`;
+        addToBattleLog(message);
         checkBattleState();
     };
     const enemyAttack = () => {
         const enemyDamage = gameState.dungeonState.waves[gameState.dungeonState.currentWave].attackDamage;
         gameState.dungeonState.playerHealth -= enemyDamage;
-        displayMessage(`Враг нанес ${enemyDamage} урона!`, 'red');
-         checkBattleState();
+        const message = `Враг нанес ${enemyDamage} урона!`;
+        addToBattleLog(message);
+        checkBattleState();
     };
    const checkBattleState = () => {
        if (gameState.dungeonState.enemyHealth <= 0) {
@@ -1138,15 +1174,20 @@ const finishDungeon = (success = true) => {
        }
    };
    const updateDungeonBattleUI = () => {
-       if (gameState.activeDungeon) {
-           if (gameState.dungeonState.enemyName) {
-               elements.dungeon.enemyNameDisplay.textContent =  `Враг: ${gameState.dungeonState.enemyName}`;
-           } else {
-                elements.dungeon.enemyNameDisplay.textContent =  '';
-          }
-          elements.dungeon.playerHealthDisplay.textContent =  `Здоровье: ${gameState.dungeonState.playerHealth.toFixed(0)}`;
-          elements.dungeon.enemyHealthDisplay.textContent =  `Здоровье врага: ${gameState.dungeonState.enemyHealth.toFixed(0)}`;
-     }
+        if (gameState.activeDungeon) {
+            if (gameState.dungeonState.enemyName) {
+                elements.dungeon.modalEnemyNameDisplay.textContent = `Враг: ${gameState.dungeonState.enemyName}`;
+            } else {
+                elements.dungeon.modalEnemyNameDisplay.textContent = '';
+            }
+            elements.dungeon.modalPlayerHealthDisplay.textContent = `Здоровье: ${gameState.dungeonState.playerHealth.toFixed(0)}`;
+            elements.dungeon.modalEnemyHealthDisplay.textContent = `Здоровье врага: ${gameState.dungeonState.enemyHealth.toFixed(0)}`;
+
+            // Логика показа модального окна
+            openDungeonBattleModal();
+        } else {
+            closeDungeonBattleModal(); // Закрываем, если подземелье не активно
+        }
     };
 
     const checkLevelUp = () => {
@@ -1493,7 +1534,11 @@ const prestige = () => {
         gameState.autoSaveInterval = null;
     };
     // 8. Обработчики событий
-    elements.clicker.clickButton.addEventListener('click', applyClick);
+   
+    elements.dungeon.modalPlayerAttackButton.addEventListener('click', playerAttack);
+    elements.dungeon.closeButton.addEventListener('click', closeDungeonBattleModal);
+
+ elements.clicker.clickButton.addEventListener('click', applyClick);
     elements.clicker.upgradeClickButton.addEventListener('click', () => {
         if (gameState.clickCount >= gameState.clickUpgradeCost) {
             gameState.clickCount -= gameState.clickUpgradeCost;
