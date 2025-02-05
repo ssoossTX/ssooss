@@ -5,6 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кликер</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Стили для модального окна */
+        .modal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed; /* Фиксированная позиция */
+            z-index: 1; /* Поверх всего */
+            left: 0;
+            top: 0;
+            width: 100%; /* Полная ширина */
+            height: 100%; /* Полная высота */
+            overflow: auto; /* Включить прокрутку, если необходимо */
+            background-color: rgba(0,0,0,0.4); /* Черный с прозрачностью */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% сверху и по центру */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Можно изменить размер */
+            position: relative; /*  Для позиционирования кнопки закрытия */
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute; /* Абсолютное позиционирование */
+            top: 10px;          /* Сверху 10px */
+            right: 10px;        /* Справа 10px */
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        #battle-log {
+            height: 200px; /* Фиксированная высота для лога */
+            overflow-y: scroll; /* Добавляем скролл, если текст не помещается */
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        .attack-button {
+            /* Стили для кнопки атаки */
+            background-color: #4CAF50; /* Зеленый */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+    </style>
 </head>
 <body>
     <div class="container">
@@ -45,8 +107,7 @@
                     </div>
                                         <div class="message" id="message" aria-live="polite"></div>
                 </section>
-                <button id="prestige-button" class="game-button">
-                    Перерождение <br>
+                <button id="prestige-button" class="game-button">Перерождение <br>
                     <span id="prestige-cost">Стоимость: 10000</span>
                 </button>
                  <div class="prestige-level">Уровень перерождения: <span id="prestige-level">0</span></div>
@@ -69,7 +130,7 @@
                         <p>Редкие сундуки: <span id="rare-chest-count">0</span></p>
                         <button id="buy-rare-chest-button" class="game-button">Купить редкий сундук (10💎)</button>
                      </div>
-                     <div class="chest-item">
+<div class="chest-item">
                         <p>Эпические сундуки: <span id="epic-chest-count">0</span></p>
                        <button id="buy-epic-chest-button" class="game-button">Купить эпический сундук (20💎)</button>
                     </div>
@@ -133,18 +194,21 @@
                      </div>
                </div>
            </div>
-        </main>
- <div id="dungeon-battle-modal" class="modal">
-      <div class="modal-content">
-          <span class="close-button">&times;</span>
-          <h2>Битва в Подземелье</h2>
-          <p id="modal-enemy-name"></p>
-          <p id="modal-player-health"></p>
-          <p id="modal-enemy-health"></p>
-          <button class="game-button attack-button" id="modal-player-attack">Атаковать</button>
-          <div id="battle-log"></div>
-      </div>
-  </div>
+</main>
+       <!-- Модальное окно для битвы в подземелье -->
+       <div id="dungeon-battle-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Битва в Подземелье</h2>
+                <div id="battle-stats">
+                    <div id="player-info">Игрок: <span id="modal-player-health">100</span></div>
+                    <div id="enemy-info">Враг: <span id="modal-enemy-name">Гоблин</span> (<span id="modal-enemy-health">50</span>)</div>
+                </div>
+                <button class="game-button attack-button" id="modal-player-attack">Атаковать</button>
+                <h3>Лог боя:</h3>
+                <div id="battle-log"></div>
+            </div>
+        </div>
     </div>
     <div id="global-message" class="global-message" style="display: none;"></div>
     <script src="script.js"></script>
