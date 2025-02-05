@@ -1460,18 +1460,7 @@ const prestige = () => {
         gameState.autoUpgradeCost = 50;
         gameState.clickUpgradeLevel = 1;
         gameState.clickUpgradeLevelCost = 100;
-        gameState.level = Math.max(1, Math.floor(gameState.level / 2));
-        gameState.experience = 0;
         clearAllTimeouts();
-        gameState.abilities = {
-            'diamond_bonus': 0,
-            'exp_bonus': 0,
-            'click_bonus': 0,
-            'expedition_speed': 0,
-            'luck_bonus': 0,
-            'dungeon_speed': 0,
-            'dungeon_luck': 0,
-        };
 
         // Восстанавливаем сохраненные данные
         gameState.skins = savedSkins;
@@ -1487,7 +1476,7 @@ const prestige = () => {
         checkAchievements();
         updateAbilitiesDisplay();
     } else {
-        displayMessage(`Нужно ${gameState.prestigeCost - gameState.clickCount} кликов!`, 'red');
+        displayMessage(`Нужно ещё ${gameState.prestigeCost - gameState.clickCount} кликов!`, 'red');
     }
 };
     
