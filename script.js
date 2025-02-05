@@ -1468,16 +1468,6 @@ const updateProfile = () => {
             displayMessage(`Нужно ${gameState.prestigeCost - gameState.clickCount} кликов!`, 'red');
         }
     };
-
-      saveData();
-      updateDisplay();
-      displayMessage('Престиж выполнен!', 'gold', '1.2em');
-      checkAchievements();
-      updateAbilitiesDisplay();
-    } else {
-      displayMessage(`Нужно ${gameState.prestigeCost - gameState.clickCount} кликов!`, 'red');
-    }
-  };
     
     const autoSave = () => {
        saveData();
