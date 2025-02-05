@@ -1438,71 +1438,36 @@ const updateProfile = () => {
             });
          });
     };
- const prestige = () => {
-    if (gameState.clickCount >= gameState.prestigeCost) {
-      // Сбрасываем основные значения
-      gameState.clickCount = 0;
-      gameState.autoClickerValue = 0;
-      gameState.clickValue = 1; // Возвращаем базовое значение
-
-        // Сбрасываем цену улучшений до базовых значений
-      gameState.clickUpgradeCost = 10;
-      gameState.autoUpgradeCost = 50;
-      gameState.clickUpgradeLevel = 1;
-      gameState.clickUpgradeLevelCost = 100;
-
-      // Даем награду
-      gameState.diamonds += 10 + (10 * gameState.prestigeLevel);
-      gameState.prestigeLevel++;
-      gameState.prestigeMultiplier += calculatePrestigeBonus(gameState.artifacts) / 10;
-      gameState.prestigeCost = gameConfig.PRESTIGE_BASE_COST * Math.pow(2, gameState.prestigeLevel);
-
-      // Останавливаем все интервалы
-      clearAllTimeouts();
-
-      // Сбрасываем уровень и опыт (но сохраняем половину очков способностей)
-      // gameState.levelPoints = Math.floor(gameState.levelPoints / 2); // Убираем сброс очков способностей
-      // gameState.level = 1;
-      // gameState.experience = 0;
-
-      // Сбрасываем активные подземелья и экспедиции
-      gameState.activeExpedition = null;
-      gameState.expeditionStartTime = null;
-      gameState.expeditionDuration = 0;
-      gameState.expeditionReward = 0;
-      gameState.activeDungeon = null;
-      gameState.dungeonStartTime = null;
-      gameState.dungeonDuration = 0;
-      gameState.dungeonRewards = null;
-      gameState.dungeonState = {
-        currentWave: 0,
-        playerHealth: 100,
-        enemyHealth: 100,
-        enemyName: null,
-        waves: [],
-      };
-      gameState.dungeonFinished = false;
-
-        // Сбрасываем способности - Убираем сброс способностей
-       // gameState.abilities = {
-       //     'diamond_bonus': 0,
-       //     'exp_bonus': 0,
-       //     'click_bonus': 0,
-       //     'expedition_speed': 0,
-       //     'luck_bonus': 0,
-       //     'dungeon_speed': 0,
-       //     'dungeon_luck': 0,
-       // };
-
-      saveData();
-      updateDisplay();
-      displayMessage('Престиж выполнен!', 'gold', '1.2em');
-      checkAchievements();
-      updateAbilitiesDisplay();
-    } else {
-      displayMessage(`Нужно ${gameState.prestigeCost - gameState.clickCount} кликов!`, 'red');
-    }
-  };
+    const prestige = () => {
+        if (gameState.clickCount >= gameState.prestigeCost) {
+            gameState.clickCount = 0;
+            gameState.autoClickerValue = 0;
+            gameState.diamonds += 10 + (10 * gameState.prestigeLevel);
+           gameState.prestigeLevel++;
+           gameState.prestigeMultiplier += calculatePrestigeBonus(gameState.artifacts) / 10;
+           gameState.prestigeCost =  gameConfig.PRESTIGE_BASE_COST * Math.pow(2, gameState.prestigeLevel);
+           clearAllTimeouts();
+             gameState.levelPoints = Math.floor(gameState.levelPoints / 2);
+           gameState.level = 1;
+           gameState.experience = 0;
+            gameState.abilities = {
+             'diamond_bonus': 0,
+             'exp_bonus': 0,
+              'click_bonus': 0,
+             'expedition_speed': 0,
+             'luck_bonus': 0,
+             'dungeon_speed': 0,
+             'dungeon_luck': 0,
+            };
+          saveData();
+            updateDisplay();
+            displayMessage('Престиж выполнен!', 'gold', '1.2em');
+             checkAchievements();
+             updateAbilitiesDisplay();
+        } else {
+            displayMessage(`Нужно ${gameState.prestigeCost - gameState.clickCount} кликов!`, 'red');
+        }
+    };
 
       saveData();
       updateDisplay();
