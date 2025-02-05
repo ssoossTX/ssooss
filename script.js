@@ -1388,11 +1388,3 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDisplay();
     setAutoSave();
 });
-
-    // 16. Telegram WebApp integration
-    if (tWebApp) {
-        tWebApp.onEvent('themeChanged', function () {
-            document.body.className = tWebApp.colorScheme;
-        });
-    }
-});
