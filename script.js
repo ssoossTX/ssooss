@@ -495,22 +495,6 @@ document.addEventListener('DOMContentLoaded', () => {
             resetButton: document.getElementById('reset-button'),
         }
     };
-        dungeon: {
-            dungeonContainer: document.getElementById('dungeon-container'),
-            dungeonProgressDisplay: document.getElementById('dungeon-progress'),
-             dungeonBattleArea: document.getElementById('dungeon-battle-area'),
-            enemyNameDisplay: document.getElementById('enemy-name'),
-             playerHealthDisplay: document.getElementById('player-health'),
-            enemyHealthDisplay: document.getElementById('enemy-health'),
-
-            dungeonBattleModal: document.getElementById('dungeon-battle-modal'), // Модальное окно
-            modalEnemyNameDisplay: document.getElementById('modal-enemy-name'), // Имя врага в модальном окне
-            modalPlayerHealthDisplay: document.getElementById('modal-player-health'), // Здоровье игрока в модальном окне
-            modalEnemyHealthDisplay: document.getElementById('modal-enemy-health'), // Здоровье врага в модальном окне
-            modalPlayerAttackButton: document.getElementById('modal-player-attack'), // Кнопка атаки в модальном окне
-            closeButton: document.querySelector('#dungeon-battle-modal .close-button'), // Кнопка закрытия
-            battleLog: document.getElementById('battle-log'), // Лог боя
-        },
     const tWebApp = window.Telegram && window.Telegram.WebApp;
 
     if (tWebApp) {
