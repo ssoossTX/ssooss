@@ -361,11 +361,11 @@ document.addEventListener('DOMContentLoaded', () => {
             },
                'dungeon_speed': {
                 name: 'Скорость Подземелий',
-                description: 'Уменьшает время прохождения подземелий',
+                description: 'Увеличивает время для прохождения подземелий',
                 costPerLevel: 1,
                 baseValue: 1.0,
-                increment: 0.5,
-                maxLevel: 10,
+                increment: 0.05,
+                maxLevel: 20,
             },
             'dungeon_luck': {
                 name: 'Удача в Подземелье',
