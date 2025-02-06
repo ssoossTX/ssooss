@@ -1535,11 +1535,14 @@ elements.menu.menuItems.forEach(item => {
         startDungeon(button.dataset.type);
       });
      });
-     elements.dungeon.dungeonContainer.addEventListener('click', (event) => {
-        if(event.target && event.target.id === 'player-attack'){
-            playerAttack();
-        }
-    });
+    document.querySelector('#dungeon-battle-area').addEventListener('click', (event) => {
+    console.log('Click on battle area', event.target);
+    if(event.target && event.target.id === 'player-attack'){
+        console.log('Player attack button clicked');
+        playerAttack();
+    }
+});
+
     elements.shop.buyKeyButton.addEventListener('click', buyKey);
     elements.shop.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
     elements.shop.buyRareChestButton.addEventListener('click', () => buyChest('rare'));
