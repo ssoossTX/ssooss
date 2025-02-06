@@ -1095,7 +1095,7 @@ const finishDungeon = (success = true) => {
             }
         }
     }
-
+    closeDungeonBattleModal();
     // Ваш код вывода сообщения
     let message = `Подземелье "${gameConfig.DUNGEON_CONFIG[dungeonType].name}" `;
     message += success ? 'завершено!' : 'провалено!';
