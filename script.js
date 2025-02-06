@@ -1026,7 +1026,6 @@ const updateDungeonButtonInfo = () => {
     gameState.dungeonInterval = setInterval(updateDungeonProgressBar, 1000);
 };
 
-// Функция finishDungeon
 const finishDungeon = (success = true) => {
     clearInterval(gameState.dungeonInterval);
     gameState.dungeonInterval = null;
@@ -1042,15 +1041,83 @@ const finishDungeon = (success = true) => {
 
     gameState.dungeonFinished = true;
 
+    console.log('Finish Dungeon - Success:', success);
+    console.log('Rewards:', rewards);
+
     if (success && rewards) {
-        // Ваш код обработки наград
+        if (rewards.diamonds) {
+            const [minDiamonds, maxDiamonds] = rewards.diamonds;
+            let gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
+            gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
+            gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
+            gameState.diamonds += gainedDiamonds;
+            console.log('Gained Diamonds:', gainedDiamonds); // ADDED
+        }
+        if (rewards.keys) {
+            const [minKeys, maxKeys] = rewards.keys;
+            let gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
+            gameState.keys += gainedKeys;
+            console.log('Gained Keys:', gainedKeys); // ADDED
+        }
+        if (rewards.experience) {
+            const [minExp, maxExp] = rewards.experience;
+            let gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
+            gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
+            gameState.experience += gainedExp;
+            console.log('Gained EXP:', gainedExp); // ADDED
+        }
+
+        if (rewards.skins) { // Проверяем наличие rewards.skins
+            for (const skinRarity in rewards.skins) {
+                const [minSkins, maxSkins] = rewards.skins[skinRarity];
+                const numSkins = Math.floor(Math.random() * (maxSkins - minSkins + 1)) + minSkins;
+                console.log('Number of skins to gain:', numSkins); // ADDED
+                for (let i = 0; i < numSkins; i++) {
+                    const skin = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
+                    if (skin) {
+                        gainedSkins[skin] = (gainedSkins[skin] || 0) + 1;
+                    }
+                }
+            }
+        }
+
+        if (rewards.artifacts) { // Проверяем наличие rewards.artifacts
+            for (const artifactRarity in rewards.artifacts) {
+                const [minArtifacts, maxArtifacts] = rewards.artifacts[artifactRarity];
+                const numArtifacts = Math.floor(Math.random() * (maxArtifacts - minArtifacts + 1)) + minArtifacts;
+                console.log('Number of artifacts to gain:', numArtifacts); // ADDED
+                for (let i = 0; i < numArtifacts; i++) {
+                    const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
+                    if (artifact) {
+                        gainedArtifacts[artifact] = (gainedArtifacts[artifact] || 0) + 1;
+                    }
+                }
+            }
+        }
     }
 
-    // Закрываем модальное окно после завершения подземелья
-    closeDungeonBattleModal();
-
+    // Ваш код вывода сообщения
     let message = `Подземелье "${gameConfig.DUNGEON_CONFIG[dungeonType].name}" `;
     message += success ? 'завершено!' : 'провалено!';
+
+    if (success) {
+        // Добавляем в сообщение полученные награды
+         if (gainedDiamonds > 0) {
+              message += ` Получено ${gainedDiamonds} алмазов.`;
+            }
+             if (gainedKeys > 0) {
+               message += ` Получено ${gainedKeys} ключей.`;
+           }
+           if (gainedExp > 0) {
+                message += ` Получено ${gainedExp} опыта.`;
+           }
+           if (Object.keys(gainedSkins).length > 0) {
+             message += ` Выпали предметы: ${Object.keys(gainedSkins).map(skin => `${skin} x${gainedSkins[skin]}`).join(', ')}.`;
+          }
+            if (Object.keys(gainedArtifacts).length > 0) {
+             message += ` Выпали предметы: ${Object.keys(gainedArtifacts).map(artifact => `${artifact} x${gainedArtifacts[artifact]}`).join(', ')}.`;
+        }
+    }
 
     displayMessage(message, success ? 'gold' : 'red', '1.2em');
     checkLevelUp();
