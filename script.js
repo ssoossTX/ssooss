@@ -1095,7 +1095,6 @@ const finishDungeon = (success = true) => {
             }
         }
     }
-    closeDungeonBattleModal();
     // Ваш код вывода сообщения
     let message = `Подземелье "${gameConfig.DUNGEON_CONFIG[dungeonType].name}" `;
     message += success ? 'завершено!' : 'провалено!';
@@ -1119,6 +1118,7 @@ const finishDungeon = (success = true) => {
         }
     }
 
+    closeDungeonBattleModal();
     displayMessage(message, success ? 'gold' : 'red', '1.2em');
     checkLevelUp();
     updateDisplay();
