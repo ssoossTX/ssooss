@@ -1066,6 +1066,7 @@ const finishDungeon = (success = true) => {
        setTimeout(enemyAttack, 1000);
     };
     const playerAttack = () => {
+        displayMessage(`Вы типо нажали`, 'lime');
         const clickDamage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
         gameState.dungeonState.enemyHealth -= clickDamage;
           displayMessage(`Вы нанесли ${clickDamage.toFixed(2)} урона!`, 'lime');
