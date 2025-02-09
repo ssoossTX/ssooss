@@ -428,8 +428,9 @@ document.addEventListener('DOMContentLoaded', () => {
                  enemyName: null,
                 waves: [],
                 },
-           dungeonFinished: false // Флаг, показывающий, завершено ли подземелье (победа или поражение)
-    };
+           isFighting: false, // Новый флаг
+           dungeonFinished: false
+};
 
     // 3. Объекты DOM элементов
     const elements = {
@@ -468,15 +469,15 @@ document.addEventListener('DOMContentLoaded', () => {
             mapContainer: document.getElementById('map-container'),
             expeditionProgressDisplay: document.getElementById('expedition-progress'),
         },
-    dungeon: {
-        dungeonContainer: document.getElementById('dungeon-container'),
-        dungeonProgressDisplay: document.getElementById('dungeon-progress'),
-        dungeonBattleArea: document.getElementById('dungeon-battle-area'),
-        enemyNameDisplay: document.getElementById('enemy-name'),
-        playerHealthDisplay: document.getElementById('player-health'),
-        enemyHealthDisplay: document.getElementById('enemy-health'),
-        dungeonBattleModal: document.getElementById('dungeon-battle-modal'), // Получаем модальное окно
-    },
+        dungeon: {
+            dungeonContainer: document.getElementById('dungeon-container'),
+            dungeonProgressDisplay: document.getElementById('dungeon-progress'),
+            dungeonBattleArea: document.getElementById('dungeon-battle-area'),
+            enemyNameDisplay: document.getElementById('enemy-name'),
+            playerHealthDisplay: document.getElementById('player-health'),
+            enemyHealthDisplay: document.getElementById('enemy-health'),
+            dungeonBattleModal: document.getElementById('dungeon-battle-modal'), // Получаем модальное окно
+        },
         inventory: {
             inventoryContainer: document.getElementById('inventory-container'),
             skinsDisplay: document.getElementById('skins-display'),
@@ -996,7 +997,7 @@ document.addEventListener('DOMContentLoaded', () => {
            gameState.dungeonState.currentWave = 0; // Устанавливаем первую волну
            gameState.dungeonState.playerHealth = 100;
            gameState.dungeonFinished = false; // Сбрасываем флаг завершения
-
+        gameState.isFighting = true; // Устанавливаем флаг
         // Запускаем таймер подземелья
         startDungeonTimer();
         updateDisplay();
@@ -1038,7 +1039,9 @@ const finishDungeon = (success = true) => {
     gameState.dungeonRewards = null;
     gameState.dungeonState.waves = [];
     gameState.dungeonState.enemyName = null;
-
+    
+    gameState.isFighting = false; // Сбрасываем флаг
+    
     gameState.dungeonFinished = true;
 
     console.log('Finish Dungeon - Success:', success);
@@ -1132,18 +1135,29 @@ const finishDungeon = (success = true) => {
         displayMessage(`Волна ${gameState.dungeonState.currentWave + 1}. Враг: ${currentWave.enemyName}`, 'blue');
        setTimeout(enemyAttack, 1000);
     };
+    // В функции playerAttack проверяем флаг перед выполнением логики атаки
     const playerAttack = () => {
+        if (!gameState.isFighting) {
+            return; // Игнорируем клик, если бой не идет
+        }
+    
         const clickDamage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
         gameState.dungeonState.enemyHealth -= clickDamage;
-          displayMessage(`Вы нанесли ${clickDamage.toFixed(2)} урона!`, 'lime');
+        displayMessage(`Вы нанесли ${clickDamage.toFixed(2)} урона!`, 'lime');
         checkBattleState();
     };
+    // В функциях enemyAttack устанавливаем флаг в false если проиграли
     const enemyAttack = () => {
         const enemyDamage = gameState.dungeonState.waves[gameState.dungeonState.currentWave].attackDamage;
         gameState.dungeonState.playerHealth -= enemyDamage;
         displayMessage(`Враг нанес ${enemyDamage} урона!`, 'red');
          checkBattleState();
+          if (gameState.dungeonState.playerHealth <= 0) {
+              gameState.isFighting = false; // Сбрасываем флаг если проиграли
+          }
     };
+    
+// В checkBattleState сбрасываем флаг если победили
    const checkBattleState = () => {
        if (gameState.dungeonState.enemyHealth <= 0) {
            displayMessage(`Победа над ${gameState.dungeonState.enemyName}`, 'green');
@@ -1152,6 +1166,7 @@ const finishDungeon = (success = true) => {
                setTimeout(startDungeonWave, 2000);
            } else {
                // Если все волны пройдены, завершаем подземелье с успехом
+               gameState.isFighting = false; // Сбрасываем флаг
                finishDungeon(true);
            }
        } else if (gameState.dungeonState.playerHealth <= 0) {
