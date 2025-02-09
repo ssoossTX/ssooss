@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. gameConfig (все константы и настройки)
     const gameConfig = {
@@ -1041,37 +1042,36 @@ const finishDungeon = (success = true) => {
 
     gameState.dungeonFinished = true;
 
-    console.log('Finish Dungeon - Success:', success);
-    console.log('Rewards:', rewards);
+    let gainedDiamonds = 0;
+    let gainedKeys = 0;
+    let gainedExp = 0;
+    const gainedSkins = {};
+    const gainedArtifacts = {};
 
     if (success && rewards) {
         if (rewards.diamonds) {
             const [minDiamonds, maxDiamonds] = rewards.diamonds;
-            let gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
+            gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
             gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
             gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
             gameState.diamonds += gainedDiamonds;
-            console.log('Gained Diamonds:', gainedDiamonds); // ADDED
         }
         if (rewards.keys) {
             const [minKeys, maxKeys] = rewards.keys;
-            let gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
+            gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
             gameState.keys += gainedKeys;
-            console.log('Gained Keys:', gainedKeys); // ADDED
         }
         if (rewards.experience) {
             const [minExp, maxExp] = rewards.experience;
-            let gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
+            gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
             gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
             gameState.experience += gainedExp;
-            console.log('Gained EXP:', gainedExp); // ADDED
         }
 
         if (rewards.skins) { // Проверяем наличие rewards.skins
             for (const skinRarity in rewards.skins) {
                 const [minSkins, maxSkins] = rewards.skins[skinRarity];
                 const numSkins = Math.floor(Math.random() * (maxSkins - minSkins + 1)) + minSkins;
-                console.log('Number of skins to gain:', numSkins); // ADDED
                 for (let i = 0; i < numSkins; i++) {
                     const skin = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
                     if (skin) {
@@ -1085,7 +1085,6 @@ const finishDungeon = (success = true) => {
             for (const artifactRarity in rewards.artifacts) {
                 const [minArtifacts, maxArtifacts] = rewards.artifacts[artifactRarity];
                 const numArtifacts = Math.floor(Math.random() * (maxArtifacts - minArtifacts + 1)) + minArtifacts;
-                console.log('Number of artifacts to gain:', numArtifacts); // ADDED
                 for (let i = 0; i < numArtifacts; i++) {
                     const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
                     if (artifact) {
@@ -1129,34 +1128,20 @@ const finishDungeon = (success = true) => {
         const currentWave = gameState.dungeonState.waves[gameState.dungeonState.currentWave];
          gameState.dungeonState.enemyName = currentWave.enemyName;
         gameState.dungeonState.enemyHealth = currentWave.enemyHealth;
-        displayMessage(`Волна ${gameState.dungeonState.currentWave + 1}. Враг: ${currentWave.enemyName}`, 'blue');
        setTimeout(enemyAttack, 1000);
     };
     const playerAttack = () => {
         const clickDamage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
         gameState.dungeonState.enemyHealth -= clickDamage;
-        displayMessage(`Вы нанесли ${clickDamage.toFixed(2)} урона!`, 'lime');
-    
-        // Отключаем кнопку атаки
-        const attackButton = document.getElementById('player-attack'); // Получаем кнопку
-        attackButton.disabled = true;
-    
         checkBattleState();
-    
-        // Включаем кнопку атаки через некоторое время
-        setTimeout(() => {
-            attackButton.disabled = false;
-        }, 200); // Задержка в 200 мс
     };
     const enemyAttack = () => {
         const enemyDamage = gameState.dungeonState.waves[gameState.dungeonState.currentWave].attackDamage;
         gameState.dungeonState.playerHealth -= enemyDamage;
-        displayMessage(`Враг нанес ${enemyDamage} урона!`, 'red');
          checkBattleState();
     };
    const checkBattleState = () => {
        if (gameState.dungeonState.enemyHealth <= 0) {
-           displayMessage(`Победа над ${gameState.dungeonState.enemyName}`, 'green');
            if (gameState.dungeonState.currentWave < gameState.dungeonState.waves.length - 1) {
                gameState.dungeonState.currentWave++;
                setTimeout(startDungeonWave, 2000);
@@ -1165,7 +1150,6 @@ const finishDungeon = (success = true) => {
                finishDungeon(true);
            }
        } else if (gameState.dungeonState.playerHealth <= 0) {
-           displayMessage(`Вы проиграли`, 'red');
            finishDungeon(false);
        }
    };
@@ -1187,7 +1171,6 @@ const finishDungeon = (success = true) => {
            gameState.level++;
            gameState.experience -= requiredExp;
            gameState.levelPoints++;
-           displayMessage(`Уровень повышен! Текущий уровень: ${gameState.level}`, 'green', '1.2em');
              checkLevelUp();
        }
           updateProfile();
@@ -1417,14 +1400,6 @@ const updateProfile = () => {
     prestigeBonusInfo.textContent = `Множитель престижа: ${gameState.prestigeMultiplier.toFixed(2)}`;
     profileInfo.appendChild(prestigeBonusInfo);
 
-    // Отладочный вывод в консоль
-    console.log('Обновление информации профиля:');
-    console.log('Сила клика:', clickValue.toFixed(2));
-    console.log('Количество кликов:', Math.round(gameState.clickCount));
-    console.log('Уровень:', gameState.level);
-    console.log('Очки способностей:', gameState.levelPoints);
-    console.log('Уровень престижа:', gameState.prestigeLevel);
-    console.log('Множитель престижа:', gameState.prestigeMultiplier.toFixed(2));
 };
     const updateAbilitiesDisplay = () => {
         const abilityContainer = document.getElementById('abilities-list');
@@ -1576,48 +1551,34 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 elements.menu.menuButton.addEventListener('click', () => {
-    console.log('menuButton Clicked');
 
     if (elements.menu.menu.classList.contains('open')) {
         //  elements.menu.menuItems.forEach(item => item.disabled = true); Убираем disabled
         elements.menu.menu.classList.remove('open');
-        elements.menu.menuButton.classList.remove('active');
-        console.log('Меню закрыто');
     } else {
         elements.menu.menu.classList.add('open');
-        // elements.menu.menuItems.forEach(item => item.disabled = false);  Убираем disabled
-        elements.menu.menuButton.classList.add('active');
-        console.log('Меню открыто');
+        //elements.menu.menuItems.forEach(item => item.disabled = false); Убираем disabled
     }
 });
 
-elements.menu.menuItems.forEach(item => {
-    item.addEventListener('click', (event) => {
-        console.log('menuItem Clicked', event.target.dataset.tab);
-        switchTab(event.target.dataset.tab);
-      //    elements.menu.menuItems.forEach(item => item.disabled = true);  Убираем disabled
-        elements.menu.menu.classList.remove('open');
-        elements.menu.menuButton.classList.remove('active');
-    });
-});
-     elements.shop.prestigeButton.addEventListener('click', prestige);
-    elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
-        button.addEventListener('click', () => {
-           startExpedition(button.dataset.type);
+    elements.menu.menuItems.forEach(item => {
+        item.addEventListener('click', (event) => {
+            const tabId = event.target.dataset.tab;
+            switchTab(tabId);
         });
     });
-     elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
-      button.addEventListener('click', () => {
-        startDungeon(button.dataset.type);
-      });
-     });
-    document.querySelector('#dungeon-battle-area').addEventListener('click', (event) => {
-    console.log('Click on battle area', event.target);
-    if(event.target && event.target.id === 'player-attack'){
-        console.log('Player attack button clicked');
-        playerAttack();
-    }
-});
+
+    elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
+        button.addEventListener('click', () => {
+            startExpedition(button.dataset.type);
+        });
+    });
+
+    elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
+        button.addEventListener('click', () => {
+            startDungeon(button.dataset.type);
+        });
+    });
 
     elements.shop.buyKeyButton.addEventListener('click', buyKey);
     elements.shop.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
@@ -1625,9 +1586,30 @@ elements.menu.menuItems.forEach(item => {
     elements.shop.buyEpicChestButton.addEventListener('click', () => buyChest('epic'));
     elements.shop.openChestButton.addEventListener('click', openChest);
     elements.shop.closeChestButton.addEventListener('click', closeChest);
+    elements.shop.prestigeButton.addEventListener('click', prestige);
     elements.menu.resetButton.addEventListener('click', resetGame);
-    // 9. Запуск игры
-   loadGame();
-  startAutoSave();
-    switchTab('clicker');
+    elements.dungeon.dungeonBattleArea.addEventListener('click', playerAttack);
+
+    // 9. Инициализация
+
+    loadGame();
+    updateDisplay();
+    startAutoClicker();
+    startAutoSave();
+
+     //  Отключаем контекстное меню на всей странице
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+    // Проверяем, поддерживает ли устройство сенсорные события
+     function isTouchDevice() {
+         return ('ontouchstart' in window) ||
+               (navigator.maxTouchPoints > 0) ||
+               (navigator.msMaxTouchPoints > 0);
+      }
+
+      if (isTouchDevice()) {
+        // Если устройство поддерживает сенсорные события, добавляем класс 'touch-device' к body
+       document.body.classList.add('touch-device');
+      }
 });
