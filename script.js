@@ -361,11 +361,11 @@ document.addEventListener('DOMContentLoaded', () => {
             },
                'dungeon_speed': {
                 name: 'Скорость Подземелий',
-                description: 'Уменьшает время прохождения подземелий',
+                description: 'Увеличивает время для прохождения подземелий',
                 costPerLevel: 1,
                 baseValue: 1.0,
-                increment: 0.5,
-                maxLevel: 10,
+                increment: 0.05,
+                maxLevel: 20,
             },
             'dungeon_luck': {
                 name: 'Удача в Подземелье',
@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
             buyKeyButton: document.getElementById('buy-key-button'),
             buyCommonChestButton: document.getElementById('buy-common-chest-button'),
             buyRareChestButton: document.getElementById('buy-rare-chest-button'),
-            buyEpicChestButton: document.getElementById('epic-chest-button'),
+            buyEpicChestButton: document.getElementById('buy-epic-chest-button'),
             openChestButton: document.getElementById('open-chest-button'),
             chestItemsDisplay: document.getElementById('chest-items'),
             closeChestButton: document.getElementById('close-chest-button'),
@@ -469,18 +469,14 @@ document.addEventListener('DOMContentLoaded', () => {
             mapContainer: document.getElementById('map-container'),
             expeditionProgressDisplay: document.getElementById('expedition-progress'),
         },
-    dungeon: {
-        dungeonContainer: document.getElementById('dungeon-container'),
-        dungeonList: document.getElementById('dungeon-list'), // Контейнер списка подземелий
-        dungeonProgressDisplay: document.getElementById('dungeon-progress'),
-        dungeonBattleArea: document.getElementById('dungeon-battle-area'),
-        enemyNameDisplay: document.getElementById('enemy-name'),
-        playerHealthDisplay: document.getElementById('player-health'),
-        enemyHealthDisplay: document.getElementById('enemy-health'),
-		dungeonStartButton: document.getElementById('dungeon-start-button'), // Кнопка "В бой"
-		dungeonDetails: document.getElementById('dungeon-details'), // Контейнер для информации о подземелье
-		dungeonRewardsDisplay: document.getElementById('dungeon-rewards'), // Контейнер для отображения наград
-    },
+         dungeon: {
+            dungeonContainer: document.getElementById('dungeon-container'),
+            dungeonProgressDisplay: document.getElementById('dungeon-progress'),
+             dungeonBattleArea: document.getElementById('dungeon-battle-area'),
+            enemyNameDisplay: document.getElementById('enemy-name'),
+             playerHealthDisplay: document.getElementById('player-health'),
+            enemyHealthDisplay: document.getElementById('enemy-health'),
+        },
         inventory: {
             inventoryContainer: document.getElementById('inventory-container'),
             skinsDisplay: document.getElementById('skins-display'),
@@ -499,6 +495,22 @@ document.addEventListener('DOMContentLoaded', () => {
             resetButton: document.getElementById('reset-button'),
         }
     };
+        dungeon: {
+            dungeonContainer: document.getElementById('dungeon-container'),
+            dungeonProgressDisplay: document.getElementById('dungeon-progress'),
+             dungeonBattleArea: document.getElementById('dungeon-battle-area'),
+            enemyNameDisplay: document.getElementById('enemy-name'),
+             playerHealthDisplay: document.getElementById('player-health'),
+            enemyHealthDisplay: document.getElementById('enemy-health'),
+
+            dungeonBattleModal: document.getElementById('dungeon-battle-modal'), // Модальное окно
+            modalEnemyNameDisplay: document.getElementById('modal-enemy-name'), // Имя врага в модальном окне
+            modalPlayerHealthDisplay: document.getElementById('modal-player-health'), // Здоровье игрока в модальном окне
+            modalEnemyHealthDisplay: document.getElementById('modal-enemy-health'), // Здоровье врага в модальном окне
+            modalPlayerAttackButton: document.getElementById('modal-player-attack'), // Кнопка атаки в модальном окне
+            closeButton: document.querySelector('#dungeon-battle-modal .close-button'), // Кнопка закрытия
+            battleLog: document.getElementById('battle-log'), // Лог боя
+        },
     const tWebApp = window.Telegram && window.Telegram.WebApp;
 
     if (tWebApp) {
@@ -554,13 +566,13 @@ document.addEventListener('DOMContentLoaded', () => {
             finishExpedition();
         }
     };
-
-  // Функция updateDungeonProgressBar
-   const updateDungeonProgressBar = () => {
+ const updateDungeonProgressBar = () => {
         if (!gameState.activeDungeon) {
             elements.dungeon.dungeonProgressDisplay.textContent = '';
+            elements.dungeon.dungeonBattleArea.style.display = 'none';
             return;
         }
+       elements.dungeon.dungeonBattleArea.style.display = 'block';
           const elapsed = Date.now() - gameState.dungeonStartTime;
           const remaining = Math.max(0, gameState.dungeonDuration - elapsed);
          const progress = Math.min(100, Math.round((elapsed / gameState.dungeonDuration) * 100));
@@ -573,6 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
             finishDungeon(false); // Вызываем finishDungeon с признаком проигрыша
         }
     };
+
 
     const updateDisplay = () => {
         updateClickCountDisplay();
@@ -647,7 +660,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // 7. Игровые механики
-
     const applyClick = () => {
         gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier;
         updateDisplay();
@@ -922,6 +934,14 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(`Экспедиция "${gameConfig.EXPEDITION_TYPES[type]}" началась!`, 'green');
     };
 
+    const openDungeonBattleModal = () => {
+        elements.dungeon.dungeonBattleModal.style.display = 'block';
+    };
+
+    const closeDungeonBattleModal = () => {
+        elements.dungeon.dungeonBattleModal.style.display = 'none';
+    };
+
     const updateExpeditionButtonInfo = () => {
         elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
             const type = button.dataset.type;
@@ -965,93 +985,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveData();
     };
 
-    const updateDungeonUI = (isBattle = false) => {
-        if (isBattle) {
-            // Показываем боевую арену, скрываем список и детали
-            elements.dungeon.dungeonList.style.display = 'none';
-            elements.dungeon.dungeonDetails.style.display = 'none';
-            elements.dungeon.dungeonBattleArea.style.display = 'block';
-			elements.dungeon.dungeonStartButton.style.display = 'none'; // Скрываем кнопку "В бой"
-            elements.dungeon.dungeonProgressDisplay.style.display = 'block'; // Отображаем прогресс бар
-
-        } else {
-            // Показываем список подземелий, скрываем боевую арену
-            elements.dungeon.dungeonList.style.display = 'flex';
-            elements.dungeon.dungeonDetails.style.display = 'block';
-            elements.dungeon.dungeonBattleArea.style.display = 'none';
-			elements.dungeon.dungeonStartButton.style.display = 'block'; // Показываем кнопку "В бой"
-            elements.dungeon.dungeonProgressDisplay.style.display = 'none'; // Скрываем прогресс бар
-        }
-    };
-
-     // Добавим функцию для отображения информации о подземелье
-    const displayDungeonInfo = (type) => {
-        const dungeonConfig = gameConfig.DUNGEON_CONFIG[type];
-        if (!dungeonConfig) {
-            console.error(`Подземелье "${type}" не найдено`);
-            return;
-        }
-
-        // Очищаем предыдущую информацию
-        elements.dungeon.dungeonDetails.innerHTML = '';
-		elements.dungeon.dungeonRewardsDisplay.innerHTML = '';
-
-        // Создаем и добавляем элементы для отображения информации
-        const nameElement = document.createElement('h3');
-        nameElement.textContent = dungeonConfig.name;
-        elements.dungeon.dungeonDetails.appendChild(nameElement);
-
-        const costElement = document.createElement('p');
-        costElement.textContent = `Стоимость: ${dungeonConfig.cost} алмазов`;
-        elements.dungeon.dungeonDetails.appendChild(costElement);
-
-		// Отображаем награды
-		if (dungeonConfig.rewards) {
-			const rewardsTitle = document.createElement('h4');
-			rewardsTitle.textContent = 'Возможные награды:';
-			elements.dungeon.dungeonRewardsDisplay.appendChild(rewardsTitle);
-
-			const rewardsList = document.createElement('ul');
-
-			// Функция для добавления информации о награде в список
-			const addRewardInfo = (rewardType, rewardRange) => {
-				if (rewardRange) {
-					const [min, max] = rewardRange;
-					const rewardItem = document.createElement('li');
-					rewardItem.textContent = `${rewardType}: ${min} - ${max}`;
-					rewardsList.appendChild(rewardItem);
-				}
-			};
-
-			addRewardInfo('Алмазы', dungeonConfig.rewards.diamonds);
-			addRewardInfo('Ключи', dungeonConfig.rewards.keys);
-			addRewardInfo('Опыт', dungeonConfig.rewards.experience);
-
-			// Для скинов и артефактов немного другая логика, так как может быть несколько уровней редкости
-			const addRarityRewardInfo = (rewardCategory, rewards) => {
-				if (rewards) {
-					for (const rarity in rewards) {
-						const rewardRange = rewards[rarity];
-						if (rewardRange) {
-							const [min, max] = rewardRange;
-							const rewardItem = document.createElement('li');
-							rewardItem.textContent = `${rewardCategory} (${rarity}): ${min} - ${max}`;
-							rewardsList.appendChild(rewardItem);
-						}
-					}
-				}
-			};
-
-			addRarityRewardInfo('Скины', dungeonConfig.rewards.skins);
-			addRarityRewardInfo('Артефакты', dungeonConfig.rewards.artifacts);
-
-			elements.dungeon.dungeonRewardsDisplay.appendChild(rewardsList);
-		}
-
-        // Дополнительная информация (например, описание, список врагов и т.д.) может быть добавлена здесь
-    };
-
-    const startDungeon = (type) => {
+ const startDungeon = (type) => {
        if (gameState.activeDungeon) {
           displayMessage('Уже есть активное подземелье', 'red');
             return;
@@ -1075,17 +1009,17 @@ document.addEventListener('DOMContentLoaded', () => {
            gameState.dungeonState.currentWave = 0; // Устанавливаем первую волну
            gameState.dungeonState.playerHealth = 100;
            gameState.dungeonFinished = false; // Сбрасываем флаг завершения
+           elements.dungeon.battleLog.innerHTML = ''; // Очищаем лог
 
         // Запускаем таймер подземелья
         startDungeonTimer();
         updateDisplay();
          displayMessage(`Началось подземелье "${dungeonConfig.name}".`, 'green');
-		updateDungeonUI(true); // Переключаемся в режим боя
         startDungeonWave();
     };
 
 const updateDungeonButtonInfo = () => {
-    elements.dungeon.dungeonList.querySelectorAll('.dungeon-button').forEach(button => {
+    elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
        const type = button.dataset.type;
        const dungeonConfig = gameConfig.DUNGEON_CONFIG[type];
         if (dungeonConfig) {
@@ -1097,11 +1031,6 @@ const updateDungeonButtonInfo = () => {
                 button.classList.remove('disabled');
                 button.disabled = false
               }
-
-			// Добавляем обработчик клика для отображения информации о подземелье
-			button.addEventListener('click', () => {
-				displayDungeonInfo(type);
-			});
         }
    });
 };
@@ -1112,87 +1041,73 @@ const updateDungeonButtonInfo = () => {
 
 const finishDungeon = (success = true) => {
     clearInterval(gameState.dungeonInterval);
-    gameState.dungeonInterval = null;
+     gameState.dungeonInterval = null;
 
     const dungeonType = gameState.activeDungeon;
     const rewards = gameState.dungeonRewards;
-    gameState.activeDungeon = null;
-    gameState.dungeonStartTime = null;
-    gameState.dungeonDuration = 0;
+     gameState.activeDungeon = null;
+     gameState.dungeonStartTime = null;
+      gameState.dungeonDuration = 0;
     gameState.dungeonRewards = null;
-    gameState.dungeonState.waves = [];
-    gameState.dungeonState.enemyName = null;
+      gameState.dungeonState.waves = [];
+      gameState.dungeonState.enemyName = null;
+    let gainedDiamonds = 0;
+    let gainedKeys = 0;
+    let gainedExp = 0;
+    const gainedSkins = {};
+    const gainedArtifacts = {};
 
-    gameState.dungeonFinished = true;
+     gameState.dungeonFinished = true; // Устанавливаем флаг завершения
 
-    console.log('Finish Dungeon - Success:', success);
-    console.log('Rewards:', rewards);
-
-	let gainedDiamonds = 0;
-	let gainedKeys = 0;
-	let gainedExp = 0;
-	const gainedSkins = {};
-	const gainedArtifacts = {};
-
-    if (success && rewards) {
+    if (success && rewards) { //  Награды только если success = true
         if (rewards.diamonds) {
             const [minDiamonds, maxDiamonds] = rewards.diamonds;
             gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
-            gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
-            gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
-            gameState.diamonds += gainedDiamonds;
-            console.log('Gained Diamonds:', gainedDiamonds); // ADDED
+             gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
+             gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
+             gameState.diamonds += gainedDiamonds;
         }
         if (rewards.keys) {
-            const [minKeys, maxKeys] = rewards.keys;
+           const [minKeys, maxKeys] = rewards.keys;
             gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
-            gameState.keys += gainedKeys;
-            console.log('Gained Keys:', gainedKeys); // ADDED
+             gameState.keys += gainedKeys;
         }
-        if (rewards.experience) {
-            const [minExp, maxExp] = rewards.experience;
-            gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
-            gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
-            gameState.experience += gainedExp;
-            console.log('Gained EXP:', gainedExp); // ADDED
-        }
-
-        if (rewards.skins) { // Проверяем наличие rewards.skins
+           if (rewards.experience) {
+                const [minExp, maxExp] = rewards.experience;
+               gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
+                gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
+             gameState.experience += gainedExp;
+            }
+        if (rewards.skins) {
             for (const skinRarity in rewards.skins) {
                 const [minSkins, maxSkins] = rewards.skins[skinRarity];
                 const numSkins = Math.floor(Math.random() * (maxSkins - minSkins + 1)) + minSkins;
-                console.log('Number of skins to gain:', numSkins); // ADDED
                 for (let i = 0; i < numSkins; i++) {
                     const skin = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
-                    if (skin) {
-                        gainedSkins[skin] = (gainedSkins[skin] || 0) + 1;
-                    }
+                   if(skin) {
+                      gainedSkins[skin] = (gainedSkins[skin] || 0) + 1
+                   }
                 }
             }
         }
-
-        if (rewards.artifacts) { // Проверяем наличие rewards.artifacts
+          if (rewards.artifacts) {
             for (const artifactRarity in rewards.artifacts) {
                 const [minArtifacts, maxArtifacts] = rewards.artifacts[artifactRarity];
                 const numArtifacts = Math.floor(Math.random() * (maxArtifacts - minArtifacts + 1)) + minArtifacts;
-                console.log('Number of artifacts to gain:', numArtifacts); // ADDED
                 for (let i = 0; i < numArtifacts; i++) {
-                    const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
-                    if (artifact) {
-                        gainedArtifacts[artifact] = (gainedArtifacts[artifact] || 0) + 1;
-                    }
+                  const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
+                    if(artifact) {
+                      gainedArtifacts[artifact] = (gainedArtifacts[artifact] || 0) + 1
+                   }
                 }
             }
         }
     }
+     let message = `Подземелье "${gameConfig.DUNGEON_CONFIG[dungeonType].name}" `;
+     message += success ? 'завершено!' : 'провалено!';
 
-    // Ваш код вывода сообщения
-    let message = `Подземелье "${gameConfig.DUNGEON_CONFIG[dungeonType].name}" `;
-    message += success ? 'завершено!' : 'провалено!';
-
-    if (success) {
-        // Добавляем в сообщение полученные награды
-         if (gainedDiamonds > 0) {
+       if (success) {
+            if (gainedDiamonds > 0) {
               message += ` Получено ${gainedDiamonds} алмазов.`;
             }
              if (gainedKeys > 0) {
@@ -1201,40 +1116,47 @@ const finishDungeon = (success = true) => {
            if (gainedExp > 0) {
                 message += ` Получено ${gainedExp} опыта.`;
            }
-           if (Object.keys(gainedSkins).length > 0) {
+            if (Object.keys(gainedSkins).length > 0) {
              message += ` Выпали предметы: ${Object.keys(gainedSkins).map(skin => `${skin} x${gainedSkins[skin]}`).join(', ')}.`;
           }
             if (Object.keys(gainedArtifacts).length > 0) {
              message += ` Выпали предметы: ${Object.keys(gainedArtifacts).map(artifact => `${artifact} x${gainedArtifacts[artifact]}`).join(', ')}.`;
         }
-    }
+       }
 
-    displayMessage(message, success ? 'gold' : 'red', '1.2em');
+     displayMessage(message, success ? 'gold' : 'red', '1.2em');
     checkLevelUp();
     updateDisplay();
     saveData();
-	updateDungeonUI(false); // Возвращаемся к списку подземелий
 };
-
   const startDungeonWave = () => {
         const currentWave = gameState.dungeonState.waves[gameState.dungeonState.currentWave];
-         gameState.dungeonState.enemyName = currentWave.enemyName;
+        gameState.dungeonState.enemyName = currentWave.enemyName;
         gameState.dungeonState.enemyHealth = currentWave.enemyHealth;
-        displayMessage(`Волна ${gameState.dungeonState.currentWave + 1}. Враг: ${currentWave.enemyName}`, 'blue');
-       setTimeout(enemyAttack, 1000);
+        const message = `Волна ${gameState.dungeonState.currentWave + 1}. Враг: ${currentWave.enemyName}`;
+        addToBattleLog(message);
+        updateDungeonBattleUI(); // Обновляем UI сразу после начала волны
+        setTimeout(enemyAttack, 1000);
     };
-    const playerAttack = () => {
-        displayMessage(`Вы типо нажали`, 'lime');
+   const addToBattleLog = (message) => {
+        const logEntry = document.createElement('p');
+        logEntry.textContent = message;
+        elements.dungeon.battleLog.appendChild(logEntry);
+        elements.dungeon.battleLog.scrollTop = elements.dungeon.battleLog.scrollHeight; // Автопрокрутка вниз
+    };
+   const playerAttack = () => {
         const clickDamage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
         gameState.dungeonState.enemyHealth -= clickDamage;
-          displayMessage(`Вы нанесли ${clickDamage.toFixed(2)} урона!`, 'lime');
+        const message = `Вы нанесли ${clickDamage.toFixed(2)} урона!`;
+        addToBattleLog(message);
         checkBattleState();
     };
     const enemyAttack = () => {
         const enemyDamage = gameState.dungeonState.waves[gameState.dungeonState.currentWave].attackDamage;
         gameState.dungeonState.playerHealth -= enemyDamage;
-        displayMessage(`Враг нанес ${enemyDamage} урона!`, 'red');
-         checkBattleState();
+        const message = `Враг нанес ${enemyDamage} урона!`;
+        addToBattleLog(message);
+        checkBattleState();
     };
    const checkBattleState = () => {
        if (gameState.dungeonState.enemyHealth <= 0) {
@@ -1252,15 +1174,20 @@ const finishDungeon = (success = true) => {
        }
    };
    const updateDungeonBattleUI = () => {
-       if (gameState.activeDungeon) {
-           if (gameState.dungeonState.enemyName) {
-               elements.dungeon.enemyNameDisplay.textContent =  `Враг: ${gameState.dungeonState.enemyName}`;
-           } else {
-                elements.dungeon.enemyNameDisplay.textContent =  '';
-          }
-          elements.dungeon.playerHealthDisplay.textContent =  `Здоровье: ${gameState.dungeonState.playerHealth.toFixed(0)}`;
-          elements.dungeon.enemyHealthDisplay.textContent =  `Здоровье врага: ${gameState.dungeonState.enemyHealth.toFixed(0)}`;
-     }
+        if (gameState.activeDungeon) {
+            if (gameState.dungeonState.enemyName) {
+                elements.dungeon.modalEnemyNameDisplay.textContent = `Враг: ${gameState.dungeonState.enemyName}`;
+            } else {
+                elements.dungeon.modalEnemyNameDisplay.textContent = '';
+            }
+            elements.dungeon.modalPlayerHealthDisplay.textContent = `Здоровье: ${gameState.dungeonState.playerHealth.toFixed(0)}`;
+            elements.dungeon.modalEnemyHealthDisplay.textContent = `Здоровье врага: ${gameState.dungeonState.enemyHealth.toFixed(0)}`;
+
+            // Логика показа модального окна
+            openDungeonBattleModal();
+        } else {
+            closeDungeonBattleModal(); // Закрываем, если подземелье не активно
+        }
     };
 
     const checkLevelUp = () => {
@@ -1526,151 +1453,187 @@ const updateProfile = () => {
                           <p>Бонус: ${(calculateAbilityBonus(abilityKey, currentLevel)-1).toFixed(2)}</p>
                          </div>
                       <div class="ability-upgrade">
-                        <button data-ability="${abilityKey}" data-cost="${cost}" class="upgrade-ability-button" ${gameState.levelPoints < cost || currentLevel === config.maxLevel? 'disabled' : ''}>
-                            Улучшить (Стоимость: ${cost})
-                         </button>
-                       </div>
-              ;
+                        <button data-ability="${abilityKey}" data-cost="${cost}" class="upgrade-ability-button" ${gameState.levelPoints < cost || currentLevel === config.maxLevel ? 'disabled' : ''}>
+                            Улучшить (${cost} очков)
+                        </button>
+                        </div>
+                 `;
                abilityContainer.appendChild(abilityDiv);
            }
-
-     abilityContainer.querySelectorAll('.upgrade-ability-button').forEach(button => {
-           button.addEventListener('click', () => {
-              const ability = button.dataset.ability;
-                const cost = parseInt(button.dataset.cost);
-                  if (gameState.levelPoints >= cost && gameState.abilities[ability] < gameConfig.ABILITY_CONFIG[ability].maxLevel) {
-                        gameState.levelPoints -= cost;
-                         gameState.abilities[ability]++;
-                         updateAbilitiesDisplay();
-                         updateDisplay();
-                         updateProfile();
-                         displayMessage(Способность "${gameConfig.ABILITY_CONFIG[ability].name}" улучшена!, 'green', '1.2em');
-                  } else {
-                     displayMessage('Недостаточно очков способностей или максимальный уровень!', 'red');
-                 }
-           });
-     });
- };
-
-    const performPrestige = () => {
-        if (gameState.clickCount >= gameState.prestigeCost) {
-            gameState.clickCount -= gameState.prestigeCost;
-            gameState.prestigeLevel++;
-            gameState.prestigeMultiplier *= calculatePrestigeBonus(gameState.artifacts);
-            gameState.prestigeCost = Math.round(gameConfig.PRESTIGE_BASE_COST * Math.pow(1.1, gameState.prestigeLevel));
-
-            gameState.clickValue = 1;
-            gameState.autoClickerValue = 0;
-            gameState.clickUpgradeCost = 10;
-            gameState.autoUpgradeCost = 50;
-            gameState.clickUpgradeLevel = 1;
-            gameState.clickUpgradeLevelCost = 100;
-
-            clearInterval(gameState.autoClickerInterval);
-            gameState.autoClickerInterval = null;
-
-            updateDisplay();
-            displayMessage('Престиж выполнен!', 'gold', '1.2em');
-        } else {
-            displayMessage('Недостаточно кликов!', 'red');
-        }
+           const abilityButtons = document.querySelectorAll('.upgrade-ability-button');
+        abilityButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const ability = button.dataset.ability;
+               const cost = parseInt(button.dataset.cost);
+                if (gameState.levelPoints >= cost) {
+                    gameState.levelPoints -= cost;
+                      gameState.abilities[ability] = (gameState.abilities[ability] || 0) + 1;
+                  updateDisplay();
+                    displayMessage(`${gameConfig.ABILITY_CONFIG[ability].name} улучшен!`, 'green');
+                   updateAbilitiesDisplay();
+                   updateProfile();
+                 saveData();
+               } else {
+                     displayMessage('Недостаточно очков способностей!', 'red');
+                }
+            });
+         });
     };
-  // 8. Обработчики событий
-    elements.clicker.clickButton.addEventListener('click', applyClick);
 
+const prestige = () => {
+    if (gameState.clickCount >= gameState.prestigeCost) {
+        const prestigeCurrencyGained = 10 + (10 * gameState.prestigeLevel); // Пример
+        gameState.diamonds += prestigeCurrencyGained; // Используем алмазы как валюту престижа для примера.
+        displayMessage(`Престиж выполнен! Получено ${prestigeCurrencyGained} алмазов.`, 'gold', '1.2em');
+
+        // Сохраняем данные, которые не должны сбрасываться
+        const savedSkins = { ...gameState.skins }; // Копируем объект скинов
+        const savedArtifacts = { ...gameState.artifacts }; // Копируем объект артефактов
+        const savedAchievements = [...gameState.achievements]; // Копируем массив достижений
+        const savedPrestigeLevel = gameState.prestigeLevel;
+        const savedPrestigeMultiplier = gameState.prestigeMultiplier;
+
+        // Сбрасываем только часть прогресса
+        gameState.clickCount = 0;
+        gameState.clickValue = 1;
+        gameState.autoClickerValue = 0;
+        gameState.clickUpgradeCost = 10;
+        gameState.autoUpgradeCost = 50;
+        gameState.clickUpgradeLevel = 1;
+        gameState.clickUpgradeLevelCost = 100;
+        clearAllTimeouts();
+
+        // Восстанавливаем сохраненные данные
+        gameState.skins = savedSkins;
+        gameState.artifacts = savedArtifacts;
+        gameState.achievements = savedAchievements;
+        gameState.prestigeLevel = savedPrestigeLevel + 1;
+        gameState.prestigeMultiplier = savedPrestigeMultiplier + calculatePrestigeBonus(gameState.artifacts) / 10;
+        gameState.prestigeCost = gameConfig.PRESTIGE_BASE_COST * Math.pow(2, gameState.prestigeLevel);
+        gameState.levelPoints = gameState.levelPoints + 2;
+
+        saveData();
+        updateDisplay();
+        checkAchievements();
+        updateAbilitiesDisplay();
+    } else {
+        displayMessage(`Нужно ещё ${gameState.prestigeCost - gameState.clickCount} кликов!`, 'red');
+    }
+};
+    
+    const autoSave = () => {
+       saveData();
+    };
+
+    const startAutoSave = () => {
+        autoSave();
+      gameState.autoSaveInterval = setInterval(autoSave, 6000);
+    };
+    const clearAutoSave = () => {
+         clearInterval(gameState.autoSaveInterval);
+        gameState.autoSaveInterval = null;
+    };
+    // 8. Обработчики событий
+   
+    elements.dungeon.modalPlayerAttackButton.addEventListener('click', playerAttack);
+    elements.dungeon.closeButton.addEventListener('click', closeDungeonBattleModal);
+
+ elements.clicker.clickButton.addEventListener('click', applyClick);
     elements.clicker.upgradeClickButton.addEventListener('click', () => {
         if (gameState.clickCount >= gameState.clickUpgradeCost) {
             gameState.clickCount -= gameState.clickUpgradeCost;
-            gameState.clickValue++;
-            gameState.clickUpgradeCost = Math.ceil(gameState.clickUpgradeCost * 1.15);
+            gameState.clickUpgradeCost = Math.floor(gameState.clickUpgradeCost * 1.5);
+            gameState.clickValue += 1;
             updateDisplay();
+            saveData();
+             displayMessage('Улучшение клика куплено', 'green');
         } else {
-            displayMessage('Недостаточно кликов для улучшения!', 'red');
+            displayMessage('Недостаточно кликов!', 'red');
         }
     });
 
     elements.clicker.upgradeAutoButton.addEventListener('click', () => {
         if (gameState.clickCount >= gameState.autoUpgradeCost) {
             gameState.clickCount -= gameState.autoUpgradeCost;
-            gameState.autoClickerValue++;
-            gameState.autoUpgradeCost = Math.ceil(gameState.autoUpgradeCost * 1.15);
+            gameState.autoUpgradeCost = Math.floor(gameState.autoUpgradeCost * 1.7);
+            gameState.autoClickerValue += 1;
             startAutoClicker();
-            updateDisplay();
+             updateDisplay();
+              saveData();
+            displayMessage('Автокликер куплен', 'green');
         } else {
-            displayMessage('Недостаточно кликов для улучшения автокликера!', 'red');
+            displayMessage('Недостаточно кликов!', 'red');
         }
     });
 
-    elements.clicker.upgradeClickLevelButton.addEventListener('click', () => {
+     elements.clicker.upgradeClickLevelButton.addEventListener('click', () => {
         if (gameState.clickCount >= gameState.clickUpgradeLevelCost) {
             gameState.clickCount -= gameState.clickUpgradeLevelCost;
-            gameState.clickUpgradeLevel++;
-            gameState.clickUpgradeLevelCost = Math.ceil(gameState.clickUpgradeLevelCost * 1.2);
-            updateDisplay();
+            gameState.clickUpgradeLevelCost = Math.floor(gameState.clickUpgradeLevelCost * 1.5);
+            gameState.clickUpgradeLevel += 1;
+           updateDisplay();
+            saveData();
+            displayMessage('Уровень клика повышен', 'green');
         } else {
-            displayMessage('Недостаточно кликов для повышения уровня клика!', 'red');
+           displayMessage('Недостаточно кликов!', 'red');
+       }
+    });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // При загрузке страницы делаем все кнопки меню неактивными
+   // elements.menu.menuItems.forEach(item => item.disabled = true); Убираем disabled
+});
+
+elements.menu.menuButton.addEventListener('click', () => {
+    console.log('menuButton Clicked');
+
+    if (elements.menu.menu.classList.contains('open')) {
+        //  elements.menu.menuItems.forEach(item => item.disabled = true); Убираем disabled
+        elements.menu.menu.classList.remove('open');
+        elements.menu.menuButton.classList.remove('active');
+        console.log('Меню закрыто');
+    } else {
+        elements.menu.menu.classList.add('open');
+        // elements.menu.menuItems.forEach(item => item.disabled = false);  Убираем disabled
+        elements.menu.menuButton.classList.add('active');
+        console.log('Меню открыто');
+    }
+});
+
+elements.menu.menuItems.forEach(item => {
+    item.addEventListener('click', (event) => {
+        console.log('menuItem Clicked', event.target.dataset.tab);
+        switchTab(event.target.dataset.tab);
+      //    elements.menu.menuItems.forEach(item => item.disabled = true);  Убираем disabled
+        elements.menu.menu.classList.remove('open');
+        elements.menu.menuButton.classList.remove('active');
+    });
+});
+     elements.shop.prestigeButton.addEventListener('click', prestige);
+    elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
+        button.addEventListener('click', () => {
+           startExpedition(button.dataset.type);
+        });
+    });
+     elements.dungeon.dungeonContainer.querySelectorAll('.dungeon-button').forEach(button => {
+      button.addEventListener('click', () => {
+        startDungeon(button.dataset.type);
+      });
+     });
+     elements.dungeon.dungeonContainer.addEventListener('click', (event) => {
+        if(event.target && event.target.id === 'player-attack'){
+            playerAttack();
         }
     });
-    elements.shop.prestigeButton.addEventListener('click', performPrestige);
     elements.shop.buyKeyButton.addEventListener('click', buyKey);
     elements.shop.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
     elements.shop.buyRareChestButton.addEventListener('click', () => buyChest('rare'));
     elements.shop.buyEpicChestButton.addEventListener('click', () => buyChest('epic'));
     elements.shop.openChestButton.addEventListener('click', openChest);
     elements.shop.closeChestButton.addEventListener('click', closeChest);
-
-    elements.map.mapContainer.querySelectorAll('.expedition-button').forEach(button => {
-        button.addEventListener('click', () => {
-            startExpedition(button.dataset.type);
-        });
-    });
-  elements.dungeon.dungeonList.querySelectorAll('.dungeon-button').forEach(button => {
-        button.addEventListener('click', () => {
-            // Вызываем displayDungeonInfo при клике на кнопку подземелья
-            displayDungeonInfo(button.dataset.type);
-        });
-    });
-
-    // Привязываем событие к кнопке "В бой"
-    elements.dungeon.dungeonStartButton.addEventListener('click', () => {
-  if (gameState.activeDungeon) {
-   startDungeon(gameState.activeDungeon);
-  } else {
-   displayMessage('Выберите подземелье!', 'red');
-  }
- });
-    elements.dungeon.dungeonBattleArea.addEventListener('click', playerAttack);
-
-    elements.menu.menuButton.addEventListener('click', () => {
-        elements.menu.menu.classList.toggle('open');
-    });
-
-    elements.menu.menuItems.forEach(item => {
-        item.addEventListener('click', (event) => {
-            const tabId = event.target.dataset.tab;
-            switchTab(tabId);
-        });
-    });
     elements.menu.resetButton.addEventListener('click', resetGame);
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            elements.shop.chestContainer.style.display = 'none';
-        }
-    });
-   let autoSaveInterval;
-     const setupAutoSave = () => {
-        autoSaveInterval = setInterval(saveData, 60000); // Автосохранение каждые 60 секунд
-    };
-    const clearAutoSave = () => {
-         clearInterval(autoSaveInterval);
-    };
-
-    // 9. Инициализация
-    updateDisplay();
-    loadGame();
-    switchTab('clicker'); // Открываем первую вкладку при запуске
-    setupAutoSave();
-     displayDungeonInfo('tutorial');
-    updateDungeonUI(false);
+    // 9. Запуск игры
+   loadGame();
+  startAutoSave();
+    switchTab('clicker');
 });
