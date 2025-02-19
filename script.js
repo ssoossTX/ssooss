@@ -1462,7 +1462,7 @@ const updateProfile = () => {
 
     const startAutoSave = () => {
         autoSave();
-      gameState.autoSaveInterval = setInterval(autoSave, 6000);
+      gameState.autoSaveInterval = setInterval(autoSave, 1000);
     };
     const clearAutoSave = () => {
          clearInterval(gameState.autoSaveInterval);
