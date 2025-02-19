@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     // 1. gameConfig (все константы и настройки)
     const gameConfig = {
@@ -469,14 +468,15 @@ document.addEventListener('DOMContentLoaded', () => {
             mapContainer: document.getElementById('map-container'),
             expeditionProgressDisplay: document.getElementById('expedition-progress'),
         },
-         dungeon: {
-            dungeonContainer: document.getElementById('dungeon-container'),
-            dungeonProgressDisplay: document.getElementById('dungeon-progress'),
-             dungeonBattleArea: document.getElementById('dungeon-battle-area'),
-            enemyNameDisplay: document.getElementById('enemy-name'),
-             playerHealthDisplay: document.getElementById('player-health'),
-            enemyHealthDisplay: document.getElementById('enemy-health'),
-        },
+    dungeon: {
+        dungeonContainer: document.getElementById('dungeon-container'),
+        dungeonProgressDisplay: document.getElementById('dungeon-progress'),
+        dungeonBattleArea: document.getElementById('dungeon-battle-area'),
+        enemyNameDisplay: document.getElementById('enemy-name'),
+        playerHealthDisplay: document.getElementById('player-health'),
+        enemyHealthDisplay: document.getElementById('enemy-health'),
+        dungeonBattleModal: document.getElementById('dungeon-battle-modal'), // Получаем модальное окно
+    },
         inventory: {
             inventoryContainer: document.getElementById('inventory-container'),
             skinsDisplay: document.getElementById('skins-display'),
@@ -550,13 +550,13 @@ document.addEventListener('DOMContentLoaded', () => {
             finishExpedition();
         }
     };
- const updateDungeonProgressBar = () => {
+
+  // Функция updateDungeonProgressBar
+   const updateDungeonProgressBar = () => {
         if (!gameState.activeDungeon) {
             elements.dungeon.dungeonProgressDisplay.textContent = '';
-            elements.dungeon.dungeonBattleArea.style.display = 'none';
             return;
         }
-       elements.dungeon.dungeonBattleArea.style.display = 'block';
           const elapsed = Date.now() - gameState.dungeonStartTime;
           const remaining = Math.max(0, gameState.dungeonDuration - elapsed);
          const progress = Math.min(100, Math.round((elapsed / gameState.dungeonDuration) * 100));
@@ -569,7 +569,6 @@ document.addEventListener('DOMContentLoaded', () => {
             finishDungeon(false); // Вызываем finishDungeon с признаком проигрыша
         }
     };
-
 
     const updateDisplay = () => {
         updateClickCountDisplay();
@@ -644,6 +643,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // 7. Игровые механики
+
+    // Код для открытия модального окна
+    const openDungeonBattleModal = () => {
+         elements.dungeon.dungeonBattleModal.style.display = 'block';
+    };
+
+    // Код для закрытия модального окна
+     const closeDungeonBattleModal = () => {
+        elements.dungeon.dungeonBattleModal.style.display = 'none';
+    };
+
     const applyClick = () => {
         gameState.clickCount += (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier;
         updateDisplay();
@@ -960,7 +970,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
         saveData();
     };
-  const startDungeon = (type) => {
+
+
+    const startDungeon = (type) => {
        if (gameState.activeDungeon) {
           displayMessage('Уже есть активное подземелье', 'red');
             return;
@@ -989,6 +1001,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startDungeonTimer();
         updateDisplay();
          displayMessage(`Началось подземелье "${dungeonConfig.name}".`, 'green');
+         openDungeonBattleModal(); // Открываем модальное окно перед началом боя
         startDungeonWave();
     };
 
@@ -1015,73 +1028,81 @@ const updateDungeonButtonInfo = () => {
 
 const finishDungeon = (success = true) => {
     clearInterval(gameState.dungeonInterval);
-     gameState.dungeonInterval = null;
+    gameState.dungeonInterval = null;
 
     const dungeonType = gameState.activeDungeon;
     const rewards = gameState.dungeonRewards;
-     gameState.activeDungeon = null;
-     gameState.dungeonStartTime = null;
-      gameState.dungeonDuration = 0;
+    gameState.activeDungeon = null;
+    gameState.dungeonStartTime = null;
+    gameState.dungeonDuration = 0;
     gameState.dungeonRewards = null;
-      gameState.dungeonState.waves = [];
-      gameState.dungeonState.enemyName = null;
-    let gainedDiamonds = 0;
-    let gainedKeys = 0;
-    let gainedExp = 0;
-    const gainedSkins = {};
-    const gainedArtifacts = {};
+    gameState.dungeonState.waves = [];
+    gameState.dungeonState.enemyName = null;
 
-     gameState.dungeonFinished = true; // Устанавливаем флаг завершения
+    gameState.dungeonFinished = true;
 
-    if (success && rewards) { //  Награды только если success = true
+    console.log('Finish Dungeon - Success:', success);
+    console.log('Rewards:', rewards);
+
+    if (success && rewards) {
         if (rewards.diamonds) {
             const [minDiamonds, maxDiamonds] = rewards.diamonds;
-            gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
-             gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
-             gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
-             gameState.diamonds += gainedDiamonds;
+            let gainedDiamonds = Math.floor(Math.random() * (maxDiamonds - minDiamonds + 1)) + minDiamonds;
+            gainedDiamonds = Math.round(gainedDiamonds * calculateDiamondBonus(gameState.artifacts));
+            gainedDiamonds = Math.round(gainedDiamonds * calculateAbilityBonus('diamond_bonus', gameState.abilities.diamond_bonus));
+            gameState.diamonds += gainedDiamonds;
+            console.log('Gained Diamonds:', gainedDiamonds); // ADDED
         }
         if (rewards.keys) {
-           const [minKeys, maxKeys] = rewards.keys;
-            gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
-             gameState.keys += gainedKeys;
+            const [minKeys, maxKeys] = rewards.keys;
+            let gainedKeys = Math.floor(Math.random() * (maxKeys - minKeys + 1)) + minKeys;
+            gameState.keys += gainedKeys;
+            console.log('Gained Keys:', gainedKeys); // ADDED
         }
-           if (rewards.experience) {
-                const [minExp, maxExp] = rewards.experience;
-               gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
-                gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
-             gameState.experience += gainedExp;
-            }
-        if (rewards.skins) {
+        if (rewards.experience) {
+            const [minExp, maxExp] = rewards.experience;
+            let gainedExp = Math.floor(Math.random() * (maxExp - minExp + 1)) + minExp;
+            gainedExp = Math.round(gainedExp * calculateAbilityBonus('exp_bonus', gameState.abilities.exp_bonus));
+            gameState.experience += gainedExp;
+            console.log('Gained EXP:', gainedExp); // ADDED
+        }
+
+        if (rewards.skins) { // Проверяем наличие rewards.skins
             for (const skinRarity in rewards.skins) {
                 const [minSkins, maxSkins] = rewards.skins[skinRarity];
                 const numSkins = Math.floor(Math.random() * (maxSkins - minSkins + 1)) + minSkins;
+                console.log('Number of skins to gain:', numSkins); // ADDED
                 for (let i = 0; i < numSkins; i++) {
                     const skin = applyRarity(null, gameConfig.SKIN_NAMES, 'skins');
-                   if(skin) {
-                      gainedSkins[skin] = (gainedSkins[skin] || 0) + 1
-                   }
+                    if (skin) {
+                        gainedSkins[skin] = (gainedSkins[skin] || 0) + 1;
+                    }
                 }
             }
         }
-          if (rewards.artifacts) {
+
+        if (rewards.artifacts) { // Проверяем наличие rewards.artifacts
             for (const artifactRarity in rewards.artifacts) {
                 const [minArtifacts, maxArtifacts] = rewards.artifacts[artifactRarity];
                 const numArtifacts = Math.floor(Math.random() * (maxArtifacts - minArtifacts + 1)) + minArtifacts;
+                console.log('Number of artifacts to gain:', numArtifacts); // ADDED
                 for (let i = 0; i < numArtifacts; i++) {
-                  const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
-                    if(artifact) {
-                      gainedArtifacts[artifact] = (gainedArtifacts[artifact] || 0) + 1
-                   }
+                    const artifact = applyRarity(null, gameConfig.ARTIFACT_NAMES, 'artifacts');
+                    if (artifact) {
+                        gainedArtifacts[artifact] = (gainedArtifacts[artifact] || 0) + 1;
+                    }
                 }
             }
         }
     }
-     let message = `Подземелье "${gameConfig.DUNGEON_CONFIG[dungeonType].name}" `;
-     message += success ? 'завершено!' : 'провалено!';
 
-       if (success) {
-            if (gainedDiamonds > 0) {
+    // Ваш код вывода сообщения
+    let message = `Подземелье "${gameConfig.DUNGEON_CONFIG[dungeonType].name}" `;
+    message += success ? 'завершено!' : 'провалено!';
+
+    if (success) {
+        // Добавляем в сообщение полученные награды
+         if (gainedDiamonds > 0) {
               message += ` Получено ${gainedDiamonds} алмазов.`;
             }
              if (gainedKeys > 0) {
@@ -1090,19 +1111,20 @@ const finishDungeon = (success = true) => {
            if (gainedExp > 0) {
                 message += ` Получено ${gainedExp} опыта.`;
            }
-            if (Object.keys(gainedSkins).length > 0) {
+           if (Object.keys(gainedSkins).length > 0) {
              message += ` Выпали предметы: ${Object.keys(gainedSkins).map(skin => `${skin} x${gainedSkins[skin]}`).join(', ')}.`;
           }
             if (Object.keys(gainedArtifacts).length > 0) {
              message += ` Выпали предметы: ${Object.keys(gainedArtifacts).map(artifact => `${artifact} x${gainedArtifacts[artifact]}`).join(', ')}.`;
         }
-       }
+    }
 
-     displayMessage(message, success ? 'gold' : 'red', '1.2em');
+    displayMessage(message, success ? 'gold' : 'red', '1.2em');
     checkLevelUp();
     updateDisplay();
     saveData();
 };
+
   const startDungeonWave = () => {
         const currentWave = gameState.dungeonState.waves[gameState.dungeonState.currentWave];
          gameState.dungeonState.enemyName = currentWave.enemyName;
@@ -1111,6 +1133,7 @@ const finishDungeon = (success = true) => {
        setTimeout(enemyAttack, 1000);
     };
     const playerAttack = () => {
+        displayMessage(`Вы типо нажали`, 'lime');
         const clickDamage = (gameState.clickValue * gameState.clickUpgradeLevel * calculateClickBonus(gameState.skins)) * gameState.prestigeMultiplier * calculateAbilityBonus('click_bonus', gameState.abilities.click_bonus);
         gameState.dungeonState.enemyHealth -= clickDamage;
           displayMessage(`Вы нанесли ${clickDamage.toFixed(2)} урона!`, 'lime');
@@ -1493,6 +1516,10 @@ const prestige = () => {
         gameState.autoSaveInterval = null;
     };
     // 8. Обработчики событий
+
+// Обработчик нажатия на кнопку закрытия модального окна
+document.querySelector('.close-button').addEventListener('click', closeDungeonBattleModal);
+
     elements.clicker.clickButton.addEventListener('click', applyClick);
     elements.clicker.upgradeClickButton.addEventListener('click', () => {
         if (gameState.clickCount >= gameState.clickUpgradeCost) {
@@ -1575,11 +1602,14 @@ elements.menu.menuItems.forEach(item => {
         startDungeon(button.dataset.type);
       });
      });
-     elements.dungeon.dungeonContainer.addEventListener('click', (event) => {
-        if(event.target && event.target.id === 'player-attack'){
-            playerAttack();
-        }
-    });
+    document.querySelector('#dungeon-battle-area').addEventListener('click', (event) => {
+    console.log('Click on battle area', event.target);
+    if(event.target && event.target.id === 'player-attack'){
+        console.log('Player attack button clicked');
+        playerAttack();
+    }
+});
+
     elements.shop.buyKeyButton.addEventListener('click', buyKey);
     elements.shop.buyCommonChestButton.addEventListener('click', () => buyChest('common'));
     elements.shop.buyRareChestButton.addEventListener('click', () => buyChest('rare'));
