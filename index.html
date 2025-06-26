@@ -15,28 +15,27 @@
             <span></span>
         </div>
     </header>
+    <main id="mainContent">
+        <section class="clicker-section">
+            <div class="counter" id="counter">0</div>
+            <button class="clicker-btn" id="clickerBtn"></button>
+            <div class="upgrades" id="upgrades">
+                <button class="upgrade-btn">Улучшение 1</button>
+                <button class="upgrade-btn">Улучшение 2</button>
+            </div>
+            <button class="prestige-btn" id="prestigeBtn">Престиж</button>
+        </section>
+    </main>
     <aside class="side-menu" id="sideMenu">
         <nav>
             <ul>
-                <li data-tab="clicker" class="active">Кликер</li>
-                <li data-tab="profile">Профиль</li>
+                <li data-tab="profile" class="active">Профиль</li>
                 <li data-tab="shop">Магазин</li>
                 <li data-tab="map">Карта</li>
                 <li data-tab="dungeons">Подземелья</li>
             </ul>
         </nav>
-        <div class="tab-content" id="tabClicker" style="display:block">
-            <section class="clicker-section">
-                <div class="counter" id="counter">0</div>
-                <button class="clicker-btn" id="clickerBtn"></button>
-                <div class="upgrades" id="upgrades">
-                    <button class="upgrade-btn">Улучшение 1</button>
-                    <button class="upgrade-btn">Улучшение 2</button>
-                </div>
-                <button class="prestige-btn" id="prestigeBtn">Престиж</button>
-            </section>
-        </div>
-        <div class="tab-content" id="tabProfile" style="display:none">
+        <div class="tab-content" id="tabProfile">
             <h2>Профиль</h2>
             <div class="profile-info">Информация о игроке</div>
             <div class="inventory">Инвентарь</div>
@@ -55,9 +54,6 @@
             <div class="towers">5 башен разной сложности</div>
         </div>
     </aside>
-    <main id="mainContent">
-        <!-- Основной контент теперь в табах -->
-    </main>
     <div class="menu-overlay" id="menuOverlay"></div>
     <script src="script.js"></script>
 </body>
