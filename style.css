@@ -17,7 +17,7 @@ body, html {
 header {
     position: absolute;
     top: 20px;
-    right: 40px;
+    left: 40px;
     z-index: 10;
 }
 .menu-toggle {
@@ -27,6 +27,7 @@ header {
     flex-direction: column;
     justify-content: space-around;
     cursor: pointer;
+    margin-left: 0;
 }
 .menu-toggle span {
     display: block;
@@ -39,21 +40,46 @@ header {
 .side-menu {
     position: fixed;
     top: 0;
-    right: -320px;
+    left: -320px;
     width: 320px;
     height: 100vh;
     background: rgba(20, 30, 40, 0.98);
     color: #fff;
     z-index: 100;
-    transition: right 0.4s cubic-bezier(.77,0,.18,1);
-    box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+    transition: left 0.4s cubic-bezier(.77,0,.18,1);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
     padding: 30px 20px 20px 20px;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
 }
 .side-menu.open {
-    right: 0;
+    left: 0;
+}
+.side-menu nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.side-menu nav ul li {
+    padding: 16px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: #223344;
+    color: #fff;
+    transition: background 0.2s, color 0.2s;
+    text-align: left;
+    border: none;
+    outline: none;
+}
+.side-menu nav ul li.active, .side-menu nav ul li:hover {
+    background: linear-gradient(90deg, #0fffc1 0%, #00bfff 100%);
+    color: #222;
 }
 .menu-overlay {
     display: none;
@@ -73,7 +99,7 @@ main#mainContent {
     justify-content: center;
 }
 .tab-content { display: none; }
-.tab-content.active { display: block; }
+.tab-content.active { display: flex; }
 main {
     min-height: 100vh;
     display: flex;
@@ -150,6 +176,9 @@ main {
     background: linear-gradient(90deg, #0fffc1 0%, #001a2e 100%);
 }
 @media (max-width: 900px) {
+    header {
+        left: 10px;
+    }
     .side-menu {
         width: 90vw;
         max-width: 400px;
@@ -173,6 +202,9 @@ main {
     }
 }
 @media (max-width: 600px) {
+    header {
+        left: 2vw;
+    }
     .side-menu {
         width: 100vw;
         max-width: 100vw;
