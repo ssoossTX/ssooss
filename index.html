@@ -3,59 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clicker Game</title>
+    <title>Кликер RPG</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="background"></div>
-    <header>
-        <div class="menu-toggle" id="menuToggle">
-            <span></span>
-            <span></span>
-            <span></span>
+    <nav class="sidebar" id="sidebar">
+        <div class="menu-header">
+            <span class="menu-title">Меню</span>
+            <button class="close-btn" id="closeSidebar">×</button>
         </div>
-    </header>
-    <main id="mainContent">
-        <section class="tab-content active" id="tabClicker">
-            <div class="counter" id="counter">0</div>
-            <button class="clicker-btn" id="clickerBtn"></button>
-            <div class="upgrades" id="upgrades">
-                <button class="upgrade-btn">Улучшение 1</button>
-                <button class="upgrade-btn">Улучшение 2</button>
+        <ul class="menu-list">
+            <li data-tab="clicker" class="active">Кликер</li>
+            <li data-tab="profile">Профиль</li>
+            <li data-tab="shop">Магазин</li>
+            <li data-tab="map">Карта</li>
+            <li data-tab="dungeons">Подземелья</li>
+        </ul>
+    </nav>
+    <button class="hamburger" id="openSidebar">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <main>
+        <section id="tab-clicker" class="tab active">
+            <div class="clicker-container">
+                <button class="clicker-btn" id="clickerBtn"></button>
+                <div class="clicker-stats">
+                    <span id="clicks">0</span> кликов
+                </div>
+                <div class="upgrades">
+                    <button class="upgrade-btn">Улучшить (+1/клик)</button>
+                </div>
+                <button class="prestige-btn">Престиж</button>
             </div>
-            <button class="prestige-btn" id="prestigeBtn">Престиж</button>
         </section>
-        <section class="tab-content" id="tabProfile">
-            <h2>Профиль</h2>
-            <div class="profile-info">Информация о игроке</div>
-            <div class="inventory">Инвентарь</div>
-            <div class="abilities">Улучшения способностей</div>
+        <section id="tab-profile" class="tab">
+            <div class="profile-info">
+                <h2>Профиль</h2>
+                <div>Имя: <span id="playerName">Игрок</span></div>
+                <div>Уровень: <span id="playerLevel">1</span></div>
+                <div>Поинты: <span id="playerPoints">0</span></div>
+                <div>Алмазики: <span id="diamonds">0</span></div>
+                <div>Ключи: <span id="keyCommon">0</span> обычных, <span id="keyRare">0</span> редких, <span id="keyEpic">0</span> эпических</div>
+                <div style="margin:10px 0;">
+                    <div style="background:#222;border-radius:8px;overflow:hidden;height:18px;width:100%;max-width:320px;">
+                        <div id="expBar" style="background:linear-gradient(90deg,#0ff,#0f0,#000);height:100%;width:0%;transition:width 0.3s;"></div>
+                    </div>
+                    <div id="expText" style="font-size:0.95em;color:#0ff;margin-top:2px;">0 / 20 опыта</div>
+                </div>
+            </div>
+            <div class="inventory">
+                <h3>Инвентарь</h3>
+                <div id="inventoryList"></div>
+            </div>
+            <div class="abilities">
+                <h3>Улучшения способностей</h3>
+                <div id="abilitiesList"></div>
+            </div>
         </section>
-        <section class="tab-content" id="tabShop">
+        <section id="tab-shop" class="tab">
             <h2>Магазин</h2>
-            <div class="cases">Кейсы разной редкости</div>
+            <div class="cases">
+                <button class="case-btn common">Обычный кейс</button>
+                <button class="case-btn rare">Редкий кейс</button>
+                <button class="case-btn epic">Эпический кейс</button>
+            </div>
         </section>
-        <section class="tab-content" id="tabMap">
+        <section id="tab-map" class="tab">
             <h2>Карта</h2>
-            <div class="expeditions">Экспедиции разной сложности</div>
+            <div class="expeditions">
+                <button class="expedition-btn easy">Лёгкая экспедиция</button>
+                <button class="expedition-btn medium">Средняя экспедиция</button>
+                <button class="expedition-btn hard">Сложная экспедиция</button>
+                <button class="expedition-btn extreme">Экстремальная экспедиция</button>
+            </div>
         </section>
-        <section class="tab-content" id="tabDungeons">
+        <section id="tab-dungeons" class="tab">
             <h2>Подземелья</h2>
-            <div class="towers">5 башен разной сложности</div>
+            <div class="towers">
+                <button class="tower-btn">Башня 1</button>
+                <button class="tower-btn">Башня 2</button>
+                <button class="tower-btn">Башня 3</button>
+                <button class="tower-btn">Башня 4</button>
+                <button class="tower-btn">Башня 5</button>
+                <button class="tower-btn">Башня 6</button>
+            </div>
         </section>
     </main>
-    <aside class="side-menu" id="sideMenu">
-        <nav>
-            <ul>
-                <li data-tab="Clicker" class="active">Кликер</li>
-                <li data-tab="Profile">Профиль</li>
-                <li data-tab="Shop">Магазин</li>
-                <li data-tab="Map">Карта</li>
-                <li data-tab="Dungeons">Подземелья</li>
-            </ul>
-        </nav>
-    </aside>
-    <div class="menu-overlay" id="menuOverlay"></div>
     <script src="script.js"></script>
 </body>
 </html>
