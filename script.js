@@ -3,9 +3,9 @@ const counter = document.getElementById('counter');
 const clickerBtn = document.getElementById('clickerBtn');
 const menuToggle = document.getElementById('menuToggle');
 const sideMenu = document.getElementById('sideMenu');
-const tabButtons = sideMenu.querySelectorAll('nav ul li');
-const tabContents = sideMenu.querySelectorAll('.tab-content');
 const menuOverlay = document.getElementById('menuOverlay');
+const tabButtons = sideMenu.querySelectorAll('nav ul li');
+const tabContents = document.querySelectorAll('main .tab-content');
 
 clickerBtn.addEventListener('click', () => {
     count++;
@@ -28,8 +28,8 @@ tabButtons.forEach(btn => {
         btn.classList.add('active');
         tabContents.forEach(tc => tc.classList.remove('active'));
         const tabId = btn.getAttribute('data-tab');
-        document.getElementById('tab' + tabId.charAt(0).toUpperCase() + tabId.slice(1)).classList.add('active');
-        // При переключении вкладки закрывать меню на мобильных
+        document.getElementById('tab' + tabId).classList.add('active');
+        // Закрывать меню после выбора вкладки
         sideMenu.classList.remove('open');
         menuOverlay.classList.remove('active');
     });
