@@ -38,23 +38,29 @@ header {
     transition: 0.3s;
 }
 .side-menu {
+    display: none;
     position: fixed;
     top: 0;
-    left: -320px;
+    left: 0;
     width: 320px;
     height: 100vh;
     background: rgba(20, 30, 40, 0.98);
     color: #fff;
     z-index: 100;
-    transition: left 0.4s cubic-bezier(.77,0,.18,1);
     box-shadow: 2px 0 10px rgba(0,0,0,0.3);
     padding: 30px 20px 20px 20px;
-    display: flex;
     flex-direction: column;
     overflow-y: auto;
+    opacity: 0;
+    transform: translateX(-40px);
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
 }
 .side-menu.open {
-    left: 0;
+    display: flex;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
 }
 .side-menu nav ul {
     list-style: none;
@@ -115,6 +121,8 @@ main {
     flex-direction: column;
     align-items: center;
     min-width: 340px;
+    max-width: 95vw;
+    margin: 0 auto;
 }
 .counter {
     font-size: 2.5rem;
