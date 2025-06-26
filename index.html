@@ -16,7 +16,7 @@
         </div>
     </header>
     <main id="mainContent">
-        <section class="clicker-section">
+        <section class="tab-content active" id="tabClicker">
             <div class="counter" id="counter">0</div>
             <button class="clicker-btn" id="clickerBtn"></button>
             <div class="upgrades" id="upgrades">
@@ -25,34 +25,35 @@
             </div>
             <button class="prestige-btn" id="prestigeBtn">Престиж</button>
         </section>
-    </main>
-    <aside class="side-menu" id="sideMenu">
-        <nav>
-            <ul>
-                <li data-tab="profile" class="active">Профиль</li>
-                <li data-tab="shop">Магазин</li>
-                <li data-tab="map">Карта</li>
-                <li data-tab="dungeons">Подземелья</li>
-            </ul>
-        </nav>
-        <div class="tab-content" id="tabProfile">
+        <section class="tab-content" id="tabProfile">
             <h2>Профиль</h2>
             <div class="profile-info">Информация о игроке</div>
             <div class="inventory">Инвентарь</div>
             <div class="abilities">Улучшения способностей</div>
-        </div>
-        <div class="tab-content" id="tabShop" style="display:none">
+        </section>
+        <section class="tab-content" id="tabShop">
             <h2>Магазин</h2>
             <div class="cases">Кейсы разной редкости</div>
-        </div>
-        <div class="tab-content" id="tabMap" style="display:none">
+        </section>
+        <section class="tab-content" id="tabMap">
             <h2>Карта</h2>
             <div class="expeditions">Экспедиции разной сложности</div>
-        </div>
-        <div class="tab-content" id="tabDungeons" style="display:none">
+        </section>
+        <section class="tab-content" id="tabDungeons">
             <h2>Подземелья</h2>
             <div class="towers">5 башен разной сложности</div>
-        </div>
+        </section>
+    </main>
+    <aside class="side-menu" id="sideMenu">
+        <nav>
+            <ul>
+                <li data-tab="Clicker" class="active">Кликер</li>
+                <li data-tab="Profile">Профиль</li>
+                <li data-tab="Shop">Магазин</li>
+                <li data-tab="Map">Карта</li>
+                <li data-tab="Dungeons">Подземелья</li>
+            </ul>
+        </nav>
     </aside>
     <div class="menu-overlay" id="menuOverlay"></div>
     <script src="script.js"></script>
