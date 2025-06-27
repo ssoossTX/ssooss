@@ -8,10 +8,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const openSidebar = document.getElementById('openSidebar');
     const closeSidebar = document.getElementById('closeSidebar');
     if (openSidebar && sidebar) {
-        openSidebar.addEventListener('click', () => sidebar.classList.add('open'));
+        openSidebar.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            if (window.innerWidth <= 700) document.body.classList.add('menu-open');
+        });
     }
     if (closeSidebar && sidebar) {
-        closeSidebar.addEventListener('click', () => sidebar.classList.remove('open'));
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            document.body.classList.remove('menu-open');
+        });
     }
     // Переключение вкладок
     const menuItems = document.querySelectorAll('.menu-list li');
@@ -23,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             tabs.forEach(tab => tab.classList.remove('active'));
             document.getElementById('tab-' + item.dataset.tab).classList.add('active');
             sidebar.classList.remove('open');
+            document.body.classList.remove('menu-open');
         });
     });
 });
