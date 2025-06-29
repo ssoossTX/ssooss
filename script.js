@@ -1,9 +1,6 @@
-// Минимальный рабочий JS для предотвращения белого экрана
-// (добавьте сюда вашу игровую логику после проверки)
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Проверка наличия основных элементов
-    // УДАЛЕНО: конфликтующий обработчик clickerBtn и переменная let clicks = 0
-    // Простейшее меню (без ошибок)
+
     const sidebar = document.getElementById('sidebar');
     const openSidebar = document.getElementById('openSidebar');
     const closeSidebar = document.getElementById('closeSidebar');
@@ -158,6 +155,7 @@ function addExp(amount) {
     }
     updateProfile();
     saveProgress();
+    return realAmount; // <--- добавить эту строку
 }
 // Улучшенный вывод бонусов в интерфейсе
 function updateProfile() {
@@ -180,42 +178,18 @@ function updateProfile() {
         let mult = (typeof window.prestigeMultiplier === 'number' ? window.prestigeMultiplier : 1);
         document.getElementById('prestigeMultiplier').textContent = mult.toFixed(2) + 'x';
     }
+    document.getElementById('stat-diamonds').textContent = `💎 Алмазы: ${diamonds}`;
+    document.getElementById('stat-clicks').textContent = `🖱️ Клики: ${clicks}`;
+    document.getElementById('stat-level').textContent = `🏅 Уровень: ${level}`;
+    document.getElementById('stat-exp').textContent = `📚 Опыт: ${exp} / ${expToNext}`;
     updateHealthBar();
 }
+
 // Используйте getPlayerMaxDungeonHp() в startDungeon и startTrainingBattle
 // --- Функции ---
-// Обновление профиля с алмазами и ключами
-function updateProfile() {
-    playerLevel.textContent = level;
-    playerPoints.textContent = points;
-    document.getElementById('expBar').style.width = (exp / expToNext * 100) + '%';
-    document.getElementById('expText').textContent = `${exp} / ${expToNext} опыта`;
-    // abilities
-    abilitiesList.innerHTML = abilities.map((a, i) =>
-        `<div>${a.name}: ${a.value} <button class='ability-up' data-idx='${i}' ${points === 0 ? 'disabled' : ''}>+</button></div>`
-    ).join('');
-    // diamonds & keys
-    document.getElementById('diamonds').textContent = diamonds;
-    document.getElementById('keyCommon').textContent = keys.common;
-    document.getElementById('keyRare').textContent = keys.rare;
-    document.getElementById('keyEpic').textContent = keys.epic;
-    // Мультипликатор престижа
-    if (document.getElementById('prestigeMultiplier')) {
-        let mult = (typeof window.prestigeMultiplier === 'number' ? window.prestigeMultiplier : 1);
-        document.getElementById('prestigeMultiplier').textContent = mult.toFixed(2) + 'x';
-    }
-    updateHealthBar();
-}
 
 // Инициализация профиля при старте
 updateProfile();
-
-// Кликер: только клики, без опыта
-clickerBtn.addEventListener('click', () => {
-    clicks += clickPower;
-    clicksSpan.textContent = clicks;
-    saveProgress();
-});
 
 // Функция повышения уровня с поздравлением и наградой
 function levelUp() {
@@ -225,17 +199,7 @@ function levelUp() {
     diamonds += diamondReward;
     showToast(`Поздравляем! Вы достигли ${level} уровня!\nВы получили 3 поинта и ${diamondReward} алмазиков!`, 'info', 4000);
     expToNext = Math.floor(expToNext * 1.2 + 5);
-}
-
-// Исправленный addExp с уведомлением
-function addExp(amount) {
-    exp += amount;
-    while (exp >= expToNext) {
-        exp -= expToNext;
-        levelUp();
-    }
     updateProfile();
-    saveProgress();
 }
 
 // Улучшение способностей
@@ -319,6 +283,7 @@ upgradeBtn.addEventListener('click', () => {
         upgradeCost = Math.floor(upgradeCost * 1.5 + 5);
         clicksSpan.textContent = clicks;
         upgradeBtn.textContent = `Улучшить (+${clickPower}/клик) — ${upgradeCost} кликов`;
+        updateProfile();
         showToast(`Клик улучшен! Теперь +${clickPower}/клик.`, 'success');
         saveProgress();
     } else {
@@ -345,6 +310,7 @@ document.querySelector('.prestige-btn').addEventListener('click', () => {
         prestigeCost = Math.floor(prestigeCost * 2.2);
         level = 1;
         exp = 0;
+        updateProfile();
         expToNext = 20;
         points = 0;
         abilities = [
@@ -414,8 +380,8 @@ document.addEventListener('DOMContentLoaded', function() {
         trainExpBtn.className = 'expedition-btn training';
         trainExpBtn.textContent = 'Тренировочная экспедиция (доступно с 0 ур.)';
         trainExpBtn.addEventListener('click', () => {
-            addExp(2);
-            showToast('Вы получили 2 опыта за тренировочную экспедицию!', 'info');
+            let realExp = addExp(2);
+            showToast(`Вы получили ${realExp} опыта за тренировочную экспедицию!`, 'info');
             saveProgress();
         });
         expeditionsDiv.prepend(trainExpBtn);
@@ -495,8 +461,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     clearInterval(timer);
                     btn.disabled = false;
                     btn.textContent = origText;
-                    addExp(expReward);
-                    showToast(msg, 'success');
+                    let realExp = addExp(expReward);
+                    showToast(msg.replace(/\d+ опыта/, realExp + ' опыта'), 'success');
                     if (Math.random() < dropChance) {
                         let drop = possibleDrops[Math.floor(Math.random()*possibleDrops.length)];
                         addToInventory(drop);
@@ -519,8 +485,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     startExpeditionTimer(left);
                 } else {
                     // Время истекло, сразу выдать награду
-                    addExp(data.expReward);
-                    showToast(data.msg, 'success');
+                    let realExp = addExp(data.expReward);
+                    showToast(data.msg.replace(/\d+ опыта/, realExp + ' опыта'), 'success');
                     if (Math.random() < data.dropChance) {
                         let drop = data.possibleDrops[Math.floor(Math.random()*data.possibleDrops.length)];
                         addToInventory(drop);
@@ -543,30 +509,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-// === ТРЕНИРОВОЧНОЕ ПОДЗЕМЕЛЬЕ ===
-const expeditionsDiv = document.querySelector('.expeditions');
-const towersDiv = document.querySelector('.towers');
-if (expeditionsDiv && !expeditionsDiv.querySelector('.training')) {
-    const trainExpBtn = document.createElement('button');
-    trainExpBtn.className = 'expedition-btn training';
-    trainExpBtn.textContent = 'Тренировочная экспедиция (доступно с 0 ур.)';
-    trainExpBtn.addEventListener('click', () => {
-        addExp(2);
-        showToast('Вы получили 2 опыта за тренировочную экспедицию!', 'info');
-        saveProgress();
-    });
-    expeditionsDiv.prepend(trainExpBtn);
-}
-if (towersDiv && !towersDiv.querySelector('.training')) {
-    const trainTowerBtn = document.createElement('button');
-    trainTowerBtn.className = 'tower-btn training';
-    trainTowerBtn.textContent = 'Тренировочное подземелье (выбор монстра)';
-    trainTowerBtn.addEventListener('click', () => {
-        openTrainingDungeonModal();
-    });
-    towersDiv.prepend(trainTowerBtn);
-}
 
 function openTrainingDungeonModal() {
     // Создаём модальное окно выбора
@@ -648,7 +590,7 @@ function renderTrainingBattleUI() {
         <div style='margin-bottom:10px;'>Здоровье монстра: <b>${b.monsterHp}</b> / ${m.hp}</div>
         <div style='margin-bottom:10px;'>Атака монстра: <b>${m.atk}</b></div>
         <div style='margin-bottom:18px;'>Ваша атака: <b>${getPlayerDmg()}</b></div>
-        <div style='margin-bottom:18px;'>Ваше здоровье: <b>${b.playerHp}</b> / ${maxHealth}</div>
+        <div style='margin-bottom:18px;'>Ваше здоровье: <b>${b.playerHp}</b> / ${getPlayerMaxDungeonHp()}</div>
         <button id='trainAttackBtn' style='background:#27ae60;color:#fff;padding:10px 28px;border:none;border-radius:7px;font-size:1.1em;margin:0 8px 12px 0;cursor:pointer;'>Атаковать</button>
         <button id='trainHealBtn' style='background:#2980b9;color:#fff;padding:10px 18px;border:none;border-radius:7px;font-size:1.1em;margin:0 8px 12px 0;cursor:pointer;'>Восстановить HP</button>
         <button id='trainExitBtn' style='background:#e74c3c;color:#fff;padding:10px 18px;border:none;border-radius:7px;font-size:1.1em;margin:0 8px 12px 0;cursor:pointer;'>Выйти</button>
@@ -761,6 +703,7 @@ function loadProgress() {
     upgradeBtn.textContent = `Улучшить (+${clickPower}/клик) — ${upgradeCost} кликов`;
     document.querySelector('.prestige-btn').textContent = `Престиж — ${prestigeCost} кликов`;
     updateInventory();
+    updateProfile();
     // Если подземелье было активно — отрисовать интерфейс
     if (dungeonActive && dungeonState) {
         renderDungeonUI();
@@ -773,6 +716,7 @@ window.addEventListener('DOMContentLoaded', loadProgress);
 clickerBtn.addEventListener('click', () => {
     clicks += clickPower;
     clicksSpan.textContent = clicks;
+    updateProfile(); // ← добавить сюда
     saveProgress();
 });
 
@@ -863,6 +807,7 @@ inventoryList.addEventListener('click', function(e) {
             if (found.effect.includes('200 кликов')) amount = 200;
             clicks += amount;
             clicksSpan.textContent = clicks;
+            updateProfile();
             showToast(`Получено ${amount} кликов!`, 'success');
         } else if (found.effect.includes('опыт')) {
             let amount = found.rarity === 'Редкий' ? 15 : found.rarity === 'Эпический' ? 50 : 5;
@@ -991,7 +936,7 @@ function renderDungeonUI() {
         <div style='margin-bottom:10px;'>Здоровье монстра: <b>${dungeonState.monsterHp}</b> / ${m.hp}</div>
         <div style='margin-bottom:10px;'>Атака монстра: <b>${m.atk}</b></div>
         <div style='margin-bottom:18px;'>Ваша атака: <b>${getPlayerDmg()}</b></div>
-        <div style='margin-bottom:18px;'>Ваше здоровье: <b>${dungeonState.playerHp}</b> / ${maxHealth}</div>
+        <div style='margin-bottom:18px;'>Ваше здоровье: <b>${dungeonState.playerHp}</b> / ${getPlayerMaxDungeonHp()}</div>
         <button id='dungeonAttackBtn' style='background:#27ae60;color:#fff;padding:10px 28px;border:none;border-radius:7px;font-size:1.1em;margin:0 8px 12px 0;cursor:pointer;'>Атаковать</button>
         <button id='dungeonHealBtn' style='background:#2980b9;color:#fff;padding:10px 18px;border:none;border-radius:7px;font-size:1.1em;margin:0 8px 12px 0;cursor:pointer;'>Использовать предмет</button>
         <button id='dungeonExitBtn' style='background:#f1c40f;color:#222;padding:10px 18px;border:none;border-radius:7px;font-size:1.1em;margin:0 8px 12px 0;cursor:pointer;'>Сохранить и выйти</button>
@@ -1009,9 +954,6 @@ function renderDungeonUI() {
     if (attackBtn) attackBtn.disabled = false;
     if (healBtn) healBtn.disabled = false;
     if (exitBtn) exitBtn.disabled = false;
-}
-function getPlayerDmg() {
-    return Math.floor(8 + (level*1.5) + (abilities[0].value*2));
 }
 function dungeonAttack() {
     const attackBtn = document.getElementById('dungeonAttackBtn');
@@ -1036,8 +978,8 @@ function dungeonAttack() {
             let rankExpMap = { S: 30, A: 22, B: 16, C: 12, D: 8, E: 5, F: 3, G: 2 };
             let baseExp = rankExpMap[m.rank] || 2;
             if (m.isBoss) baseExp = Math.round(baseExp * 2.5); // боссы дают больше
-            addExp(baseExp);
-            msg += `<br><span style='color:#3498db;'>Получено опыта: ${baseExp}</span>`;
+            let realExp = addExp(baseExp);
+            msg += `<br><span style='color:#3498db;'>Получено опыта: ${realExp}</span>`;
             dungeonState.floor++;
             nextDungeonFloor();
             setTimeout(renderDungeonUI, 1200);
@@ -1141,6 +1083,7 @@ function dungeonExit() {
     let dungeonDiv = document.getElementById('dungeonUI');
     if (dungeonDiv) dungeonDiv.style.display = 'none';
     saveProgress();
+    window.dungeonState = dungeonState; // <--- добавить эту строку
     renderTowerButtons();
 }
 function dungeonGiveUp() {
