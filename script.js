@@ -195,7 +195,7 @@ updateProfile();
 function levelUp() {
     level++;
     points += 3;
-    const diamondReward = 5 + Math.floor(level * 0.5);
+    const diamondReward = 5 + Math.floor(level * 1.5);
     diamonds += diamondReward;
     showToast(`Поздравляем! Вы достигли ${level} уровня!\nВы получили 3 поинта и ${diamondReward} алмазиков!`, 'info', 4000);
     expToNext = Math.floor(expToNext * 1.2 + 5);
@@ -227,7 +227,7 @@ document.querySelectorAll('.case-btn').forEach((btn, i) => {
     // Модальное окно/блок для дропа
     let dropInfo = document.createElement('div');
     dropInfo.style = 'display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.55); z-index:99999; align-items:center; justify-content:center;';
-    dropInfo.innerHTML = `<div style='background:linear-gradient(135deg,#f8fafc 60%,#e0e7ef 100%); color:#222; border-radius:22px; padding:44px 36px; min-width:320px; max-width:96vw; box-shadow:0 12px 48px #0008; text-align:center; position:relative; font-family:inherit; border:2px solid #dfe6e9;'>
+    dropInfo.innerHTML = `<div class='drop-info-content' style='background:linear-gradient(135deg,#f8fafc 60%,#e0e7ef 100%); color:#222; border-radius:22px; padding:44px 36px; min-width:320px; max-width:96vw; box-shadow:0 12px 48px #0008; text-align:center; position:relative; font-family:inherit; border:2px solid #dfe6e9;'>
         <h2 style='margin-top:0; margin-bottom:22px; font-size:1.7em; letter-spacing:0.5px; color:#2980b9; text-shadow:0 2px 8px #dfe6e9;'>${caseTypes[i].name} — дроп</h2>
         <table style='width:100%; border-collapse:separate; border-spacing:0 10px; margin-bottom:28px; font-size:1.13em;'>
             <thead><tr style='background:#f7fafd; color:#2980b9; font-weight:700;'><th style="padding:10px 12px; border-radius:10px 0 0 10px;">🎁 Предмет</th><th style="padding:10px 12px;">⭐ Редкость</th><th style="padding:10px 12px;">🎲 Шанс</th><th style="padding:10px 12px; border-radius:0 10px 10px 0;">✨ Эффект</th></tr></thead>
