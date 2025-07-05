@@ -196,38 +196,37 @@ main {
     background: linear-gradient(90deg, #0f0 0%, #0ff 100%);
 }
 @media (max-width: 700px) {
-    main {
-        max-width: 98vw;
-        padding-top: 70px;
-    }
-    .clicker-btn {
-        width: 120px;
-        height: 120px;
-    }
-    .sidebar {
-        width: 80vw;
-        min-width: 180px;
-        left: -100vw; /* Скрыто полностью */
-        height: 100vh;
+    #player-stats {
+        font-size: 1em;
+        padding: 7px 0 7px 0;
+        min-height: 38px;
         top: 0;
-        bottom: 0;
-        z-index: 2000;
-        box-shadow: 2px 0 32px #000a;
-        transition: left 0.35s cubic-bezier(.77,0,.18,1);
     }
-    .sidebar.open {
-        left: 0;
-        width: 100vw;
-        min-width: unset;
-        max-width: 100vw;
+    .hamburger {
+        width: 34px;
+        height: 34px;
+        top: 48px; /* ниже инфоблока */
+        left: 10px;
+        z-index: 11001;
+        box-shadow: 0 2px 8px #0005;
     }
-    /* Затемнение фона при открытом меню */
-    body.menu-open::before {
-        content: '';
-        position: fixed;
-        left: 0; top: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.45);
-        z-index: 1999;
-        pointer-events: auto;
+    /* Добавим отступ для основного контента, чтобы не наезжать на инфоблок */
+    main {
+        padding-top: 90px;
+    }
+    /* Окно информации о дропе (класс .drop-info) */
+    .drop-info {
+        max-width: 96vw;
+        max-height: 80vh;
+        overflow-y: auto;
+        font-size: 0.98em;
+        padding: 12px 8px 16px 8px !important;
+        border-radius: 12px !important;
+    }
+    .drop-info h2 {
+        font-size: 1.1em;
+    }
+    .drop-info ul {
+        padding-left: 18px;
     }
 }
